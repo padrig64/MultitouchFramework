@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>gestureframework</groupId>
+    <artifactId>gestureframework</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Gesture Framework2</name>
+    <description>Parent POM of Gesture Framework components</description>
+    <url>http://padrig64.github.com/GestureFramework/</url>
+
+    <licenses>
+        <license>
+            <name>Simplified BSD License</name>
+            <url>https://raw.github.com/padrig64/GestureFramework/master/LICENSE.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:padrig64/GestureFramework.git</connection>
+        <url>scm:git:git@github.com:padrig64/GestureFramework.git</url>
+        <developerConnection>scm:git:git@github.com:padrig64/GestureFramework.git</developerConnection>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Maven plugins versions -->
+
+        <mavencompilerplugin.version>2.5.1</mavencompilerplugin.version>
+        <java.compiler.version>1.6</java.compiler.version>
+        <mavengpgplugin.version>1.4</mavengpgplugin.version>
+        <mavenreleaseplugin.version>2.3.2</mavenreleaseplugin.version>
+
+        <!-- Dependencies versions -->
+    </properties>
+
+    <modules>
+        <module>gestureframework-core</module>
+        <module>gestureframework-swing</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Gesture Framework -->
+
+            <dependency>
+                <groupId>gestureframework</groupId>
+                <artifactId>gestureframework-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>gestureframework</groupId>
+                <artifactId>gestureframework-swing</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${mavencompilerplugin.version}</version>
+                <configuration>
+                    <source>${java.compiler.version}</source>
+                    <target>${java.compiler.version}</target>
+                    <compilerVersion>${java.compiler.version}</compilerVersion>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${mavenreleaseplugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- PGP signatures generation -->
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${mavengpgplugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
