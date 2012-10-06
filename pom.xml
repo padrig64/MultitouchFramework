@@ -9,7 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Gesture Framework2</name>
+    <name>Gesture Framework</name>
     <description>Parent POM of Gesture Framework components</description>
     <url>http://padrig64.github.com/GestureFramework/</url>
 
