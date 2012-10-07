@@ -23,18 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.api.flow;
 
-import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.filter.InputFilter;
+public interface DataElement<D, O> extends Element<O> {
 
-public interface GestureManager {
-
-	public InputController getInputController();
-
-	public void setInputController(InputController inputController);
-
-	public void addInputFilter(InputFilter inputFilter);
-
-	public void removeInputFilter(InputFilter inputFilter);
+	public void processData(D data);
 }

@@ -23,18 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.api.flow;
 
-import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.filter.InputFilter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public interface GestureManager {
+public class CompositeElement<N> implements Element<N> {
 
-	public InputController getInputController();
+	private final List<Element<N>> subElements = new ArrayList<Element<N>>();
 
-	public void setInputController(InputController inputController);
+	public void addSubElement(final Element<N> subElement) {
 
-	public void addInputFilter(InputFilter inputFilter);
+	}
 
-	public void removeInputFilter(InputFilter inputFilter);
+	public void removeSubElement(final Element<N> subElement) {
+
+	}
+
+	@Override
+	public Collection<N> getNextElements() {
+		return null;
+	}
+
+	@Override
+	public void addNextElement(final N listener) {
+	}
+
+	@Override
+	public void removeNextElement(final N listener) {
+	}
 }

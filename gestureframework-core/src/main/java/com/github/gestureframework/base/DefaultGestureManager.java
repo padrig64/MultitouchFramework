@@ -23,18 +23,59 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.base;
 
+import com.github.gestureframework.api.GestureManager;
 import com.github.gestureframework.api.input.controller.InputController;
+import com.github.gestureframework.api.input.controller.InputListener;
+import com.github.gestureframework.api.input.controller.TouchPoint;
 import com.github.gestureframework.api.input.filter.InputFilter;
+import java.util.Collection;
 
-public interface GestureManager {
+public class DefaultGestureManager implements GestureManager {
 
-	public InputController getInputController();
+	private class InputAdapter implements InputListener {
 
-	public void setInputController(InputController inputController);
+		@Override
+		public void processInput(final Collection<TouchPoint> touchPoints) {
 
-	public void addInputFilter(InputFilter inputFilter);
+		}
+	}
 
-	public void removeInputFilter(InputFilter inputFilter);
+	private InputController inputController = null;
+
+	private final InputListener inputAdapter = new InputAdapter();
+
+	/**
+	 * @see GestureManager#getInputController()
+	 */
+	@Override
+	public InputController getInputController() {
+		return inputController;
+	}
+
+	/**
+	 * @see GestureManager#setInputController(InputController)
+	 */
+	@Override
+	public void setInputController(final InputController inputController) {
+		if (this.inputController != null) {
+			this.inputController.removeNextElement(inputAdapter);
+		}
+
+		this.inputController = inputController;
+
+		if (this.inputController != null) {
+			this.inputController.addNextElement(inputAdapter);
+		}
+	}
+
+	@Override
+	public void addInputFilter(final InputFilter inputFilter) {
+
+	}
+
+	@Override
+	public void removeInputFilter(final InputFilter inputFilter) {
+	}
 }

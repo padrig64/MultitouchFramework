@@ -25,8 +25,7 @@
 
 package com.github.gestureframework.base.input.controller;
 
-import com.github.gestureframework.api.input.controller.InputController;
+public class TuioController extends AbstractInputController {
 
-public class TuioController implements InputController {
 	// TODO
 }

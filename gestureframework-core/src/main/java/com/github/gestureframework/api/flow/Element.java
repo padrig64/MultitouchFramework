@@ -23,18 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.api.flow;
 
-import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.filter.InputFilter;
+import java.util.Collection;
 
-public interface GestureManager {
+public interface Element<N> {
 
-	public InputController getInputController();
+	public Collection<N> getNextElements();
 
-	public void setInputController(InputController inputController);
+	public void addNextElement(N listener);
 
-	public void addInputFilter(InputFilter inputFilter);
-
-	public void removeInputFilter(InputFilter inputFilter);
+	public void removeNextElement(N listener);
 }

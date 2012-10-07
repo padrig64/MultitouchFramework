@@ -15,5 +15,12 @@
 
     <dependencies>
 
+        <!-- TUIO -->
+
+        <dependency>
+            <groupId>net.sourceforge.tuio</groupId>
+            <artifactId>tuio</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

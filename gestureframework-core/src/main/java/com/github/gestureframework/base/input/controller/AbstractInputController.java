@@ -23,18 +23,48 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.base.input.controller;
 
 import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.filter.InputFilter;
+import com.github.gestureframework.api.input.controller.InputListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public interface GestureManager {
+public class AbstractInputController implements InputController {
 
-	public InputController getInputController();
+	private boolean started = false;
 
-	public void setInputController(InputController inputController);
+	private final List<InputListener> inputListeners = new ArrayList<InputListener>();
 
-	public void addInputFilter(InputFilter inputFilter);
+	@Override
+	public Collection<InputListener> getNextElements() {
+		return inputListeners;
+	}
 
-	public void removeInputFilter(InputFilter inputFilter);
+	@Override
+	public void addNextElement(final InputListener listener) {
+		inputListeners.add(listener);
+	}
+
+	@Override
+	public void removeNextElement(final InputListener listener) {
+		inputListeners.remove(listener);
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	@Override
+	public void start() {
+		if (!started) {
+			started = true;
+		}
+	}
+
+	@Override
+	public void stop() {
+		started = false;
+	}
 }

@@ -25,8 +25,6 @@
 
 package com.github.gestureframework.base.input.controller;
 
-import com.github.gestureframework.api.input.controller.InputController;
-
-public class MouseKeyboardController implements InputController {
+public class MouseKeyboardController extends AbstractInputController {
 	// TODO
 }

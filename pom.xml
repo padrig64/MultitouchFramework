@@ -37,6 +37,8 @@
         <mavenreleaseplugin.version>2.3.2</mavenreleaseplugin.version>
 
         <!-- Dependencies versions -->
+
+        <tuio.version>1.4</tuio.version>
     </properties>
 
     <modules>
@@ -58,6 +60,14 @@
                 <groupId>gestureframework</groupId>
                 <artifactId>gestureframework-swing</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- TUIO -->
+
+            <dependency>
+                <groupId>net.sourceforge.tuio</groupId>
+                <artifactId>tuio</artifactId>
+                <version>${tuio.version}</version>
             </dependency>
 
         </dependencies>

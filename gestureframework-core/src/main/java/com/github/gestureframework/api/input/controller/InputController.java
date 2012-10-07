@@ -25,6 +25,11 @@
 
 package com.github.gestureframework.api.input.controller;
 
-public interface InputController {
-	// TODO
+import com.github.gestureframework.api.flow.Element;
+
+public interface InputController extends Element<InputListener> {
+
+	public void start();
+
+	public void stop();
 }

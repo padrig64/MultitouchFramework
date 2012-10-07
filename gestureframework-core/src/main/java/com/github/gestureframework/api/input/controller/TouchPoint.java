@@ -23,18 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api;
+package com.github.gestureframework.api.input.controller;
 
-import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.filter.InputFilter;
+public class TouchPoint {
 
-public interface GestureManager {
+	private final int id;
 
-	public InputController getInputController();
+	private final int x;
 
-	public void setInputController(InputController inputController);
+	private final int y;
 
-	public void addInputFilter(InputFilter inputFilter);
+	public TouchPoint(final int id, final int x, final int y) {
+		this.id = id;
+		this.x = x;
+		this.y = y;
+	}
 
-	public void removeInputFilter(InputFilter inputFilter);
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 }

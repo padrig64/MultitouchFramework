@@ -25,8 +25,6 @@
 
 package com.github.gestureframework.base.input.controller;
 
-import com.github.gestureframework.api.input.controller.InputController;
-
-public class WindowsTouchController implements InputController {
+public class WindowsTouchController extends AbstractInputController {
 	// TODO
 }
