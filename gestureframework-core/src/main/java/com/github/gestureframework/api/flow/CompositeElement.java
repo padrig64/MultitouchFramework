@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CompositeElement<N> implements Element<N> {
+public class CompositeElement<N extends Element<N>> implements Element<N> {
 
 	private final List<Element<N>> subElements = new ArrayList<Element<N>>();
 
