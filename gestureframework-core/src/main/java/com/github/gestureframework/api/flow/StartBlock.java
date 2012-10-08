@@ -23,27 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.base.input.filter;
+package com.github.gestureframework.api.flow;
 
-import com.github.gestureframework.api.flow.Block;
-import com.github.gestureframework.api.input.controller.TouchPoint;
-import com.github.gestureframework.api.input.filter.InputFilter;
-import java.util.Collection;
+public interface StartBlock<O> {
 
-public class BoundingBoxFilter implements InputFilter {
+	public void addNextBlock(Block<O, ?> outputBlock);
 
-	@Override
-	public void process(final Collection<TouchPoint> inputData) {
-		// TODO
-	}
-
-	@Override
-	public void addNextBlock(final Block<Collection<TouchPoint>, ?> outputBlock) {
-		// TODO
-	}
-
-	@Override
-	public void removeNextBlock(final Block<Collection<TouchPoint>, ?> outputBlock) {
-		// TODO
-	}
+	public void removeNextBlock(Block<O, ?> outputBlock);
 }

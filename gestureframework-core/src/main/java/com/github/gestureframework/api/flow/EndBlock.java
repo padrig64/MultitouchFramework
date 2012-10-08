@@ -25,13 +25,7 @@
 
 package com.github.gestureframework.api.flow;
 
-import java.util.Collection;
+public interface EndBlock<I> {
 
-public interface Element<N> {
-
-	public Collection<N> getNextElements();
-
-	public void addNextElement(N listener);
-
-	public void removeNextElement(N listener);
+	public void process(I inputData);
 }

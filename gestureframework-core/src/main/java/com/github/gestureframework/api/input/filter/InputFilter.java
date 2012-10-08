@@ -25,6 +25,10 @@
 
 package com.github.gestureframework.api.input.filter;
 
-public interface InputFilter {
-	// TODO
+import com.github.gestureframework.api.flow.Block;
+import com.github.gestureframework.api.input.controller.TouchPoint;
+import java.util.Collection;
+
+public interface InputFilter extends Block<Collection<TouchPoint>, Collection<TouchPoint>> {
+	// Nothing more to be done
 }

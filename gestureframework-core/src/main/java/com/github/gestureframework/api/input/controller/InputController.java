@@ -25,9 +25,12 @@
 
 package com.github.gestureframework.api.input.controller;
 
-import com.github.gestureframework.api.flow.Element;
+import com.github.gestureframework.api.flow.StartBlock;
+import java.util.Collection;
 
-public interface InputController extends Element<InputListener> {
+public interface InputController extends StartBlock<Collection<TouchPoint>> {
+
+	public boolean isStarted();
 
 	public void start();
 

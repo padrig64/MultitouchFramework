@@ -25,8 +25,9 @@
 
 package com.github.gestureframework.base.input.controller;
 
+import com.github.gestureframework.api.flow.Block;
 import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.controller.InputListener;
+import com.github.gestureframework.api.input.controller.TouchPoint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,23 +36,20 @@ public class AbstractInputController implements InputController {
 
 	private boolean started = false;
 
-	private final List<InputListener> inputListeners = new ArrayList<InputListener>();
+	private final List<Block<Collection<TouchPoint>, ?>> outputProcessors =
+			new ArrayList<Block<Collection<TouchPoint>, ?>>();
 
 	@Override
-	public Collection<InputListener> getNextElements() {
-		return inputListeners;
+	public void addNextBlock(final Block<Collection<TouchPoint>, ?> outputProcessor) {
+		outputProcessors.add(outputProcessor);
 	}
 
 	@Override
-	public void addNextElement(final InputListener listener) {
-		inputListeners.add(listener);
+	public void removeNextBlock(final Block<Collection<TouchPoint>, ?> outputProcessor) {
+		outputProcessors.remove(outputProcessor);
 	}
 
 	@Override
-	public void removeNextElement(final InputListener listener) {
-		inputListeners.remove(listener);
-	}
-
 	public boolean isStarted() {
 		return started;
 	}

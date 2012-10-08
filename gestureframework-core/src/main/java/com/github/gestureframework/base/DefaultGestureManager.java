@@ -26,25 +26,18 @@
 package com.github.gestureframework.base;
 
 import com.github.gestureframework.api.GestureManager;
+import com.github.gestureframework.api.flow.CompositeBlock;
 import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.controller.InputListener;
 import com.github.gestureframework.api.input.controller.TouchPoint;
 import com.github.gestureframework.api.input.filter.InputFilter;
 import java.util.Collection;
 
 public class DefaultGestureManager implements GestureManager {
 
-	private class InputAdapter implements InputListener {
-
-		@Override
-		public void processInput(final Collection<TouchPoint> touchPoints) {
-
-		}
-	}
-
 	private InputController inputController = null;
 
-	private final InputListener inputAdapter = new InputAdapter();
+	private final CompositeBlock<Collection<TouchPoint>, Collection<TouchPoint>> filterComposition =
+			new CompositeBlock<Collection<TouchPoint>, Collection<TouchPoint>>();
 
 	/**
 	 * @see GestureManager#getInputController()
@@ -60,22 +53,23 @@ public class DefaultGestureManager implements GestureManager {
 	@Override
 	public void setInputController(final InputController inputController) {
 		if (this.inputController != null) {
-			this.inputController.removeNextElement(inputAdapter);
+			this.inputController.removeNextBlock(filterComposition);
 		}
 
 		this.inputController = inputController;
 
 		if (this.inputController != null) {
-			this.inputController.addNextElement(inputAdapter);
+			this.inputController.addNextBlock(filterComposition);
 		}
 	}
 
 	@Override
 	public void addInputFilter(final InputFilter inputFilter) {
-
+		filterComposition.addSubBlock(inputFilter);
 	}
 
 	@Override
 	public void removeInputFilter(final InputFilter inputFilter) {
+		filterComposition.removeSubBlock(inputFilter);
 	}
 }

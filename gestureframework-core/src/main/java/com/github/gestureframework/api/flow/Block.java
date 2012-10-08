@@ -25,7 +25,6 @@
 
 package com.github.gestureframework.api.flow;
 
-public interface DataElement<D, O> extends Element<O> {
-
-	public void processData(D data);
+public interface Block<I, O> extends EndBlock<I>, StartBlock<O> {
+	// Nothing more to be done
 }
