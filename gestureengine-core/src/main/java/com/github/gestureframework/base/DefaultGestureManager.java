@@ -36,8 +36,8 @@ public class DefaultGestureManager implements GestureManager {
 
 	private InputController inputController = null;
 
-	private final CompositeDataProcessorBlock<Collection<TouchPoint>, Collection<TouchPoint>> filterComposition =
-			new CompositeDataProcessorBlock<Collection<TouchPoint>, Collection<TouchPoint>>();
+	private final CompositeDataProcessorBlock<Collection<TouchPoint>> filterComposition =
+			new CompositeDataProcessorBlock<Collection<TouchPoint>>();
 
 	/**
 	 * @see GestureManager#getInputController()

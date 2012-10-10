@@ -25,10 +25,11 @@
 
 package com.github.gestureframework.api.input.controller;
 
-import com.github.gestureframework.api.flow.StartDataProcessorBlock;
+import com.github.gestureframework.api.flow.Block;
+import com.github.gestureframework.api.flow.DataProcessor;
 import java.util.Collection;
 
-public interface InputController extends StartDataProcessorBlock<Collection<TouchPoint>> {
+public interface InputController extends Block<DataProcessor<Collection<TouchPoint>>> {
 
 	public boolean isStarted();
 

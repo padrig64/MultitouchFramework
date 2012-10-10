@@ -25,10 +25,11 @@
 
 package com.github.gestureframework.api.input.filter;
 
+import com.github.gestureframework.api.flow.DataProcessor;
 import com.github.gestureframework.api.flow.DataProcessorBlock;
 import com.github.gestureframework.api.input.controller.TouchPoint;
 import java.util.Collection;
 
-public interface InputFilter extends DataProcessorBlock<Collection<TouchPoint>, Collection<TouchPoint>> {
+public interface InputFilter extends DataProcessorBlock<Collection<TouchPoint>, DataProcessor<Collection<TouchPoint>>> {
 	// Nothing more to be done
 }

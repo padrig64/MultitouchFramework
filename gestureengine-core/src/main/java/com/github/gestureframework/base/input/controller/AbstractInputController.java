@@ -25,7 +25,7 @@
 
 package com.github.gestureframework.base.input.controller;
 
-import com.github.gestureframework.api.flow.DataProcessorBlock;
+import com.github.gestureframework.api.flow.DataProcessor;
 import com.github.gestureframework.api.input.controller.InputController;
 import com.github.gestureframework.api.input.controller.TouchPoint;
 import java.util.ArrayList;
@@ -36,16 +36,16 @@ public class AbstractInputController implements InputController {
 
 	private boolean started = false;
 
-	private final List<DataProcessorBlock<Collection<TouchPoint>, ?>> outputProcessors =
-			new ArrayList<DataProcessorBlock<Collection<TouchPoint>, ?>>();
+	protected final List<DataProcessor<Collection<TouchPoint>>> outputProcessors =
+			new ArrayList<DataProcessor<Collection<TouchPoint>>>();
 
 	@Override
-	public void addNextBlock(final DataProcessorBlock<Collection<TouchPoint>, ?> outputProcessor) {
+	public void addNextBlock(final DataProcessor<Collection<TouchPoint>> outputProcessor) {
 		outputProcessors.add(outputProcessor);
 	}
 
 	@Override
-	public void removeNextBlock(final DataProcessorBlock<Collection<TouchPoint>, ?> outputProcessor) {
+	public void removeNextBlock(final DataProcessor<Collection<TouchPoint>> outputProcessor) {
 		outputProcessors.remove(outputProcessor);
 	}
 

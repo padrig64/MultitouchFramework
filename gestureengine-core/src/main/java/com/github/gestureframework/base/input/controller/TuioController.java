@@ -26,6 +26,5 @@
 package com.github.gestureframework.base.input.controller;
 
 public class TuioController extends AbstractInputController {
-
 	// TODO
 }

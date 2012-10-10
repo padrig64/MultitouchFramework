@@ -25,6 +25,6 @@
 
 package com.github.gestureframework.api.flow;
 
-public interface DataProcessorBlock<I, O> extends DataProcessor<I>, Block<DataProcessorBlock<O, ?>> {
+public interface DataProcessorBlock<D, N> extends DataProcessor<D>, Block<N> {
 	// Nothing more to be done
 }
