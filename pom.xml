@@ -4,26 +4,26 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>gestureframework</groupId>
-    <artifactId>gestureframework</artifactId>
+    <groupId>gestureengine</groupId>
+    <artifactId>gestureengine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Gesture Framework</name>
-    <description>Parent POM of Gesture Framework components</description>
-    <url>http://padrig64.github.com/GestureFramework/</url>
+    <name>Gesture Engine</name>
+    <description>Parent POM of Gesture Engine components</description>
+    <url>http://padrig64.github.com/GestureEngine/</url>
 
     <licenses>
         <license>
             <name>Simplified BSD License</name>
-            <url>https://raw.github.com/padrig64/GestureFramework/master/LICENSE.txt</url>
+            <url>https://raw.github.com/padrig64/GestureEngine/master/LICENSE.txt</url>
         </license>
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:padrig64/GestureFramework.git</connection>
-        <url>scm:git:git@github.com:padrig64/GestureFramework.git</url>
-        <developerConnection>scm:git:git@github.com:padrig64/GestureFramework.git</developerConnection>
+        <connection>scm:git:git@github.com:padrig64/GestureEngine.git</connection>
+        <url>scm:git:git@github.com:padrig64/GestureEngine.git</url>
+        <developerConnection>scm:git:git@github.com:padrig64/GestureEngine.git</developerConnection>
     </scm>
 
     <properties>
@@ -42,23 +42,23 @@
     </properties>
 
     <modules>
-        <module>gestureframework-core</module>
-        <module>gestureframework-swing</module>
+        <module>gestureengine-core</module>
+        <module>gestureengine-swing</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- Gesture Framework -->
+            <!-- Gesture Engine -->
 
             <dependency>
-                <groupId>gestureframework</groupId>
-                <artifactId>gestureframework-core</artifactId>
+                <groupId>gestureengine</groupId>
+                <artifactId>gestureengine-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>gestureframework</groupId>
-                <artifactId>gestureframework-swing</artifactId>
+                <groupId>gestureengine</groupId>
+                <artifactId>gestureengine-swing</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

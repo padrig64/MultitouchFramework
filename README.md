@@ -1,4 +1,4 @@
 GestureServer
 =============
 
-Gesture server for touch-based applications
+Jave gesture engine for touch-based applications
