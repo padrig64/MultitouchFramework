@@ -25,7 +25,7 @@
 
 package com.github.gestureframework.api.region;
 
-public interface RegionController {
+public interface TouchableObjectsController {
 
 	public Touchable getTouchableRegions();
 }
