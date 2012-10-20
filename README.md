@@ -1,4 +1,4 @@
 GestureEngine
 =============
 
-Java gesture engine for touch-based applications.
+Java gesture engine for multitouch-based applications.
