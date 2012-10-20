@@ -25,12 +25,12 @@
 
 package com.github.gestureframework.api;
 
+import com.github.gestureframework.api.area.Touchable;
 import com.github.gestureframework.api.gesture.definition.GestureDefinition;
 import com.github.gestureframework.api.gesture.listener.GestureListener;
 import com.github.gestureframework.api.gesture.recognizer.GestureRecognizer;
 import com.github.gestureframework.api.input.controller.InputController;
 import com.github.gestureframework.api.input.filter.InputFilter;
-import com.github.gestureframework.api.region.Touchable;
 
 public interface GestureManager {
 
@@ -45,12 +45,17 @@ public interface GestureManager {
 	// TODO
 
 	public <L extends GestureListener> void addGestureRecognizer(GestureDefinition<L> gestureDefinition,
-																   GestureRecognizer<L> gestureRecognizer);
+																 GestureRecognizer<L> gestureRecognizer);
 
 	public <L extends GestureListener> void removeGestureRecognizer(GestureRecognizer<L> gestureRecognizer);
 
 	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   Touchable touchableObject, L gestureListener);
+															   L gestureListener);
 
 	public <L extends GestureListener> void removeGestureListener(L gestureListener);
+
+	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
+															   L gestureListener, Touchable touchableObject);
+
+	public <L extends GestureListener> void removeGestureListener(L gestureListener, Touchable touchableObject);
 }

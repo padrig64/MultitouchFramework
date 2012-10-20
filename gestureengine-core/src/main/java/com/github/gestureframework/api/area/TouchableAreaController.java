@@ -23,15 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureframework.api.gesture;
+package com.github.gestureframework.api.area;
 
-import com.github.gestureframework.api.gesture.definition.GestureDefinition;
-import com.github.gestureframework.api.gesture.listener.GestureListener;
-import com.github.gestureframework.api.gesture.recognizer.GestureRecognizer;
-import com.github.gestureframework.api.region.Touchable;
+import com.github.gestureframework.api.flow.TouchPointAreaProcessor;
+import com.github.gestureframework.api.flow.TouchPointProcessorBlock;
 
-public interface GestureRecognizerFactory {
-
-	public <L extends GestureListener> GestureRecognizer<L> createGestureRecognizer(
-			GestureDefinition<L> gestureDefinition, Touchable area);
+public interface TouchableAreaController extends TouchPointProcessorBlock<TouchPointAreaProcessor> {
+	// Nothing to be done
 }

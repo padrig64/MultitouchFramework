@@ -25,8 +25,16 @@
 
 package com.github.gestureframework.base.gesture.recognizer;
 
+import java.util.Collection;
+
+import com.github.gestureframework.api.area.Touchable;
+import com.github.gestureframework.api.input.controller.TouchPoint;
 import com.github.gestureframework.base.gesture.listener.CursorListener;
 
 public class CursorRecognizer extends AbstractGestureRecognizer<CursorListener> {
-	// TODO
+
+	@Override
+	public void process(Collection<TouchPoint> touchPoints, Collection<Touchable> touchedAreas) {
+		// TODO
+	}
 }

@@ -25,8 +25,9 @@
 
 package com.github.gestureframework.api.gesture.recognizer;
 
+import com.github.gestureframework.api.flow.TouchPointAreaProcessorBlock;
 import com.github.gestureframework.api.gesture.listener.GestureListener;
 
-public interface GestureRecognizer<L extends GestureListener> {
-	// TODO
+public interface GestureRecognizer<L extends GestureListener> extends TouchPointAreaProcessorBlock<L> {
+	// Nothing to be done
 }

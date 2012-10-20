@@ -25,10 +25,11 @@
 
 package com.github.gestureframework.base.input.filter;
 
-import com.github.gestureframework.api.flow.DataProcessor;
+import java.util.Collection;
+
+import com.github.gestureframework.api.flow.TouchPointProcessor;
 import com.github.gestureframework.api.input.controller.TouchPoint;
 import com.github.gestureframework.api.input.filter.InputFilter;
-import java.util.Collection;
 
 public class BoundingBoxFilter implements InputFilter {
 
@@ -38,12 +39,12 @@ public class BoundingBoxFilter implements InputFilter {
 	}
 
 	@Override
-	public void addNextBlock(final DataProcessor<Collection<TouchPoint>> outputBlock) {
+	public void addNextBlock(final TouchPointProcessor outputBlock) {
 		// TODO
 	}
 
 	@Override
-	public void removeNextBlock(final DataProcessor<Collection<TouchPoint>> outputBlock) {
+	public void removeNextBlock(final TouchPointProcessor outputBlock) {
 		// TODO
 	}
 }

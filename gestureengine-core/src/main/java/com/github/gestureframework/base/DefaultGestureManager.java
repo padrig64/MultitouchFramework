@@ -26,18 +26,22 @@
 package com.github.gestureframework.base;
 
 import com.github.gestureframework.api.GestureManager;
-import com.github.gestureframework.api.flow.CompositeDataProcessorBlock;
+import com.github.gestureframework.api.area.Touchable;
+import com.github.gestureframework.api.area.TouchableAreaController;
+import com.github.gestureframework.api.flow.CompositeTouchPointProcessorBlock;
+import com.github.gestureframework.api.gesture.definition.GestureDefinition;
+import com.github.gestureframework.api.gesture.listener.GestureListener;
+import com.github.gestureframework.api.gesture.recognizer.GestureRecognizer;
 import com.github.gestureframework.api.input.controller.InputController;
-import com.github.gestureframework.api.input.controller.TouchPoint;
 import com.github.gestureframework.api.input.filter.InputFilter;
-import java.util.Collection;
 
 public class DefaultGestureManager implements GestureManager {
 
 	private InputController inputController = null;
 
-	private final CompositeDataProcessorBlock<Collection<TouchPoint>> filterComposition =
-			new CompositeDataProcessorBlock<Collection<TouchPoint>>();
+	private final CompositeTouchPointProcessorBlock filterComposition = new CompositeTouchPointProcessorBlock();
+
+	private TouchableAreaController toc = null;
 
 	/**
 	 * @see GestureManager#getInputController()
@@ -77,5 +81,50 @@ public class DefaultGestureManager implements GestureManager {
 	@Override
 	public void removeInputFilter(final InputFilter inputFilter) {
 		filterComposition.removeSubBlock(inputFilter);
+	}
+
+	public TouchableAreaController getTouchableObjectController() {
+		return toc;
+	}
+
+	public void setTouchableObjectController(TouchableAreaController toc) {
+		if (this.toc != null) {
+			filterComposition.removeNextBlock(this.toc);
+		}
+
+		this.toc = toc;
+
+		if (toc != null) {
+			filterComposition.addNextBlock(toc);
+		}
+	}
+
+	@Override
+	public <L extends GestureListener> void addGestureRecognizer(GestureDefinition<L> gestureDefinition,
+																 GestureRecognizer<L> gestureRecognizer) {
+		toc.addNextBlock(gestureRecognizer);
+	}
+
+	@Override
+	public <L extends GestureListener> void removeGestureRecognizer(GestureRecognizer<L> gestureRecognizer) {
+		toc.removeNextBlock(gestureRecognizer);
+	}
+
+	@Override
+	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
+															   L gestureListener) {
+	}
+
+	@Override
+	public <L extends GestureListener> void removeGestureListener(L gestureListener) {
+	}
+
+	@Override
+	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
+															   L gestureListener, Touchable touchableObject) {
+	}
+
+	@Override
+	public <L extends GestureListener> void removeGestureListener(L gestureListener, Touchable touchableObject) {
 	}
 }
