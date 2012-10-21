@@ -1,4 +1,4 @@
 GestureEngine
 =============
 
-Java gesture engine for multitouch-based applications.
+Java framework for handling multi-touch input and recognizing gestures.
