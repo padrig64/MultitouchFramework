@@ -23,35 +23,47 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experiment;
+package com.github.gestureengine.base.input.filter;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.gestureengine.api.flow.TouchPointProcessor;
-import com.github.gestureengine.api.input.controller.TouchPoint;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.base.input.controller.TuioController;
 
-public class DemoApp {
+/**
+ * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected touch point
+ * processor to process the filtered touch input, by calling their {@link TouchPointProcessor#process(java.util.Collection)}
+ * method.
+ *
+ * @see InputFilter
+ */
+public abstract class AbstractInputFilter implements InputFilter {
 
-	public static void main(String[] args) {
-		final TuioController inputController = new TuioController();
-		inputController.connectNextBlock(new InputFilter() {
-			@Override
-			public void connectNextBlock(TouchPointProcessor nextBlock) {
-				System.out.println("DemoApp.connectNextBlock");
-			}
+	/**
+	 * Touch point processors connected and processing the output touch points from this input controller.
+	 */
+	private final List<TouchPointProcessor> nextBlocks = new ArrayList<TouchPointProcessor>();
 
-			@Override
-			public void disconnectNextBlock(TouchPointProcessor nextBlock) {
-				System.out.println("DemoApp.disconnectNextBlock");
-			}
+	/**
+	 * Connects the specified touch point processor to this input controller block.<br>Touch point processor can be, for
+	 * instance, input filters or touch area controllers.
+	 *
+	 * @param touchPointProcessor Touch point processor to be connected.
+	 */
+	@Override
+	public void connectNextBlock(TouchPointProcessor touchPointProcessor) {
+		nextBlocks.add(touchPointProcessor);
+	}
 
-			@Override
-			public void process(Collection<TouchPoint> data) {
-				System.out.println("DemoApp.process: " + data.size());
-			}
-		});
-		inputController.start();
+	/**
+	 * Disconnects the specified touch point processor from this input controller block.<br>Touch point processor can be,
+	 * for instance, input filters or touch area controllers.
+	 *
+	 * @param touchPointProcessor Touch point processor to be disconnected.
+	 */
+	@Override
+	public void disconnectNextBlock(TouchPointProcessor touchPointProcessor) {
+		nextBlocks.remove(touchPointProcessor);
 	}
 }

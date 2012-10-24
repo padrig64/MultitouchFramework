@@ -16,10 +16,10 @@
     <dependencies>
 
         <!-- TUIO -->
+
         <dependency>
-            <groupId>net.sourceforge.tuio</groupId>
-            <artifactId>tuio</artifactId>
-            <version>1.4</version>
+            <groupId>com.illposed.osc</groupId>
+            <artifactId>javaosc-core</artifactId>
         </dependency>
 
         <!-- Logging -->

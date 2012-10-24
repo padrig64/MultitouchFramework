@@ -25,11 +25,17 @@
 
 package com.github.gestureengine.base.input.controller;
 
-import TUIO.TuioClient;
-import TUIO.TuioCursor;
-import TUIO.TuioListener;
-import TUIO.TuioObject;
-import TUIO.TuioTime;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.input.controller.TouchPoint;
+import com.mlawrie.yajtl.TUIOCursor;
+import com.mlawrie.yajtl.TUIOEvent;
+import com.mlawrie.yajtl.TUIOReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,100 +46,46 @@ import org.slf4j.LoggerFactory;
  */
 public class TuioController extends AbstractInputController {
 
-	private class TuioInputAdapter implements TuioListener {
+	private class TuioClientAdapter implements TUIOEvent {
 
-		private int nextTouchPointId = 0;
+		private Map<Long, TouchPoint> currentTouchPoints = new HashMap<Long, TouchPoint>();
 
 		/**
-		 * @see TuioListener#addTuioObject(TuioObject)
+		 * @see TUIOEvent#newCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void addTuioObject(TuioObject tuioObject) {
-			// Nothing to be done
+		public void newCursorEvent(TUIOCursor tuioCursor) {
+			TouchPoint touchPoint = new TouchPoint(Long.valueOf(tuioCursor.id()).intValue(), Float.valueOf(
+					tuioCursor.x()).intValue(), Float.valueOf(tuioCursor.y()).intValue());
+			currentTouchPoints.put(tuioCursor.id(), touchPoint);
+			processWithNextBlocks();
 		}
 
 		/**
-		 * @see TuioListener#updateTuioObject(TuioObject)
+		 * @see TUIOEvent#removeCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void updateTuioObject(TuioObject tuioObject) {
-			// Nothing to be done
+		public void removeCursorEvent(TUIOCursor tuioCursor) {
+			currentTouchPoints.remove(tuioCursor.id());
+			processWithNextBlocks();
 		}
 
 		/**
-		 * @see TuioListener#removeTuioObject(TuioObject)
+		 * @see TUIOEvent#moveCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void removeTuioObject(TuioObject tuioObject) {
-			// Nothing to be done
+		public void moveCursorEvent(TUIOCursor tuioCursor) {
+			// Update by just replacing the cursor
+			newCursorEvent(tuioCursor);
+			processWithNextBlocks();
 		}
 
-		/**
-		 * @see TuioListener#addTuioCursor(TuioCursor)
-		 */
-		@Override
-		public void addTuioCursor(TuioCursor tuioCursor) {
-			// TODO
-			System.out.println("TuioController$TuioInputAdapter.addTuioCursor: " + tuioCursor);
-		}
-
-		/**
-		 * @see TuioListener#updateTuioCursor(TuioCursor)
-		 */
-		@Override
-		public void updateTuioCursor(TuioCursor tuioCursor) {
-			// TODO
-			System.out.println("TuioController$TuioInputAdapter.updateTuioCursor: " + tuioCursor);
-		}
-
-		/**
-		 * @see TuioListener#removeTuioCursor(TuioCursor)
-		 */
-		@Override
-		public void removeTuioCursor(TuioCursor tuioCursor) {
-			// TODO
-			System.out.println("TuioController$TuioInputAdapter.removeTuioCursor: " + tuioCursor);
-		}
-
-		/**
-		 * @see TuioListener#refresh(TuioTime)
-		 */
-		@Override
-		public void refresh(TuioTime tuioTime) {
-			// TODO
-			System.out.println("TuioController$TuioInputAdapter.refresh: " + tuioTime);
+		private void processWithNextBlocks() {
+			for (final TouchPointProcessor nextBlock : nextBlocks) {
+				nextBlock.process(currentTouchPoints.values());
+			}
 		}
 	}
-
-//	private class TuioClientAdapter implements TUIOEvent {
-//
-//		/**
-//		 * @see TUIOEvent#newCursorEvent(TUIOCursor)
-//		 */
-//		@Override
-//		public void newCursorEvent(TUIOCursor tuioCursor) {
-//			// TODO
-//			System.out.println("TuioController$TuioClientAdapter.newCursorEvent: " + tuioCursor);
-//		}
-//
-//		/**
-//		 * @see TUIOEvent#removeCursorEvent(TUIOCursor)
-//		 */
-//		@Override
-//		public void removeCursorEvent(TUIOCursor tuioCursor) {
-//			// TODO
-//			System.out.println("TuioController$TuioClientAdapter.removeCursorEvent: " + tuioCursor);
-//		}
-//
-//		/**
-//		 * @see TUIOEvent#moveCursorEvent(TUIOCursor)
-//		 */
-//		@Override
-//		public void moveCursorEvent(TUIOCursor tuioCursor) {
-//			// TODO
-//			System.out.println("TuioController$TuioClientAdapter.moveCursorEvent: " + tuioCursor);
-//		}
-//	}
 
 	/**
 	 * Logger for this class.
@@ -153,14 +105,12 @@ public class TuioController extends AbstractInputController {
 	/**
 	 * TUIO client receiving touch input from to the TUIO server.
 	 */
-	private TuioClient tuioClient;
-//	private SingleThreadTUIOWrapper tuioClient;
+	private TUIOReceiver tuioClient;
 
-	//	/**
-//	 * Listener to the TUIO client, adapting the input events into {@link TouchPoint}s.
-//	 */
-//	private TUIOEvent tuioClientAdapter = new TuioClientAdapter();
-	private TuioListener tuioClientAdapter = new TuioInputAdapter();
+	/**
+	 * Listener to the TUIO client, adapting the input events into {@link TouchPoint}s.
+	 */
+	private TUIOEvent tuioClientAdapter = new TuioClientAdapter();
 
 	/**
 	 * Default constructor making use of the default TUIO port number to connect to the TUIO server.
@@ -190,26 +140,22 @@ public class TuioController extends AbstractInputController {
 			LOGGER.warn("TUIO input controller is already started");
 		} else {
 			// Connect to TUIO server if not already done before
-			tuioClient = new TuioClient(tuioPort);
-			tuioClient.connect();
-//			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//			if (tuioClient == null) {
-//				try {
-//					tuioClient = new SingleThreadTUIOWrapper(new TUIOReceiver(screenSize.width, screenSize.height,
-//																			  tuioPort));
-//				} catch (SocketException e) {
-//					LOGGER.error("Could not connect to TUIO server", e);
-//				}
-//			}
+			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			if (tuioClient == null) {
+				try {
+					tuioClient = new TUIOReceiver(screenSize.width, screenSize.height, tuioPort);
+				} catch (SocketException e) {
+					LOGGER.error("Could not connect to TUIO server", e);
+				}
+			}
 
 			// Add TUIO client adapter
-//			if (tuioClient != null) {
-//				tuioClient.addHandler(tuioClientAdapter);
-			tuioClient.addTuioListener(tuioClientAdapter);
+			if (tuioClient != null) {
+				tuioClient.setHandler(tuioClientAdapter);
 
-			// Everything went fine
-			super.start();
-//			}
+				// Everything went fine
+				super.start();
+			}
 		}
 	}
 
@@ -220,8 +166,7 @@ public class TuioController extends AbstractInputController {
 	public void stop() {
 		// Remove TUIO client adapter
 		if (tuioClient != null) {
-//			tuioClient.removeHandler(tuioClientAdapter);
-			tuioClient.disconnect();
+			tuioClient.setHandler(null);
 		}
 		super.stop();
 	}

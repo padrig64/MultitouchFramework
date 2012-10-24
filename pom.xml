@@ -38,8 +38,10 @@
 
         <!-- Dependencies versions -->
 
+        <javaosc.version>0.1</javaosc.version>
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.6.6</slf4j.version>
+
     </properties>
 
     <modules>
@@ -61,6 +63,14 @@
                 <groupId>gestureengine</groupId>
                 <artifactId>gestureengine-swing</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- TUIO -->
+
+            <dependency>
+                <groupId>com.illposed.osc</groupId>
+                <artifactId>javaosc-core</artifactId>
+                <version>${javaosc.version}</version>
             </dependency>
 
             <!-- Logging -->

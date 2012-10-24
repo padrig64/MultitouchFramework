@@ -25,26 +25,75 @@
 
 package com.github.gestureengine.base.input.filter;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.TouchPoint;
-import com.github.gestureengine.api.input.filter.InputFilter;
 
-public class BoundingBoxFilter implements InputFilter {
+public class BoundingBoxFilter extends AbstractInputFilter {
+
+	private static final int MAX_DIFF = 5;
+
+	private final List<TouchPoint> filteredTouchPoints = new ArrayList<TouchPoint>();
 
 	@Override
-	public void process(final Collection<TouchPoint> data) {
-		// TODO
+	public void process(Collection<TouchPoint> data) {
+//		final int cursorCount = cursorPoints.size();
+//		if (filteredTouchPoints.size() == cursorCount) {
+//			// Filter cursor points
+//			for (int i = 0; i < cursorCount; i++) {
+//				final Point filteredCursor = filteredTouchPoints.get(i);
+//				final Point newCursor = cursorPoints.get(i);
+//
+//				filterPoint(newCursor, filteredCursor);
+//			}
+//
+//			// Filter mean point
+//			if (meanPoint == null) {
+//				// No mean point to be filtered
+//				filteredMeanPoint = null;
+//			} else if (filteredMeanPoint == null) {
+//				// Mean point cannot be filtered yet, so just copy it
+//				filteredMeanPoint = new Point(meanPoint);
+//			} else {
+//				// Filter
+//				filterPoint(meanPoint, filteredMeanPoint);
+//			}
+//		} else {
+//			// Not the same number of fingers as before so just duplicate the list
+//			filteredTouchPoints.clear();
+//			for (final Point cursor : cursorPoints) {
+//				filteredTouchPoints.add(new Point(cursor));
+//			}
+//
+//			if (meanPoint == null) {
+//				// No mean point at all
+//				filteredMeanPoint = null;
+//			} else {
+//				filteredMeanPoint = new Point(meanPoint);
+//			}
+//		}
 	}
 
-	@Override
-	public void connectNextBlock(final TouchPointProcessor outputBlock) {
-		// TODO
-	}
+	private void filterPoint(final Point newCursor, final Point filteredCursor) {
+		// Move box on X axis if needed
+		if (newCursor.x < (filteredCursor.x - MAX_DIFF)) {
+			filteredCursor.x = newCursor.x + MAX_DIFF;
+		} else if (newCursor.x > (filteredCursor.x + MAX_DIFF)) {
+			filteredCursor.x = newCursor.x - MAX_DIFF;
+		}
 
-	@Override
-	public void disconnectNextBlock(final TouchPointProcessor outputBlock) {
-		// TODO
+		// Move box on Y axis if needed
+		if (newCursor.y < (filteredCursor.y - MAX_DIFF)) {
+			filteredCursor.y = newCursor.y + MAX_DIFF;
+		} else if (newCursor.y > (filteredCursor.y + MAX_DIFF)) {
+			filteredCursor.y = newCursor.y - MAX_DIFF;
+		}
+
+		// Update new cursor with filtered cursor
+		newCursor.x = filteredCursor.x;
+		newCursor.y = filteredCursor.y;
 	}
 }
