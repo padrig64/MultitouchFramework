@@ -27,31 +27,64 @@ package com.github.gestureengine.experiment;
 
 import java.util.Collection;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.TouchPoint;
-import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.base.input.controller.TuioController;
+import com.github.gestureengine.experiment.support.Canvas;
+import com.github.gestureengine.experiment.support.TouchPointLayer;
 
-public class DemoApp {
+public class DemoApp extends JFrame {
+
+	private static class EDTTouchPointProcessor implements TouchPointProcessor {
+
+		private final TouchPointProcessor wrappedProcessor;
+
+		public EDTTouchPointProcessor(final TouchPointProcessor wrappedProcessor) {
+			this.wrappedProcessor = wrappedProcessor;
+		}
+
+		@Override
+		public void process(final Collection<TouchPoint> data) {
+			System.out.println("DemoApp$EDTTouchPointProcessor.process: " + data.size());
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					wrappedProcessor.process(data);
+				}
+			});
+		}
+	}
+
+	private final Canvas touchCanvas = new Canvas();
+
+	public DemoApp() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(touchCanvas);
+
+		initGestureProfile();
+	}
 
 	public static void main(String[] args) {
-		final TuioController inputController = new TuioController();
-		inputController.connectNextBlock(new InputFilter() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void connectNextBlock(TouchPointProcessor nextBlock) {
-				System.out.println("DemoApp.connectNextBlock");
-			}
-
-			@Override
-			public void disconnectNextBlock(TouchPointProcessor nextBlock) {
-				System.out.println("DemoApp.disconnectNextBlock");
-			}
-
-			@Override
-			public void process(Collection<TouchPoint> data) {
-				System.out.println("DemoApp.process: " + data.size());
+			public void run() {
+				final JFrame frame = new DemoApp();
+				frame.setVisible(true);
 			}
 		});
+	}
+
+	private void initGestureProfile() {
+		final TuioController inputController = new TuioController();
+
+		final TouchPointLayer touchPointLayer = new TouchPointLayer(touchCanvas);
+		touchCanvas.addLayer(touchPointLayer);
+		inputController.connectNextBlock(new EDTTouchPointProcessor(touchPointLayer));
+
 		inputController.start();
 	}
 }
