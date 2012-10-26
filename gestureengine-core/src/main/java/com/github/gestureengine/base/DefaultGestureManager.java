@@ -57,13 +57,13 @@ public class DefaultGestureManager implements GestureManager {
 	@Override
 	public void setInputController(final InputController inputController) {
 		if (this.inputController != null) {
-			this.inputController.disconnectNextBlock(filterComposition);
+			this.inputController.disconnect(filterComposition);
 		}
 
 		this.inputController = inputController;
 
 		if (this.inputController != null) {
-			this.inputController.connectNextBlock(filterComposition);
+			this.inputController.connect(filterComposition);
 		}
 	}
 
@@ -89,25 +89,25 @@ public class DefaultGestureManager implements GestureManager {
 
 	public void setTouchableObjectController(final TouchableAreaController toc) {
 		if (this.toc != null) {
-			filterComposition.disconnectNextBlock(this.toc);
+			filterComposition.disconnect(this.toc);
 		}
 
 		this.toc = toc;
 
 		if (toc != null) {
-			filterComposition.connectNextBlock(toc);
+			filterComposition.connect(toc);
 		}
 	}
 
 	@Override
 	public <L extends GestureListener> void addGestureRecognizer(final GestureDefinition<L> gestureDefinition,
 																 final GestureRecognizer<L> gestureRecognizer) {
-		toc.connectNextBlock(gestureRecognizer);
+		toc.connect(gestureRecognizer);
 	}
 
 	@Override
 	public <L extends GestureListener> void removeGestureRecognizer(final GestureRecognizer<L> gestureRecognizer) {
-		toc.disconnectNextBlock(gestureRecognizer);
+		toc.disconnect(gestureRecognizer);
 	}
 
 	@Override

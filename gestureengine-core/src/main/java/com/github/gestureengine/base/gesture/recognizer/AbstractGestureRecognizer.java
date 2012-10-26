@@ -35,12 +35,12 @@ public abstract class AbstractGestureRecognizer<L extends GestureListener> imple
 	protected List<L> gestureListeners = new ArrayList<L>();
 
 	@Override
-	public void disconnectNextBlock(final L gestureListener) {
+	public void disconnect(final L gestureListener) {
 		gestureListeners.add(gestureListener);
 	}
 
 	@Override
-	public void connectNextBlock(final L gestureListener) {
+	public void connect(final L gestureListener) {
 		gestureListeners.remove(gestureListener);
 	}
 }

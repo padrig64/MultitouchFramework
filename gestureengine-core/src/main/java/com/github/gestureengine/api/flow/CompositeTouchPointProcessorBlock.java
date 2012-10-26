@@ -46,8 +46,8 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	/**
 	 * List of next connected blocks.<br>They will be connected to the last sub-block only.
 	 *
-	 * @see #connectNextBlock(Object)
-	 * @see #disconnectNextBlock(Object)
+	 * @see #connect(Object)
+	 * @see #disconnect(Object)
 	 */
 	private final List<TouchPointProcessor> nextBlocks = new ArrayList<TouchPointProcessor>();
 
@@ -62,16 +62,16 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 
 			// Disconnect next blocks from the previously last block from the list
 			for (final TouchPointProcessor nextBlock : nextBlocks) {
-				lastSubBlock.disconnectNextBlock(nextBlock);
+				lastSubBlock.disconnect(nextBlock);
 			}
 
 			// Connect new sub-block to the previously last sub-block from the list
-			lastSubBlock.connectNextBlock(subBlock);
+			lastSubBlock.connect(subBlock);
 		}
 
 		// Connect next blocks to the new (last) sub-block
 		for (final TouchPointProcessor nextBlock : nextBlocks) {
-			subBlock.disconnectNextBlock(nextBlock);
+			subBlock.disconnect(nextBlock);
 		}
 
 		// Add new sub-block to the list
@@ -90,13 +90,13 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 				// Disconnect it from previous sub-block
 				final TouchPointProcessorBlock<TouchPointProcessor> previousSubBlock =
 						subBlocks.get(previousSubBlockIndex);
-				previousSubBlock.disconnectNextBlock(subBlock);
+				previousSubBlock.disconnect(subBlock);
 
 				// Reconnect next sub-block to previous sub-block
 				final int nextSubBlockIndex = subBlockIndex + 1;
 				if (nextSubBlockIndex < subBlocks.size()) {
 					final TouchPointProcessorBlock<TouchPointProcessor> nextSubBlock = subBlocks.get(nextSubBlockIndex);
-					previousSubBlock.connectNextBlock(nextSubBlock);
+					previousSubBlock.connect(nextSubBlock);
 				}
 			}
 
@@ -104,7 +104,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 //			final int nextSubBlockIndex = subBlockIndex + 1;
 //			if (nextSubBlockIndex < subBlocks.size()) {
 //				final DataProcessorBlock<D, N> nextSubBlock = subBlocks.get(nextSubBlockIndex);
-//				subBlock.disconnectNextBlock((DataProcessorBlock<N, ?>) nextSubBlock);
+//				subBlock.disconnect((DataProcessorBlock<N, ?>) nextSubBlock);
 //			}
 //
 //			// TODO Reconnect next sub-block to previous sub-block
@@ -130,14 +130,14 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#connectNextBlock(Object)
+	 * @see TouchPointProcessorBlock#connect(Object)
 	 */
 	@Override
-	public void connectNextBlock(final TouchPointProcessor nextBlock) {
+	public void connect(final TouchPointProcessor nextBlock) {
 		// Connect next block to last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
-			lastSubBlock.connectNextBlock(nextBlock);
+			lastSubBlock.connect(nextBlock);
 		}
 
 		// Add next block to the list
@@ -145,14 +145,14 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#disconnectNextBlock(Object)
+	 * @see TouchPointProcessorBlock#disconnect(Object)
 	 */
 	@Override
-	public void disconnectNextBlock(final TouchPointProcessor nextBlock) {
+	public void disconnect(final TouchPointProcessor nextBlock) {
 		// Disconnect next block from last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
-			lastSubBlock.disconnectNextBlock(nextBlock);
+			lastSubBlock.disconnect(nextBlock);
 		}
 
 		// Remove next block from the list

@@ -51,7 +51,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 	 * @param touchPointProcessor Touch point processor to be connected.
 	 */
 	@Override
-	public void connectNextBlock(final TouchPointProcessor touchPointProcessor) {
+	public void connect(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.add(touchPointProcessor);
 	}
 
@@ -62,7 +62,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 	 * @param touchPointProcessor Touch point processor to be disconnected.
 	 */
 	@Override
-	public void disconnectNextBlock(final TouchPointProcessor touchPointProcessor) {
+	public void disconnect(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.remove(touchPointProcessor);
 	}
 }

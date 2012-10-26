@@ -26,26 +26,50 @@
 package com.github.gestureengine.swing.flow;
 
 import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.flow.TouchPointProcessorBlock;
 import com.github.gestureengine.api.input.controller.TouchPoint;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import javax.swing.SwingUtilities;
 
-public class TouchPointProcessorEDTWrapper implements TouchPointProcessor {
+public class EDTTouchPointProcessorBlock implements TouchPointProcessorBlock<TouchPointProcessor> {
 
-	private final TouchPointProcessor wrappedProcessor;
+	private final List<TouchPointProcessor> nextBlocks =
+			Collections.synchronizedList(new ArrayList<TouchPointProcessor>());
 
-	public TouchPointProcessorEDTWrapper(final TouchPointProcessor wrappedProcessor) {
-		this.wrappedProcessor = wrappedProcessor;
+	public EDTTouchPointProcessorBlock() {
+		// Nothing to be done
+	}
+
+	public EDTTouchPointProcessorBlock(final TouchPointProcessor firstNextBlock) {
+		nextBlocks.add(firstNextBlock);
+	}
+
+	@Override
+	public void connect(final TouchPointProcessor nextBlock) {
+		nextBlocks.add(nextBlock);
+	}
+
+	@Override
+	public void disconnect(final TouchPointProcessor nextBlock) {
+		nextBlocks.remove(nextBlock);
 	}
 
 	@Override
 	public void process(final Collection<TouchPoint> data) {
-		final Collection<TouchPoint> syncedData = Collections.synchronizedCollection(data);
+		// Just point the points in a new list, but not need to clone them
+		final Collection<TouchPoint> copiedData = new ArrayList<TouchPoint>(data);
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				wrappedProcessor.process(syncedData);
+				synchronized (nextBlocks) {
+					for (final TouchPointProcessor nextBlock : nextBlocks) {
+						nextBlock.process(copiedData);
+					}
+				}
 			}
 		});
 	}

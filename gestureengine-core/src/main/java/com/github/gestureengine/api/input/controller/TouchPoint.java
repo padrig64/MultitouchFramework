@@ -33,6 +33,10 @@ public class TouchPoint {
 
 	private final int y;
 
+	public TouchPoint(final TouchPoint touchPoint) {
+		this(touchPoint.id, touchPoint.x, touchPoint.y);
+	}
+
 	public TouchPoint(final int id, final int x, final int y) {
 		this.id = id;
 		this.x = x;

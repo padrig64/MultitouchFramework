@@ -28,7 +28,7 @@ package com.github.gestureengine.demo;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.demo.support.Canvas;
 import com.github.gestureengine.demo.support.TouchPointLayer;
-import com.github.gestureengine.swing.flow.TouchPointProcessorEDTWrapper;
+import com.github.gestureengine.swing.flow.EDTTouchPointProcessorBlock;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -61,7 +61,10 @@ public class DemoApp extends JFrame {
 
 		final TouchPointLayer touchPointLayer = new TouchPointLayer(touchCanvas);
 		touchCanvas.addLayer(touchPointLayer);
-		inputController.connectNextBlock(new TouchPointProcessorEDTWrapper(touchPointLayer));
+
+		final EDTTouchPointProcessorBlock edtProcessorBlock = new EDTTouchPointProcessorBlock();
+		edtProcessorBlock.connect(touchPointLayer);
+		inputController.connect(edtProcessorBlock);
 
 		inputController.start();
 	}
