@@ -23,18 +23,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experiment.support;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.util.Collection;
+package com.github.gestureengine.demo.support;
 
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.TouchPoint;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class TouchPointLayer implements Layer, TouchPointProcessor {
+
+	private static final Color TOUCH_POINT_COLOR = new Color(114, 144, 180);
+
+	private static final Color MEAN_LINE_COLOR = Color.LIGHT_GRAY;
+
+	private static final int TOUCH_POINT_SIZE = 20;
+
+	private static final int MEAN_POINT_SIZE = 6;
 
 	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -47,26 +58,52 @@ public class TouchPointLayer implements Layer, TouchPointProcessor {
 	}
 
 	@Override
-	public void process(Collection<TouchPoint> data) {
+	public void process(final Collection<TouchPoint> data) {
 		touchPoints = data;
 		canvas.repaint();
 	}
 
 	@Override
-	public void paint(Graphics2D g2d) {
-		// Paint touch points
-		for (final TouchPoint touchPoint : touchPoints) {
-			g2d.setColor(new Color(114, 144, 180));
+	public void paint(final Graphics2D g2d) {
+		if ((touchPoints != null) && !touchPoints.isEmpty()) {
+			// Prepare for painting
+			final List<Point> canvasPoints = new ArrayList<Point>();
+			int meanX = 0;
+			int meanY = 0;
 
-			TouchPoint convertedTouchPoint = convertTouchPointToCanvas(touchPoint);
-			g2d.fillOval(convertedTouchPoint.getX() - 5, convertedTouchPoint.getY() - 5, 10, 10);
+			// Calculate mean point
+			for (final TouchPoint touchPoint : touchPoints) {
+				final Point canvasPoint = convertTouchPointToCanvas(touchPoint);
+				canvasPoints.add(canvasPoint);
+
+				meanX += canvasPoint.getX();
+				meanY += canvasPoint.getY();
+			}
+			meanX /= canvasPoints.size();
+			meanY /= canvasPoints.size();
+
+			// Paint touch points and lines
+			g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.0f,
+					new float[] { 5.0f, 5.0f }, 0.0f));
+			for (final Point canvasPoint : canvasPoints) {
+				g2d.setColor(MEAN_LINE_COLOR);
+				g2d.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
+
+				g2d.setColor(TOUCH_POINT_COLOR);
+				g2d.fillOval(canvasPoint.x - TOUCH_POINT_SIZE / 2, canvasPoint.y - TOUCH_POINT_SIZE / 2,
+						TOUCH_POINT_SIZE, TOUCH_POINT_SIZE);
+			}
+
+			// Paint mean point
+			g2d.setColor(Color.BLACK);
+			g2d.fillOval(meanX - MEAN_POINT_SIZE / 2, meanY - MEAN_POINT_SIZE / 2, MEAN_POINT_SIZE, MEAN_POINT_SIZE);
 		}
 	}
 
-	private TouchPoint convertTouchPointToCanvas(final TouchPoint screenTouchPoint) {
+	private Point convertTouchPointToCanvas(final TouchPoint screenTouchPoint) {
 		final int canvasX = screenTouchPoint.getX() * canvas.getWidth() / SCREEN_SIZE.width;
 		final int canvasY = screenTouchPoint.getY() * canvas.getHeight() / SCREEN_SIZE.height;
 
-		return new TouchPoint(screenTouchPoint.getId(), canvasX, canvasY);
+		return new Point(canvasX, canvasY);
 	}
 }

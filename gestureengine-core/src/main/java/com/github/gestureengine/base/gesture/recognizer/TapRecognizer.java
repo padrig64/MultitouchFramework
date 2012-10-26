@@ -25,16 +25,15 @@
 
 package com.github.gestureengine.base.gesture.recognizer;
 
-import java.util.Collection;
-
 import com.github.gestureengine.api.area.Touchable;
 import com.github.gestureengine.api.input.controller.TouchPoint;
 import com.github.gestureengine.base.gesture.listener.TapListener;
+import java.util.Collection;
 
 public class TapRecognizer extends AbstractGestureRecognizer<TapListener> {
 
 	@Override
-	public void process(Collection<TouchPoint> touchPoints, Collection<Touchable> touchedAreas) {
+	public void process(final Collection<TouchPoint> touchPoints, final Collection<Touchable> touchedAreas) {
 		// TODO
 	}
 }

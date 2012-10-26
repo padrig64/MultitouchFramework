@@ -25,11 +25,10 @@
 
 package com.github.gestureengine.base.input.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.InputController;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected touch point

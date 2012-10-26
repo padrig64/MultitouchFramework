@@ -87,7 +87,7 @@ public class DefaultGestureManager implements GestureManager {
 		return toc;
 	}
 
-	public void setTouchableObjectController(TouchableAreaController toc) {
+	public void setTouchableObjectController(final TouchableAreaController toc) {
 		if (this.toc != null) {
 			filterComposition.disconnectNextBlock(this.toc);
 		}
@@ -100,31 +100,33 @@ public class DefaultGestureManager implements GestureManager {
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureRecognizer(GestureDefinition<L> gestureDefinition,
-																 GestureRecognizer<L> gestureRecognizer) {
+	public <L extends GestureListener> void addGestureRecognizer(final GestureDefinition<L> gestureDefinition,
+																 final GestureRecognizer<L> gestureRecognizer) {
 		toc.connectNextBlock(gestureRecognizer);
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureRecognizer(GestureRecognizer<L> gestureRecognizer) {
+	public <L extends GestureListener> void removeGestureRecognizer(final GestureRecognizer<L> gestureRecognizer) {
 		toc.disconnectNextBlock(gestureRecognizer);
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener) {
+	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
+															   final L gestureListener) {
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureListener(L gestureListener) {
+	public <L extends GestureListener> void removeGestureListener(final L gestureListener) {
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener, Touchable touchableObject) {
+	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
+															   final L gestureListener,
+															   final Touchable touchableObject) {
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureListener(L gestureListener, Touchable touchableObject) {
+	public <L extends GestureListener> void removeGestureListener(final L gestureListener,
+																  final Touchable touchableObject) {
 	}
 }

@@ -23,41 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experiment;
+package com.github.gestureengine.demo;
 
-import java.util.Collection;
-
+import com.github.gestureengine.base.input.controller.TuioController;
+import com.github.gestureengine.demo.support.Canvas;
+import com.github.gestureengine.demo.support.TouchPointLayer;
+import com.github.gestureengine.swing.flow.TouchPointProcessorEDTWrapper;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import com.github.gestureengine.api.flow.TouchPointProcessor;
-import com.github.gestureengine.api.input.controller.TouchPoint;
-import com.github.gestureengine.base.input.controller.TuioController;
-import com.github.gestureengine.experiment.support.Canvas;
-import com.github.gestureengine.experiment.support.TouchPointLayer;
-
 public class DemoApp extends JFrame {
 
-	private static class EDTTouchPointProcessor implements TouchPointProcessor {
-
-		private final TouchPointProcessor wrappedProcessor;
-
-		public EDTTouchPointProcessor(final TouchPointProcessor wrappedProcessor) {
-			this.wrappedProcessor = wrappedProcessor;
-		}
-
-		@Override
-		public void process(final Collection<TouchPoint> data) {
-			System.out.println("DemoApp$EDTTouchPointProcessor.process: " + data.size());
-
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					wrappedProcessor.process(data);
-				}
-			});
-		}
-	}
+	/**
+	 * Generated serial UID.
+	 */
+	private static final long serialVersionUID = 5317328427520423914L;
 
 	private final Canvas touchCanvas = new Canvas();
 
@@ -66,16 +48,12 @@ public class DemoApp extends JFrame {
 		setContentPane(touchCanvas);
 
 		initGestureProfile();
-	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				final JFrame frame = new DemoApp();
-				frame.setVisible(true);
-			}
-		});
+		// Set window size and location
+		setSize(640, 480);
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 3);
+
 	}
 
 	private void initGestureProfile() {
@@ -83,8 +61,18 @@ public class DemoApp extends JFrame {
 
 		final TouchPointLayer touchPointLayer = new TouchPointLayer(touchCanvas);
 		touchCanvas.addLayer(touchPointLayer);
-		inputController.connectNextBlock(new EDTTouchPointProcessor(touchPointLayer));
+		inputController.connectNextBlock(new TouchPointProcessorEDTWrapper(touchPointLayer));
 
 		inputController.start();
+	}
+
+	public static void main(final String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				final JFrame frame = new DemoApp();
+				frame.setVisible(true);
+			}
+		});
 	}
 }

@@ -25,11 +25,10 @@
 
 package com.github.gestureengine.api.flow;
 
+import com.github.gestureengine.api.input.controller.TouchPoint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.github.gestureengine.api.input.controller.TouchPoint;
 
 public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlock<TouchPointProcessor> {
 
@@ -41,8 +40,8 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	 * @see #removeSubBlock(TouchPointProcessorBlock)
 	 * @see #process(Collection)
 	 */
-	private final List<TouchPointProcessorBlock<TouchPointProcessor>> subBlocks
-			= new ArrayList<TouchPointProcessorBlock<TouchPointProcessor>>();
+	private final List<TouchPointProcessorBlock<TouchPointProcessor>> subBlocks =
+			new ArrayList<TouchPointProcessorBlock<TouchPointProcessor>>();
 
 	/**
 	 * List of next connected blocks.<br>They will be connected to the last sub-block only.
@@ -89,8 +88,8 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 			final int previousSubBlockIndex = subBlockIndex - 1;
 			if (previousSubBlockIndex >= 0) {
 				// Disconnect it from previous sub-block
-				final TouchPointProcessorBlock<TouchPointProcessor> previousSubBlock = subBlocks.get(
-						previousSubBlockIndex);
+				final TouchPointProcessorBlock<TouchPointProcessor> previousSubBlock =
+						subBlocks.get(previousSubBlockIndex);
 				previousSubBlock.disconnectNextBlock(subBlock);
 
 				// Reconnect next sub-block to previous sub-block
@@ -123,7 +122,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	 * @see TouchPointProcessorBlock#process(Collection)
 	 */
 	@Override
-	public void process(Collection<TouchPoint> data) {
+	public void process(final Collection<TouchPoint> data) {
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessor firstSubBlock = subBlocks.get(0);
 			firstSubBlock.process(data);
@@ -134,7 +133,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	 * @see TouchPointProcessorBlock#connectNextBlock(Object)
 	 */
 	@Override
-	public void connectNextBlock(TouchPointProcessor nextBlock) {
+	public void connectNextBlock(final TouchPointProcessor nextBlock) {
 		// Connect next block to last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
@@ -149,7 +148,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	 * @see TouchPointProcessorBlock#disconnectNextBlock(Object)
 	 */
 	@Override
-	public void disconnectNextBlock(TouchPointProcessor nextBlock) {
+	public void disconnectNextBlock(final TouchPointProcessor nextBlock) {
 		// Disconnect next block from last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);

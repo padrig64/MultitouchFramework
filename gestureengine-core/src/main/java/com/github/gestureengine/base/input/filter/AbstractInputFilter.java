@@ -25,11 +25,10 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected touch point
@@ -52,7 +51,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 	 * @param touchPointProcessor Touch point processor to be connected.
 	 */
 	@Override
-	public void connectNextBlock(TouchPointProcessor touchPointProcessor) {
+	public void connectNextBlock(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.add(touchPointProcessor);
 	}
 
@@ -63,7 +62,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 	 * @param touchPointProcessor Touch point processor to be disconnected.
 	 */
 	@Override
-	public void disconnectNextBlock(TouchPointProcessor touchPointProcessor) {
+	public void disconnectNextBlock(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.remove(touchPointProcessor);
 	}
 }

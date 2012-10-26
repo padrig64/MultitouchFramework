@@ -25,23 +25,22 @@
 
 package com.github.gestureengine.base.gesture.recognizer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.gestureengine.api.gesture.listener.GestureListener;
 import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractGestureRecognizer<L extends GestureListener> implements GestureRecognizer<L> {
 
 	protected List<L> gestureListeners = new ArrayList<L>();
 
 	@Override
-	public void disconnectNextBlock(L gestureListener) {
+	public void disconnectNextBlock(final L gestureListener) {
 		gestureListeners.add(gestureListener);
 	}
 
 	@Override
-	public void connectNextBlock(L nextBlock) {
-		gestureListeners.remove(gestureListeners);
+	public void connectNextBlock(final L gestureListener) {
+		gestureListeners.remove(gestureListener);
 	}
 }

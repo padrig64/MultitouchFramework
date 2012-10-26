@@ -23,42 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experiment.support;
+package com.github.gestureengine.demo.support;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JComponent;
+public interface Layer {
 
-public class Canvas extends JComponent {
-
-	private List<Layer> layers = new ArrayList<Layer>();
-
-	public void addLayer(final Layer layer) {
-		layers.add(layer);
-	}
-
-	public void removeLayer(final Layer layer) {
-		layers.remove(layer);
-	}
-
-	@Override
-	public void paint(Graphics graphics) {
-		super.paint(graphics);
-
-		if (graphics instanceof Graphics2D) {
-			final Graphics2D g2d = (Graphics2D) graphics;
-
-			// Set anti-aliasing
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-			// Draw all layers
-			for (final Layer layer : layers) {
-				layer.paint(g2d);
-			}
-		}
-	}
+	public void paint(Graphics2D g2d);
 }

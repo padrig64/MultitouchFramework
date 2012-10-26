@@ -23,17 +23,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.swing.flow;
 
-import com.github.gestureengine.api.area.Touchable;
+import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.TouchPoint;
-import com.github.gestureengine.base.gesture.listener.LongPressListener;
 import java.util.Collection;
+import java.util.Collections;
+import javax.swing.SwingUtilities;
 
-public class LongPressRecognizer extends AbstractGestureRecognizer<LongPressListener> {
+public class TouchPointProcessorEDTWrapper implements TouchPointProcessor {
+
+	private final TouchPointProcessor wrappedProcessor;
+
+	public TouchPointProcessorEDTWrapper(final TouchPointProcessor wrappedProcessor) {
+		this.wrappedProcessor = wrappedProcessor;
+	}
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints, final Collection<Touchable> touchedAreas) {
-		// TODO
+	public void process(final Collection<TouchPoint> data) {
+		final Collection<TouchPoint> syncedData = Collections.synchronizedCollection(data);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				wrappedProcessor.process(syncedData);
+			}
+		});
 	}
 }

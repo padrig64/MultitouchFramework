@@ -25,17 +25,17 @@
 
 package com.github.gestureengine.base.input.controller;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.controller.TouchPoint;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
 import com.mlawrie.yajtl.TUIOReceiver;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.net.SocketException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,15 +48,16 @@ public class TuioController extends AbstractInputController {
 
 	private class TuioClientAdapter implements TUIOEvent {
 
-		private Map<Long, TouchPoint> currentTouchPoints = new HashMap<Long, TouchPoint>();
+		private final Map<Long, TouchPoint> currentTouchPoints = new HashMap<Long, TouchPoint>();
 
 		/**
 		 * @see TUIOEvent#newCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void newCursorEvent(TUIOCursor tuioCursor) {
-			TouchPoint touchPoint = new TouchPoint(Long.valueOf(tuioCursor.id()).intValue(), Float.valueOf(
-					tuioCursor.x()).intValue(), Float.valueOf(tuioCursor.y()).intValue());
+		public void newCursorEvent(final TUIOCursor tuioCursor) {
+			final TouchPoint touchPoint =
+					new TouchPoint(Long.valueOf(tuioCursor.id()).intValue(), Float.valueOf(tuioCursor.x()).intValue(),
+							Float.valueOf(tuioCursor.y()).intValue());
 			currentTouchPoints.put(tuioCursor.id(), touchPoint);
 			processWithNextBlocks();
 		}
@@ -65,7 +66,7 @@ public class TuioController extends AbstractInputController {
 		 * @see TUIOEvent#removeCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void removeCursorEvent(TUIOCursor tuioCursor) {
+		public void removeCursorEvent(final TUIOCursor tuioCursor) {
 			currentTouchPoints.remove(tuioCursor.id());
 			processWithNextBlocks();
 		}
@@ -74,15 +75,16 @@ public class TuioController extends AbstractInputController {
 		 * @see TUIOEvent#moveCursorEvent(TUIOCursor)
 		 */
 		@Override
-		public void moveCursorEvent(TUIOCursor tuioCursor) {
+		public void moveCursorEvent(final TUIOCursor tuioCursor) {
 			// Update by just replacing the cursor
 			newCursorEvent(tuioCursor);
 			processWithNextBlocks();
 		}
 
 		private void processWithNextBlocks() {
+			final Collection<TouchPoint> touchPointList = currentTouchPoints.values();
 			for (final TouchPointProcessor nextBlock : nextBlocks) {
-				nextBlock.process(currentTouchPoints.values());
+				nextBlock.process(touchPointList);
 			}
 		}
 	}
@@ -110,7 +112,7 @@ public class TuioController extends AbstractInputController {
 	/**
 	 * Listener to the TUIO client, adapting the input events into {@link TouchPoint}s.
 	 */
-	private TUIOEvent tuioClientAdapter = new TuioClientAdapter();
+	private final TUIOEvent tuioClientAdapter = new TuioClientAdapter();
 
 	/**
 	 * Default constructor making use of the default TUIO port number to connect to the TUIO server.

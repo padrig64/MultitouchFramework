@@ -25,12 +25,11 @@
 
 package com.github.gestureengine.base.input.filter;
 
+import com.github.gestureengine.api.input.controller.TouchPoint;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.github.gestureengine.api.input.controller.TouchPoint;
 
 public class BoundingBoxFilter extends AbstractInputFilter {
 
@@ -39,7 +38,7 @@ public class BoundingBoxFilter extends AbstractInputFilter {
 	private final List<TouchPoint> filteredTouchPoints = new ArrayList<TouchPoint>();
 
 	@Override
-	public void process(Collection<TouchPoint> data) {
+	public void process(final Collection<TouchPoint> data) {
 //		final int cursorCount = cursorPoints.size();
 //		if (filteredTouchPoints.size() == cursorCount) {
 //			// Filter cursor points
