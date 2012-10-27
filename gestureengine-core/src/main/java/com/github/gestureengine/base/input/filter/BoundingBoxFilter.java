@@ -25,74 +25,66 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.input.controller.TouchPoint;
-import java.awt.Point;
-import java.util.ArrayList;
+import com.github.gestureengine.api.flow.TouchPoint;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoundingBoxFilter extends AbstractInputFilter {
 
-	private static final int MAX_DIFF = 5;
+	private static final int MAX_DIFF = 10;
 
-	private final List<TouchPoint> filteredTouchPoints = new ArrayList<TouchPoint>();
+	private Map<Long, TouchPoint> filteredTouchPoints = new HashMap<Long, TouchPoint>();
 
 	@Override
-	public void process(final Collection<TouchPoint> data) {
-//		final int cursorCount = cursorPoints.size();
-//		if (filteredTouchPoints.size() == cursorCount) {
-//			// Filter cursor points
-//			for (int i = 0; i < cursorCount; i++) {
-//				final Point filteredCursor = filteredTouchPoints.get(i);
-//				final Point newCursor = cursorPoints.get(i);
-//
-//				filterPoint(newCursor, filteredCursor);
-//			}
-//
-//			// Filter mean point
-//			if (meanPoint == null) {
-//				// No mean point to be filtered
-//				filteredMeanPoint = null;
-//			} else if (filteredMeanPoint == null) {
-//				// Mean point cannot be filtered yet, so just copy it
-//				filteredMeanPoint = new Point(meanPoint);
-//			} else {
-//				// Filter
-//				filterPoint(meanPoint, filteredMeanPoint);
-//			}
-//		} else {
-//			// Not the same number of fingers as before so just duplicate the list
-//			filteredTouchPoints.clear();
-//			for (final Point cursor : cursorPoints) {
-//				filteredTouchPoints.add(new Point(cursor));
-//			}
-//
-//			if (meanPoint == null) {
-//				// No mean point at all
-//				filteredMeanPoint = null;
-//			} else {
-//				filteredMeanPoint = new Point(meanPoint);
-//			}
-//		}
+	public void process(final Collection<TouchPoint> touchPoints) {
+		// Quick way to remove the points that are no longer there
+		final Map<Long, TouchPoint> oldFilteredPoints = filteredTouchPoints;
+		filteredTouchPoints = new HashMap<Long, TouchPoint>();
+
+		for (final TouchPoint rawTouchPoint : touchPoints) {
+			final TouchPoint oldFilteredTouchPoint = oldFilteredPoints.get(rawTouchPoint.getId());
+			if (oldFilteredTouchPoint == null) {
+				// Touch point was not yet filtered, so just added it now to the list
+				filteredTouchPoints.put(rawTouchPoint.getId(), rawTouchPoint);
+			} else {
+				// Touch point was already filtered
+				final TouchPoint newFilteredTouchPoint = filterTouchPoint(rawTouchPoint, oldFilteredTouchPoint);
+				filteredTouchPoints.put(rawTouchPoint.getId(), newFilteredTouchPoint);
+			}
+		}
+
+		forwardToNextBlocks(filteredTouchPoints.values());
 	}
 
-	private void filterPoint(final Point newCursor, final Point filteredCursor) {
-		// Move box on X axis if needed
-		if (newCursor.x < (filteredCursor.x - MAX_DIFF)) {
-			filteredCursor.x = newCursor.x + MAX_DIFF;
-		} else if (newCursor.x > (filteredCursor.x + MAX_DIFF)) {
-			filteredCursor.x = newCursor.x - MAX_DIFF;
+	private TouchPoint filterTouchPoint(final TouchPoint rawTouchPoint, final TouchPoint oldFilteredTouchPoint) {
+		final int filteredX;
+		final int filteredY;
+
+		// Filter on the X axis
+		if (rawTouchPoint.getX() < (oldFilteredTouchPoint.getX() - MAX_DIFF)) {
+			// New position is out of the box, so move the box
+			filteredX = rawTouchPoint.getX() + MAX_DIFF;
+		} else if (rawTouchPoint.getX() > (oldFilteredTouchPoint.getX() + MAX_DIFF)) {
+			// New position is out of the box, so move the box
+			filteredX = rawTouchPoint.getX() - MAX_DIFF;
+		} else {
+			// Just reuse the old position
+			filteredX = oldFilteredTouchPoint.getX();
 		}
 
-		// Move box on Y axis if needed
-		if (newCursor.y < (filteredCursor.y - MAX_DIFF)) {
-			filteredCursor.y = newCursor.y + MAX_DIFF;
-		} else if (newCursor.y > (filteredCursor.y + MAX_DIFF)) {
-			filteredCursor.y = newCursor.y - MAX_DIFF;
+		// Filter on the Y axis
+		if (rawTouchPoint.getY() < (oldFilteredTouchPoint.getY() - MAX_DIFF)) {
+			// New position is out of the box, so move the box
+			filteredY = rawTouchPoint.getY() + MAX_DIFF;
+		} else if (rawTouchPoint.getY() > (oldFilteredTouchPoint.getY() + MAX_DIFF)) {
+			// New position is out of the box, so move the box
+			filteredY = rawTouchPoint.getY() - MAX_DIFF;
+		} else {
+			// Just reuse the old position
+			filteredY = oldFilteredTouchPoint.getY();
 		}
 
-		// Update new cursor with filtered cursor
-		newCursor.x = filteredCursor.x;
-		newCursor.y = filteredCursor.y;
+		return new TouchPoint(rawTouchPoint.getId(), filteredX, filteredY);
 	}
 }

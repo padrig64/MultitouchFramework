@@ -23,35 +23,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.input.controller;
+package com.github.gestureengine.base.input.filter;
 
-public class TouchPoint {
+import com.github.gestureengine.api.flow.TouchPoint;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-	private final int id;
+public class NoChangeFilter extends AbstractInputFilter {
 
-	private final int x;
+	private Set<TouchPoint> lastTouchPoints = new HashSet<TouchPoint>();
 
-	private final int y;
+	@Override
+	public void process(final Collection<TouchPoint> touchPoints) {
+		boolean changed = false;
 
-	public TouchPoint(final TouchPoint touchPoint) {
-		this(touchPoint.id, touchPoint.x, touchPoint.y);
-	}
+		if (touchPoints.size() == lastTouchPoints.size()) {
+			// Same number of points as last event, so check if all points are the same
+			for (final TouchPoint touchPoint : touchPoints) {
+				if (!lastTouchPoints.contains(touchPoint)) {
+					changed = true;
+					break;
+				}
+			}
+		} else {
+			// Not the same number of points as last event, so process them
+			changed = true;
+		}
 
-	public TouchPoint(final int id, final int x, final int y) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
+		if (changed) {
+			lastTouchPoints = new HashSet<TouchPoint>(touchPoints);
+			forwardToNextBlocks(touchPoints);
+		}
 	}
 }

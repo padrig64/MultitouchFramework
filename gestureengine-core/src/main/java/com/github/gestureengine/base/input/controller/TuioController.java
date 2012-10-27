@@ -25,8 +25,8 @@
 
 package com.github.gestureengine.base.input.controller;
 
+import com.github.gestureengine.api.flow.TouchPoint;
 import com.github.gestureengine.api.flow.TouchPointProcessor;
-import com.github.gestureengine.api.input.controller.TouchPoint;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
 import com.mlawrie.yajtl.TUIOReceiver;
@@ -55,9 +55,12 @@ public class TuioController extends AbstractInputController {
 		 */
 		@Override
 		public void newCursorEvent(final TUIOCursor tuioCursor) {
-			final TouchPoint touchPoint =
-					new TouchPoint(Long.valueOf(tuioCursor.id()).intValue(), Float.valueOf(tuioCursor.x()).intValue(),
-							Float.valueOf(tuioCursor.y()).intValue());
+			if (currentTouchPoints.containsKey(tuioCursor.id())) {
+				LOGGER.warn("+++ Cursor " + tuioCursor.id() + " was already tracked");
+			}
+
+			final TouchPoint touchPoint = new TouchPoint(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
+					Float.valueOf(tuioCursor.y()).intValue());
 			currentTouchPoints.put(tuioCursor.id(), touchPoint);
 			processWithNextBlocks();
 		}
@@ -67,6 +70,10 @@ public class TuioController extends AbstractInputController {
 		 */
 		@Override
 		public void removeCursorEvent(final TUIOCursor tuioCursor) {
+			if (!currentTouchPoints.containsKey(tuioCursor.id())) {
+				LOGGER.warn("--- Cursor " + tuioCursor.id() + " was not tracked");
+			}
+
 			currentTouchPoints.remove(tuioCursor.id());
 			processWithNextBlocks();
 		}
@@ -76,6 +83,10 @@ public class TuioController extends AbstractInputController {
 		 */
 		@Override
 		public void moveCursorEvent(final TUIOCursor tuioCursor) {
+			if (!currentTouchPoints.containsKey(tuioCursor.id())) {
+				LOGGER.warn("~~~ Cursor " + tuioCursor.id() + " was not tracked (it will now be tracked)");
+			}
+
 			// Update by just replacing the cursor
 			newCursorEvent(tuioCursor);
 			processWithNextBlocks();

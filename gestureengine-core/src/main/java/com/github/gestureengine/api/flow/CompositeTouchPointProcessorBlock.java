@@ -25,7 +25,6 @@
 
 package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.input.controller.TouchPoint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,8 +45,8 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	/**
 	 * List of next connected blocks.<br>They will be connected to the last sub-block only.
 	 *
-	 * @see #connect(Object)
-	 * @see #disconnect(Object)
+	 * @see #queue(Object)
+	 * @see #dequeue(Object)
 	 */
 	private final List<TouchPointProcessor> nextBlocks = new ArrayList<TouchPointProcessor>();
 
@@ -62,16 +61,16 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 
 			// Disconnect next blocks from the previously last block from the list
 			for (final TouchPointProcessor nextBlock : nextBlocks) {
-				lastSubBlock.disconnect(nextBlock);
+				lastSubBlock.dequeue(nextBlock);
 			}
 
 			// Connect new sub-block to the previously last sub-block from the list
-			lastSubBlock.connect(subBlock);
+			lastSubBlock.queue(subBlock);
 		}
 
 		// Connect next blocks to the new (last) sub-block
 		for (final TouchPointProcessor nextBlock : nextBlocks) {
-			subBlock.disconnect(nextBlock);
+			subBlock.dequeue(nextBlock);
 		}
 
 		// Add new sub-block to the list
@@ -90,13 +89,13 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 				// Disconnect it from previous sub-block
 				final TouchPointProcessorBlock<TouchPointProcessor> previousSubBlock =
 						subBlocks.get(previousSubBlockIndex);
-				previousSubBlock.disconnect(subBlock);
+				previousSubBlock.dequeue(subBlock);
 
 				// Reconnect next sub-block to previous sub-block
 				final int nextSubBlockIndex = subBlockIndex + 1;
 				if (nextSubBlockIndex < subBlocks.size()) {
 					final TouchPointProcessorBlock<TouchPointProcessor> nextSubBlock = subBlocks.get(nextSubBlockIndex);
-					previousSubBlock.connect(nextSubBlock);
+					previousSubBlock.queue(nextSubBlock);
 				}
 			}
 
@@ -104,7 +103,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 //			final int nextSubBlockIndex = subBlockIndex + 1;
 //			if (nextSubBlockIndex < subBlocks.size()) {
 //				final DataProcessorBlock<D, N> nextSubBlock = subBlocks.get(nextSubBlockIndex);
-//				subBlock.disconnect((DataProcessorBlock<N, ?>) nextSubBlock);
+//				subBlock.dequeue((DataProcessorBlock<N, ?>) nextSubBlock);
 //			}
 //
 //			// TODO Reconnect next sub-block to previous sub-block
@@ -130,14 +129,14 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#connect(Object)
+	 * @see TouchPointProcessorBlock#queue(Object)
 	 */
 	@Override
-	public void connect(final TouchPointProcessor nextBlock) {
+	public void queue(final TouchPointProcessor nextBlock) {
 		// Connect next block to last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
-			lastSubBlock.connect(nextBlock);
+			lastSubBlock.queue(nextBlock);
 		}
 
 		// Add next block to the list
@@ -145,14 +144,14 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#disconnect(Object)
+	 * @see TouchPointProcessorBlock#dequeue(Object)
 	 */
 	@Override
-	public void disconnect(final TouchPointProcessor nextBlock) {
+	public void dequeue(final TouchPointProcessor nextBlock) {
 		// Disconnect next block from last sub-block
 		if (!subBlocks.isEmpty()) {
 			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
-			lastSubBlock.disconnect(nextBlock);
+			lastSubBlock.dequeue(nextBlock);
 		}
 
 		// Remove next block from the list

@@ -23,17 +23,62 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.base.gesture.listener.SpreadListener;
-import java.util.Collection;
+public class TouchPoint {
 
-public class SpreadRecognizer extends AbstractGestureRecognizer<SpreadListener> {
+	private final long id;
+
+	private final int x;
+
+	private final int y;
+
+	public TouchPoint(final TouchPoint touchPoint) {
+		this(touchPoint.id, touchPoint.x, touchPoint.y);
+	}
+
+	public TouchPoint(final long id, final int x, final int y) {
+		this.id = id;
+		this.x = x;
+		this.y = y;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints, final Collection<Touchable> touchedAreas) {
-		// TODO
+	public int hashCode() {
+		int hash = (int) (id ^ (id >>> 32));
+		hash = 31 * hash + x;
+		hash = 31 * hash + y;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		final boolean equal;
+
+		if (this == o) {
+			// Same instance
+			equal = true;
+		} else if ((o == null) || (getClass() != o.getClass())) {
+			// Different class
+			equal = false;
+		} else {
+			// Same class, so check attributes
+			final TouchPoint that = (TouchPoint) o;
+			equal = (id == that.id) && (x == that.x) && (y == that.y);
+		}
+
+		return equal;
 	}
 }

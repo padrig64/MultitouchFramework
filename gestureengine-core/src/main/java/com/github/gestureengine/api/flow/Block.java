@@ -38,12 +38,12 @@ public interface Block<N> {
 	 *
 	 * @param nextBlock Block to be connected.
 	 */
-	public void connect(N nextBlock);
+	public void queue(N nextBlock);
 
 	/**
 	 * Disconnects the specified block from this block.
 	 *
 	 * @param nextBlock Block to be disconnected.
 	 */
-	public void disconnect(N nextBlock);
+	public void dequeue(N nextBlock);
 }

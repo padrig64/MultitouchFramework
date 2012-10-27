@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.swing.flow;
 
+import com.github.gestureengine.api.flow.TouchPoint;
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.flow.TouchPointProcessorBlock;
-import com.github.gestureengine.api.input.controller.TouchPoint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,12 +48,12 @@ public class EDTTouchPointProcessorBlock implements TouchPointProcessorBlock<Tou
 	}
 
 	@Override
-	public void connect(final TouchPointProcessor nextBlock) {
+	public void queue(final TouchPointProcessor nextBlock) {
 		nextBlocks.add(nextBlock);
 	}
 
 	@Override
-	public void disconnect(final TouchPointProcessor nextBlock) {
+	public void dequeue(final TouchPointProcessor nextBlock) {
 		nextBlocks.remove(nextBlock);
 	}
 

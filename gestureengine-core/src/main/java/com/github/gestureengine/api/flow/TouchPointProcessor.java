@@ -25,10 +25,9 @@
 
 package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.input.controller.TouchPoint;
 import java.util.Collection;
 
 public interface TouchPointProcessor {
 
-	public void process(Collection<TouchPoint> data);
+	public void process(Collection<TouchPoint> touchPoints);
 }

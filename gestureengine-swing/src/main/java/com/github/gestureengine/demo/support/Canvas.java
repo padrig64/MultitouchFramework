@@ -30,7 +30,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.JComponent;
 
 public class Canvas extends JComponent {
@@ -44,12 +46,31 @@ public class Canvas extends JComponent {
 
 	private final List<Layer> layers = new ArrayList<Layer>();
 
+	private final Set<Layer> visibleLayers = new HashSet<Layer>();
+
 	public void addLayer(final Layer layer) {
 		layers.add(layer);
+		visibleLayers.add(layer);
+		repaint();
 	}
 
 	public void removeLayer(final Layer layer) {
+		visibleLayers.remove(layer);
 		layers.remove(layer);
+		repaint();
+	}
+
+	public boolean isLayerVisible(final Layer layer) {
+		return visibleLayers.contains(layer);
+	}
+
+	public void setLayerVisible(final Layer layer, final boolean visible) {
+		if (visible) {
+			visibleLayers.add(layer);
+		} else {
+			visibleLayers.remove(layer);
+		}
+		repaint();
 	}
 
 	@Override
@@ -60,15 +81,16 @@ public class Canvas extends JComponent {
 		graphics.setColor(BACKGROUND_COLOR);
 		graphics.fillRect(0, 0, getWidth(), getHeight());
 
+		// Set anti-aliasing
 		if (graphics instanceof Graphics2D) {
 			final Graphics2D g2d = (Graphics2D) graphics;
-
-			// Set anti-aliasing
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			// Draw all layers
+			// Draw all visible layers
 			for (final Layer layer : layers) {
-				layer.paint(g2d);
+				if (visibleLayers.contains(layer)) {
+					layer.paint(g2d);
+				}
 			}
 		}
 	}

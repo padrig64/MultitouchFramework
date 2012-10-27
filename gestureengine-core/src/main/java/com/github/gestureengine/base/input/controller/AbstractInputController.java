@@ -59,7 +59,7 @@ public abstract class AbstractInputController implements InputController {
 	 * @param touchPointProcessor Touch point processor to be connected.
 	 */
 	@Override
-	public void connect(final TouchPointProcessor touchPointProcessor) {
+	public void queue(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.add(touchPointProcessor);
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractInputController implements InputController {
 	 * @param touchPointProcessor Touch point processor to be disconnected.
 	 */
 	@Override
-	public void disconnect(final TouchPointProcessor touchPointProcessor) {
+	public void dequeue(final TouchPointProcessor touchPointProcessor) {
 		nextBlocks.remove(touchPointProcessor);
 	}
 

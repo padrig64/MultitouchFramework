@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.gesture.recognizer;
 
 import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.input.controller.TouchPoint;
+import com.github.gestureengine.api.flow.TouchPoint;
 import com.github.gestureengine.base.gesture.listener.RotateListener;
 import java.util.Collection;
 
