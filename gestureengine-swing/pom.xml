@@ -22,5 +22,12 @@
             <artifactId>gestureengine-core</artifactId>
         </dependency>
 
+        <!-- Layout -->
+
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

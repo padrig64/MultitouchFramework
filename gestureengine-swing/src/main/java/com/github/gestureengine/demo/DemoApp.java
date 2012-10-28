@@ -38,18 +38,21 @@ import com.github.gestureengine.demo.support.MeanPointLayer;
 import com.github.gestureengine.demo.support.TouchPointsLayer;
 import com.github.gestureengine.swing.flow.EDTTouchPointProcessorBlock;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,12 +133,16 @@ public class DemoApp extends JFrame {
 
 	private void initComponents() {
 		final JPanel contentPane = new JPanel(new BorderLayout());
+		contentPane.setBackground(Color.WHITE);
 		setContentPane(canvas);
 
 		// Create layer list
-		final JPanel layerListPanel = new JPanel();
-		layerListPanel.setLayout(new BoxLayout(layerListPanel, BoxLayout.PAGE_AXIS));
+		final JPanel layerListPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]related[]"));
 		contentPane.add(new JScrollPane(layerListPanel), BorderLayout.WEST);
+
+		final JLabel titleLabel = new JLabel("Layers");
+		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
+		layerListPanel.add(titleLabel);
 
 		// Add layers to the list
 		final LayerProcessor[] layerProcessors = LayerProcessor.values();
