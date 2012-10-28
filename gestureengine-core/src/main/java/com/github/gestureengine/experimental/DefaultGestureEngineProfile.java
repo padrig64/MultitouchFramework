@@ -23,11 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base;
+package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.GestureManager;
+import com.github.gestureengine.api.area.TouchPointToAreaProcessor;
 import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.area.TouchableAreaController;
 import com.github.gestureengine.api.flow.CompositeTouchPointProcessorBlock;
 import com.github.gestureengine.api.gesture.definition.GestureDefinition;
 import com.github.gestureengine.api.gesture.listener.GestureListener;
@@ -35,16 +34,16 @@ import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
 import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
 
-public class DefaultGestureManager implements GestureManager {
+public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
 	private InputController inputController = null;
 
 	private final CompositeTouchPointProcessorBlock filterComposition = new CompositeTouchPointProcessorBlock();
 
-	private TouchableAreaController toc = null;
+	private TouchPointToAreaProcessor toc = null;
 
 	/**
-	 * @see GestureManager#getInputController()
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#getInputController()
 	 */
 	@Override
 	public InputController getInputController() {
@@ -52,7 +51,7 @@ public class DefaultGestureManager implements GestureManager {
 	}
 
 	/**
-	 * @see GestureManager#setInputController(InputController)
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(InputController)
 	 */
 	@Override
 	public void setInputController(final InputController inputController) {
@@ -68,7 +67,7 @@ public class DefaultGestureManager implements GestureManager {
 	}
 
 	/**
-	 * @see GestureManager#addInputFilter(InputFilter)
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#addInputFilter(InputFilter)
 	 */
 	@Override
 	public void addInputFilter(final InputFilter inputFilter) {
@@ -76,18 +75,18 @@ public class DefaultGestureManager implements GestureManager {
 	}
 
 	/**
-	 * @see GestureManager#removeInputFilter(InputFilter)
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#removeInputFilter(InputFilter)
 	 */
 	@Override
 	public void removeInputFilter(final InputFilter inputFilter) {
 		filterComposition.removeSubBlock(inputFilter);
 	}
 
-	public TouchableAreaController getTouchableObjectController() {
+	public TouchPointToAreaProcessor getTouchableObjectController() {
 		return toc;
 	}
 
-	public void setTouchableObjectController(final TouchableAreaController toc) {
+	public void setTouchableObjectController(final TouchPointToAreaProcessor toc) {
 		if (this.toc != null) {
 			filterComposition.dequeue(this.toc);
 		}

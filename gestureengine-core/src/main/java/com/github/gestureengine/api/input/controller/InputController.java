@@ -31,7 +31,7 @@ import com.github.gestureengine.api.flow.TouchPointProcessor;
 /**
  * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
  * touch input processing. They provide touch points to one or several touch point processors, typically {@link
- * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.area.TouchableAreaController}s.
+ * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.area.TouchPointToAreaProcessor}s.
  *
  * @see Block
  * @see TouchPointProcessor

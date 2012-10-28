@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api;
+package com.github.gestureengine.experimental;
 
 import com.github.gestureengine.api.area.Touchable;
 import com.github.gestureengine.api.gesture.definition.GestureDefinition;
@@ -32,7 +32,7 @@ import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
 import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
 
-public interface GestureManager {
+public interface GestureEngineProfile {
 
 	public InputController getInputController();
 

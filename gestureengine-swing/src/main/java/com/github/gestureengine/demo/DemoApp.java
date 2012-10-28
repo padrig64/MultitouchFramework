@@ -25,8 +25,13 @@
 
 package com.github.gestureengine.demo;
 
+import com.github.gestureengine.api.area.TouchPointToAreaProcessor;
+import com.github.gestureengine.api.area.Touchable;
+import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.api.flow.TouchPointAreaProcessor;
 import com.github.gestureengine.api.flow.TouchPointProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.base.area.TouchPointToScreenProcessor;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
@@ -44,6 +49,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collection;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -87,10 +93,10 @@ public class DemoApp extends JFrame {
 
 	private enum LayerProcessor {
 
-		MEAN_POINT("Mean point", new MeanPointLayer(canvas)),
-		TOUCH_POINTS("Touch points", new TouchPointsLayer(canvas)),
-		BOUNDING_BOX_FILTER_OUTPUT("Bounding box filter output", new BoundingBoxFilterOutputLayer(canvas)),
-		MEAN_LINES("Mean lines", new MeanLinesLayer(canvas));
+		MEAN_POINT("Filtered mean point", new MeanPointLayer(canvas)),
+		TOUCH_POINTS("Raw touch points", new TouchPointsLayer(canvas)),
+		BOUNDING_BOX_FILTER_OUTPUT("Filtered touch points", new BoundingBoxFilterOutputLayer(canvas)),
+		MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas));
 
 		private final String presentationName;
 		private final Layer layer;
@@ -150,7 +156,7 @@ public class DemoApp extends JFrame {
 			final JCheckBox layerControlCheckBox = new JCheckBox(layerProcessor.toString());
 			layerControlCheckBox.addItemListener(layerControlAdapter);
 			layerControlCheckBox.setSelected(true);
-			layerListPanel.add(layerControlCheckBox);
+			layerListPanel.add(layerControlCheckBox, "gap 10");
 		}
 
 		// Configure canvas
@@ -162,9 +168,10 @@ public class DemoApp extends JFrame {
 	}
 
 	private void initGestureProfile() {
+		// Create input source
 		final TuioController inputController = new TuioController();
 
-		// Configure raw touch point processing
+		// Configure layers for raw touch points
 		final EDTTouchPointProcessorBlock edtRawTouchPointProcessorBlock = new EDTTouchPointProcessorBlock();
 		edtRawTouchPointProcessorBlock.queue(LayerProcessor.TOUCH_POINTS.getTouchPointProcessor());
 		inputController.queue(edtRawTouchPointProcessorBlock);
@@ -172,16 +179,28 @@ public class DemoApp extends JFrame {
 		// Configure touch point filtering
 		final InputFilter boundingBoxFilter = new BoundingBoxFilter();
 		inputController.queue(boundingBoxFilter);
-
 		final NoChangeFilter noChangeFilter = new NoChangeFilter();
 		boundingBoxFilter.queue(noChangeFilter);
 
+		// Configure layers for filtered touch points
 		final EDTTouchPointProcessorBlock edtFilteredTouchPointProcessBlock = new EDTTouchPointProcessorBlock();
 		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.BOUNDING_BOX_FILTER_OUTPUT.getTouchPointProcessor());
 		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.MEAN_POINT.getTouchPointProcessor());
 		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.MEAN_LINES.getTouchPointProcessor());
 		noChangeFilter.queue(edtFilteredTouchPointProcessBlock);
 
+		// Configure touch point to area dispatching
+		final TouchPointToAreaProcessor screenProcessor = new TouchPointToScreenProcessor();
+		screenProcessor.queue(new TouchPointAreaProcessor() {
+			@Override
+			public void process(Collection<TouchPoint> touchPoints, Collection<Touchable> touchedAreas) {
+				System.out.println(
+						"DemoApp.process: " + touchPoints + " " + touchedAreas.iterator().next().getTouchableBounds());
+			}
+		});
+		noChangeFilter.queue(screenProcessor);
+
+		// Activate input controller
 		inputController.start();
 	}
 

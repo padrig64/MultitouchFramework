@@ -23,67 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.area;
 
-public class TouchPoint {
+import com.github.gestureengine.api.area.TouchPointToAreaProcessor;
+import com.github.gestureengine.api.area.Touchable;
+import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.api.flow.TouchPointAreaProcessor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-	private final long id;
+public abstract class AbstractTouchPointToAreaProcessor implements TouchPointToAreaProcessor {
 
-	private final int x;
+	private final List<TouchPointAreaProcessor> nextBlocks = new ArrayList<TouchPointAreaProcessor>();
 
-	private final int y;
-
-	public TouchPoint(final TouchPoint touchPoint) {
-		this(touchPoint.id, touchPoint.x, touchPoint.y);
-	}
-
-	public TouchPoint(final long id, final int x, final int y) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
+	@Override
+	public void queue(final TouchPointAreaProcessor touchPointAreaProcessor) {
+		nextBlocks.add(touchPointAreaProcessor);
 	}
 
 	@Override
-	public int hashCode() {
-		int hash = (int) (id ^ (id >>> 32));
-		hash = 31 * hash + x;
-		hash = 31 * hash + y;
-		return hash;
+	public void dequeue(final TouchPointAreaProcessor touchPointAreaProcessor) {
+		nextBlocks.remove(touchPointAreaProcessor);
 	}
 
-	@Override
-	public boolean equals(final Object o) {
-		final boolean equal;
-
-		if (this == o) {
-			// Same instance
-			equal = true;
-		} else if ((o == null) || (getClass() != o.getClass())) {
-			// Different class
-			equal = false;
-		} else {
-			// Same class, so check attributes
-			final TouchPoint that = (TouchPoint) o;
-			equal = (id == that.id) && (x == that.x) && (y == that.y);
+	protected void forwardToNextBlocks(final Collection<TouchPoint> touchPoints,
+									   final Collection<Touchable> touchableObjects) {
+		for (final TouchPointAreaProcessor nextBlock : nextBlocks) {
+			nextBlock.process(touchPoints, touchableObjects);
 		}
-
-		return equal;
-	}
-
-	@Override
-	public String toString() {
-		return "{id=" + id + "; x=" + x + "; y=" + y + "}";
 	}
 }

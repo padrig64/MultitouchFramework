@@ -23,67 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.swing.area;
 
-public class TouchPoint {
+import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.base.area.AbstractTouchPointToAreaProcessor;
+import java.util.Collection;
 
-	private final long id;
-
-	private final int x;
-
-	private final int y;
-
-	public TouchPoint(final TouchPoint touchPoint) {
-		this(touchPoint.id, touchPoint.x, touchPoint.y);
-	}
-
-	public TouchPoint(final long id, final int x, final int y) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
+public class TouchPointToComponentProcessor extends AbstractTouchPointToAreaProcessor {
 
 	@Override
-	public int hashCode() {
-		int hash = (int) (id ^ (id >>> 32));
-		hash = 31 * hash + x;
-		hash = 31 * hash + y;
-		return hash;
-	}
+	public void process(final Collection<TouchPoint> touchPoints) {
 
-	@Override
-	public boolean equals(final Object o) {
-		final boolean equal;
-
-		if (this == o) {
-			// Same instance
-			equal = true;
-		} else if ((o == null) || (getClass() != o.getClass())) {
-			// Different class
-			equal = false;
-		} else {
-			// Same class, so check attributes
-			final TouchPoint that = (TouchPoint) o;
-			equal = (id == that.id) && (x == that.x) && (y == that.y);
-		}
-
-		return equal;
-	}
-
-	@Override
-	public String toString() {
-		return "{id=" + id + "; x=" + x + "; y=" + y + "}";
 	}
 }

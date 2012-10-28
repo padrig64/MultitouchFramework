@@ -25,25 +25,31 @@
 
 package com.github.gestureengine.api.flow;
 
-public class TouchPoint {
+public class Bounds {
 
-	private final long id;
+	private final String id;
 
 	private final int x;
 
 	private final int y;
 
-	public TouchPoint(final TouchPoint touchPoint) {
-		this(touchPoint.id, touchPoint.x, touchPoint.y);
+	private final int width;
+
+	private final int height;
+
+	public Bounds(final Bounds area) {
+		this(area.id, area.x, area.y, area.width, area.height);
 	}
 
-	public TouchPoint(final long id, final int x, final int y) {
+	public Bounds(final String id, final int x, final int y, final int width, final int height) {
 		this.id = id;
 		this.x = x;
 		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -55,35 +61,64 @@ public class TouchPoint {
 		return y;
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public boolean isIn(final TouchPoint touchPoint) {
+		return isIn(touchPoint.getX(), touchPoint.getY());
+	}
+
+	public boolean isIn(final int x, final int y) {
+		return (this.x <= x) && (x <= (this.x + this.width)) && (this.y <= y) && (y <= (this.y + height));
+	}
+
 	@Override
 	public int hashCode() {
-		int hash = (int) (id ^ (id >>> 32));
-		hash = 31 * hash + x;
-		hash = 31 * hash + y;
-		return hash;
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + width;
+		result = 31 * result + height;
+		return result;
 	}
 
 	@Override
 	public boolean equals(final Object o) {
-		final boolean equal;
-
 		if (this == o) {
-			// Same instance
-			equal = true;
-		} else if ((o == null) || (getClass() != o.getClass())) {
-			// Different class
-			equal = false;
-		} else {
-			// Same class, so check attributes
-			final TouchPoint that = (TouchPoint) o;
-			equal = (id == that.id) && (x == that.x) && (y == that.y);
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
 		}
 
-		return equal;
+		final Bounds area = (Bounds) o;
+
+		if (height != area.height) {
+			return false;
+		}
+		if (width != area.width) {
+			return false;
+		}
+		if (x != area.x) {
+			return false;
+		}
+		if (y != area.y) {
+			return false;
+		}
+		if (id != null ? !id.equals(area.id) : area.id != null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "{id=" + id + "; x=" + x + "; y=" + y + "}";
+		return "{id=" + id + "; x=" + x + "; y=" + y + "; w=" + width + "; h=" + height + "}";
 	}
 }

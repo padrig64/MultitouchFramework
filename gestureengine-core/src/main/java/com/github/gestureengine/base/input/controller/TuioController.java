@@ -88,7 +88,9 @@ public class TuioController extends AbstractInputController {
 			}
 
 			// Update by just replacing the cursor
-			newCursorEvent(tuioCursor);
+			final TouchPoint touchPoint = new TouchPoint(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
+					Float.valueOf(tuioCursor.y()).intValue());
+			currentTouchPoints.put(tuioCursor.id(), touchPoint);
 			processWithNextBlocks();
 		}
 
