@@ -23,16 +23,46 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.swing.area;
+package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.base.area.AbstractCursorToAreaDispatcher;
+import com.github.gestureengine.api.region.Region;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
-public class CursorToComponentDispatcher extends AbstractCursorToAreaDispatcher {
+public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispatcher {
+
+	private Map<Cursor, Region> cursorToRegion = new HashMap<Cursor, Region>();
+
+	private final Map<Region, Collection<Cursor>> regionToCursors = new WeakHashMap<Region, Collection<Cursor>>();
 
 	@Override
 	public void process(final Collection<Cursor> cursors) {
+		final Map<Cursor, Region> oldCursors = cursorToRegion;
+		cursorToRegion = new HashMap<Cursor, Region>();
 
+		for (final Cursor cursor : cursors) {
+			final Region region = oldCursors.get(cursor);
+			if (region == null) {
+				// Cursor was not bound to a region
+				// TODO Find a region for this cursor
+			} else {
+
+			}
+		}
+
+		forwardToNextBlocks();
+	}
+
+	private void forwardToNextBlocks() {
+		for (final Map.Entry<Region, Collection<Cursor>> entry : regionToCursors.entrySet()) {
+			forwardToNextBlocks(entry.getValue(), Collections.singleton(entry.getKey()));
+			if (entry.getValue().isEmpty()) {
+				regionToCursors.remove(entry.getKey()); // FIXME Cannot do that here
+			}
+		}
 	}
 }

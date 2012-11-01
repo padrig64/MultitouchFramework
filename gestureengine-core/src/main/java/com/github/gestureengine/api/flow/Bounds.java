@@ -37,8 +37,8 @@ public class Bounds {
 
 	private final int height;
 
-	public Bounds(final Bounds area) {
-		this(area.id, area.x, area.y, area.width, area.height);
+	public Bounds(final Bounds bounds) {
+		this(bounds.id, bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	public Bounds(final String id, final int x, final int y, final int width, final int height) {
@@ -96,21 +96,21 @@ public class Bounds {
 			return false;
 		}
 
-		final Bounds area = (Bounds) o;
+		final Bounds bounds = (Bounds) o;
 
-		if (height != area.height) {
+		if (height != bounds.height) {
 			return false;
 		}
-		if (width != area.width) {
+		if (width != bounds.width) {
 			return false;
 		}
-		if (x != area.x) {
+		if (x != bounds.x) {
 			return false;
 		}
-		if (y != area.y) {
+		if (y != bounds.y) {
 			return false;
 		}
-		if (id != null ? !id.equals(area.id) : area.id != null) {
+		if (id != null ? !id.equals(bounds.id) : bounds.id != null) {
 			return false;
 		}
 

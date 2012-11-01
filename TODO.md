@@ -1,3 +1,5 @@
+. Remove references to "area controller"
+
 . Better packaging: swing, basic gestures, windows 7 touch, macbook trackpad, javafx, etc.
 . Windows Touch events
 . MacBook trackpad / magic mouse events

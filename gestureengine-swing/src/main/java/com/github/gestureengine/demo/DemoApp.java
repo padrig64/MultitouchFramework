@@ -25,16 +25,16 @@
 
 package com.github.gestureengine.demo;
 
-import com.github.gestureengine.api.area.CursorToAreaDispatcher;
-import com.github.gestureengine.api.area.TouchableArea;
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorAreaProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.flow.CursorRegionProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.base.area.CursorToScreenDispatcher;
+import com.github.gestureengine.api.region.CursorToRegionDispatcher;
+import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
+import com.github.gestureengine.base.region.CursorToScreenDispatcher;
 import com.github.gestureengine.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.gestureengine.demo.support.Canvas;
 import com.github.gestureengine.demo.support.CursorsLayer;
@@ -189,13 +189,13 @@ public class DemoApp extends JFrame {
 		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_LINES.getCursorProcessor());
 		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
 
-		// Configure cursor to area dispatching
-		final CursorToAreaDispatcher screenProcessor = new CursorToScreenDispatcher();
-		screenProcessor.queue(new CursorAreaProcessor() {
+		// Configure cursor to region dispatching
+		final CursorToRegionDispatcher screenProcessor = new CursorToScreenDispatcher();
+		screenProcessor.queue(new CursorRegionProcessor() {
 			@Override
-			public void process(Collection<Cursor> cursors, Collection<TouchableArea> touchableAreas) {
-				System.out.println(
-						"DemoApp.process: " + cursors + " " + touchableAreas.iterator().next().getTouchableBounds());
+			public void process(Collection<Cursor> cursors, Collection<Region> regions) {
+				System.out
+						.println("DemoApp.process: " + cursors + " " + regions.iterator().next().getTouchableBounds());
 			}
 		});
 		noChangeFilter.queue(screenProcessor);

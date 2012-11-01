@@ -23,42 +23,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.area;
+package com.github.gestureengine.base.region;
 
-import com.github.gestureengine.api.area.TouchableArea;
-import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import com.github.gestureengine.api.flow.CursorRegionProcessor;
+import com.github.gestureengine.api.region.CursorToRegionDispatcher;
+import com.github.gestureengine.api.region.Region;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class CursorToScreenDispatcher extends AbstractCursorToAreaDispatcher {
+public abstract class AbstractCursorToRegionDispatcher implements CursorToRegionDispatcher {
 
-	private static class TouchableScreen implements TouchableArea {
+	private final List<CursorRegionProcessor> nextBlocks = new ArrayList<CursorRegionProcessor>();
 
-		private final Bounds screenBounds;
-
-		public TouchableScreen() {
-			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			screenBounds = new Bounds("Screen", 0, 0, screenSize.width, screenSize.height);
-		}
-
-		@Override
-		public Bounds getTouchableBounds() {
-			return screenBounds;
-		}
-	}
-
-	private final Collection<TouchableArea> touchableAreas;
-
-	public CursorToScreenDispatcher() {
-		touchableAreas = new ArrayList<TouchableArea>();
-		touchableAreas.add(new TouchableScreen());
+	@Override
+	public void queue(final CursorRegionProcessor cursorRegionProcessor) {
+		nextBlocks.add(cursorRegionProcessor);
 	}
 
 	@Override
-	public void process(final Collection<Cursor> cursors) {
-		forwardToNextBlocks(cursors, touchableAreas);
+	public void dequeue(final CursorRegionProcessor cursorRegionProcessor) {
+		nextBlocks.remove(cursorRegionProcessor);
+	}
+
+	protected void forwardToNextBlocks(final Collection<Cursor> cursors, final Collection<Region> regions) {
+		for (final CursorRegionProcessor nextBlock : nextBlocks) {
+			nextBlock.process(cursors, regions);
+		}
 	}
 }

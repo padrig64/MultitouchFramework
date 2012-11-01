@@ -23,17 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.Region;
-import com.github.gestureengine.base.gesture.listener.PanListener;
-import java.util.Collection;
-
-public class PanRecognizer extends AbstractGestureRecognizer<PanListener> {
-
-	@Override
-	public void process(final Collection<Cursor> cursors, final Collection<Region> regions) {
-		// TODO
-	}
+public interface CursorRegionProcessorBlock<N> extends CursorRegionProcessor, Block<N> {
+	// Nothing to be done
 }

@@ -54,7 +54,7 @@ public abstract class AbstractInputController implements InputController {
 
 	/**
 	 * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-	 * input filters or touch area controllers.
+	 * input filters or region controllers.
 	 *
 	 * @param cursorProcessor Cursor processor to be connected.
 	 */
@@ -65,7 +65,7 @@ public abstract class AbstractInputController implements InputController {
 
 	/**
 	 * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-	 * instance, input filters or touch area controllers.
+	 * instance, input filters or region controllers.
 	 *
 	 * @param cursorProcessor Cursor processor to be disconnected.
 	 */

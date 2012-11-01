@@ -31,7 +31,7 @@ import com.github.gestureengine.api.flow.CursorProcessorBlock;
 /**
  * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors.
  * They provide the filtered cursors to one or several other cursor processors, typically other {@link InputFilter}s or
- * {@link com.github.gestureengine.api.area.CursorToAreaDispatcher}s.
+ * {@link com.github.gestureengine.api.region.CursorToRegionDispatcher}s.
  *
  * @see com.github.gestureengine.api.flow.CursorProcessorBlock
  * @see com.github.gestureengine.api.flow.CursorProcessor
