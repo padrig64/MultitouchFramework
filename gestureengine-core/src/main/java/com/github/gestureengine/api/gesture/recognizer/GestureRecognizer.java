@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.api.gesture.recognizer;
 
-import com.github.gestureengine.api.flow.TouchPointAreaProcessorBlock;
+import com.github.gestureengine.api.flow.CursorAreaProcessorBlock;
 import com.github.gestureengine.api.gesture.listener.GestureListener;
 
-public interface GestureRecognizer<L extends GestureListener> extends TouchPointAreaProcessorBlock<L> {
+public interface GestureRecognizer<L extends GestureListener> extends CursorAreaProcessorBlock<L> {
 	// Nothing to be done
 }

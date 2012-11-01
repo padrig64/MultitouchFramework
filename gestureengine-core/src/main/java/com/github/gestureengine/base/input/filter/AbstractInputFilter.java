@@ -25,16 +25,16 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected touch point
- * processor to process the filtered touch input, by calling their {@link TouchPointProcessor#process(java.util.Collection)}
+ * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
+ * process the filtered touch input, by calling their {@link com.github.gestureengine.api.flow.CursorProcessor#process(java.util.Collection)}
  * method.
  *
  * @see InputFilter
@@ -42,35 +42,35 @@ import java.util.List;
 public abstract class AbstractInputFilter implements InputFilter {
 
 	/**
-	 * Touch point processors connected and processing the output touch points from this input controller.
+	 * Cursor processors connected and processing the output cursors from this input controller.
 	 */
-	private final List<TouchPointProcessor> nextBlocks = new ArrayList<TouchPointProcessor>();
+	private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
 	/**
-	 * Connects the specified touch point processor to this input controller block.<br>Touch point processor can be, for
+	 * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
+	 * input filters or touch area controllers.
+	 *
+	 * @param cursorProcessor Cursor processor to be connected.
+	 */
+	@Override
+	public void queue(final CursorProcessor cursorProcessor) {
+		nextBlocks.add(cursorProcessor);
+	}
+
+	/**
+	 * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
 	 * instance, input filters or touch area controllers.
 	 *
-	 * @param touchPointProcessor Touch point processor to be connected.
+	 * @param cursorProcessor Cursor processor to be disconnected.
 	 */
 	@Override
-	public void queue(final TouchPointProcessor touchPointProcessor) {
-		nextBlocks.add(touchPointProcessor);
+	public void dequeue(final CursorProcessor cursorProcessor) {
+		nextBlocks.remove(cursorProcessor);
 	}
 
-	/**
-	 * Disconnects the specified touch point processor from this input controller block.<br>Touch point processor can be,
-	 * for instance, input filters or touch area controllers.
-	 *
-	 * @param touchPointProcessor Touch point processor to be disconnected.
-	 */
-	@Override
-	public void dequeue(final TouchPointProcessor touchPointProcessor) {
-		nextBlocks.remove(touchPointProcessor);
-	}
-
-	protected void forwardToNextBlocks(final Collection<TouchPoint> touchPoints) {
-		for (final TouchPointProcessor nextBlock : nextBlocks) {
-			nextBlock.process(touchPoints);
+	protected void forwardToNextBlocks(final Collection<Cursor> cursors) {
+		for (final CursorProcessor nextBlock : nextBlocks) {
+			nextBlock.process(cursors);
 		}
 	}
 }

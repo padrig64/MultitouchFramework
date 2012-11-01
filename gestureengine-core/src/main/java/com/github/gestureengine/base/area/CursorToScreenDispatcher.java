@@ -23,8 +23,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.area;
 
-public interface TouchPointProcessorBlock<N> extends TouchPointProcessor, Block<N> {
-	// Nothing to be done
+import com.github.gestureengine.api.area.TouchableArea;
+import com.github.gestureengine.api.flow.Bounds;
+import com.github.gestureengine.api.flow.Cursor;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class CursorToScreenDispatcher extends AbstractCursorToAreaDispatcher {
+
+	private static class TouchableScreen implements TouchableArea {
+
+		private final Bounds screenBounds;
+
+		public TouchableScreen() {
+			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			screenBounds = new Bounds("Screen", 0, 0, screenSize.width, screenSize.height);
+		}
+
+		@Override
+		public Bounds getTouchableBounds() {
+			return screenBounds;
+		}
+	}
+
+	private final Collection<TouchableArea> touchableAreas;
+
+	public CursorToScreenDispatcher() {
+		touchableAreas = new ArrayList<TouchableArea>();
+		touchableAreas.add(new TouchableScreen());
+	}
+
+	@Override
+	public void process(final Collection<Cursor> cursors) {
+		forwardToNextBlocks(cursors, touchableAreas);
+	}
 }

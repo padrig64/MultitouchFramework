@@ -26,32 +26,32 @@
 package com.github.gestureengine.api.input.controller;
 
 import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.flow.CursorProcessor;
 
 /**
  * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
- * touch input processing. They provide touch points to one or several touch point processors, typically {@link
- * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.area.TouchPointToAreaProcessor}s.
+ * touch input processing. They provide cursors to one or several cursor processors, typically {@link
+ * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.area.CursorToAreaDispatcher}s.
  *
  * @see Block
- * @see TouchPointProcessor
+ * @see com.github.gestureengine.api.flow.CursorProcessor
  */
-public interface InputController extends Block<TouchPointProcessor> {
+public interface InputController extends Block<CursorProcessor> {
 
 	/**
-	 * States whether the input controller is started and is able to provide touch points or not.
+	 * States whether the input controller is started and is able to provide cursors or not.
 	 *
 	 * @return True if the controller is started, false otherwise.
 	 */
 	public boolean isStarted();
 
 	/**
-	 * Starts the input controller so that it can provide touch points.
+	 * Starts the input controller so that it can provide cursors.
 	 */
 	public void start();
 
 	/**
-	 * Stops the input controller so that it no longer provide touch points.
+	 * Stops the input controller so that it no longer provide cursors.
 	 */
 	public void stop();
 }

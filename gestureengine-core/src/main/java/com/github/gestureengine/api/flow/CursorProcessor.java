@@ -23,16 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.swing.area;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.base.area.AbstractTouchPointToAreaProcessor;
 import java.util.Collection;
 
-public class TouchPointToComponentProcessor extends AbstractTouchPointToAreaProcessor {
+public interface CursorProcessor {
 
-	@Override
-	public void process(final Collection<TouchPoint> touchPoints) {
-
-	}
+	public void process(Collection<Cursor> cursors);
 }

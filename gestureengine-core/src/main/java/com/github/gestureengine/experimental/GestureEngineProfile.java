@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.area.Touchable;
+import com.github.gestureengine.api.area.TouchableArea;
 import com.github.gestureengine.api.gesture.definition.GestureDefinition;
 import com.github.gestureengine.api.gesture.listener.GestureListener;
 import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
@@ -55,7 +55,7 @@ public interface GestureEngineProfile {
 	public <L extends GestureListener> void removeGestureListener(L gestureListener);
 
 	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener, Touchable touchableObject);
+															   L gestureListener, TouchableArea touchableObject);
 
-	public <L extends GestureListener> void removeGestureListener(L gestureListener, Touchable touchableObject);
+	public <L extends GestureListener> void removeGestureListener(L gestureListener, TouchableArea touchableObject);
 }

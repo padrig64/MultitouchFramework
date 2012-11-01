@@ -25,22 +25,22 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.area.TouchPointToAreaProcessor;
-import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.flow.CompositeTouchPointProcessorBlock;
+import com.github.gestureengine.api.area.CursorToAreaDispatcher;
+import com.github.gestureengine.api.area.TouchableArea;
 import com.github.gestureengine.api.gesture.definition.GestureDefinition;
 import com.github.gestureengine.api.gesture.listener.GestureListener;
 import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
 import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.base.flow.CompositeCursorProcessorBlock;
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
 	private InputController inputController = null;
 
-	private final CompositeTouchPointProcessorBlock filterComposition = new CompositeTouchPointProcessorBlock();
+	private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
 
-	private TouchPointToAreaProcessor toc = null;
+	private CursorToAreaDispatcher toc = null;
 
 	/**
 	 * @see com.github.gestureengine.experimental.GestureEngineProfile#getInputController()
@@ -82,11 +82,11 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 		filterComposition.removeSubBlock(inputFilter);
 	}
 
-	public TouchPointToAreaProcessor getTouchableObjectController() {
+	public CursorToAreaDispatcher getTouchableObjectController() {
 		return toc;
 	}
 
-	public void setTouchableObjectController(final TouchPointToAreaProcessor toc) {
+	public void setTouchableObjectController(final CursorToAreaDispatcher toc) {
 		if (this.toc != null) {
 			filterComposition.dequeue(this.toc);
 		}
@@ -121,11 +121,11 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	@Override
 	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
 															   final L gestureListener,
-															   final Touchable touchableObject) {
+															   final TouchableArea touchableObject) {
 	}
 
 	@Override
 	public <L extends GestureListener> void removeGestureListener(final L gestureListener,
-																  final Touchable touchableObject) {
+																  final TouchableArea touchableObject) {
 	}
 }

@@ -23,24 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.flow;
 
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.flow.CursorProcessorBlock;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlock<TouchPointProcessor> {
+public class CompositeCursorProcessorBlock implements CursorProcessorBlock<CursorProcessor> {
 
 	/**
 	 * List of sub-blocks composing this composite block.<br>The first sub-block is the entry point when processing the
 	 * data. All sub-blocks will be chained to each other in the order of addition.
 	 *
-	 * @see #addSubBlock(TouchPointProcessorBlock)
-	 * @see #removeSubBlock(TouchPointProcessorBlock)
+	 * @see #addSubBlock(com.github.gestureengine.api.flow.CursorProcessorBlock)
+	 * @see #removeSubBlock(com.github.gestureengine.api.flow.CursorProcessorBlock)
 	 * @see #process(Collection)
 	 */
-	private final List<TouchPointProcessorBlock<TouchPointProcessor>> subBlocks =
-			new ArrayList<TouchPointProcessorBlock<TouchPointProcessor>>();
+	private final List<CursorProcessorBlock<CursorProcessor>> subBlocks =
+			new ArrayList<CursorProcessorBlock<CursorProcessor>>();
 
 	/**
 	 * List of next connected blocks.<br>They will be connected to the last sub-block only.
@@ -48,19 +51,19 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	 * @see #queue(Object)
 	 * @see #dequeue(Object)
 	 */
-	private final List<TouchPointProcessor> nextBlocks = new ArrayList<TouchPointProcessor>();
+	private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
 	/**
 	 * Adds the specified sub-block to the block composition.<br>It will be appended to the last added sub-block, if any.
 	 *
 	 * @param subBlock Block to be added as the last sub-block.
 	 */
-	public void addSubBlock(final TouchPointProcessorBlock<TouchPointProcessor> subBlock) {
+	public void addSubBlock(final CursorProcessorBlock<CursorProcessor> subBlock) {
 		if (!subBlocks.isEmpty()) {
-			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
+			final CursorProcessorBlock<CursorProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
 
 			// Disconnect next blocks from the previously last block from the list
-			for (final TouchPointProcessor nextBlock : nextBlocks) {
+			for (final CursorProcessor nextBlock : nextBlocks) {
 				lastSubBlock.dequeue(nextBlock);
 			}
 
@@ -69,7 +72,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 		}
 
 		// Connect next blocks to the new (last) sub-block
-		for (final TouchPointProcessor nextBlock : nextBlocks) {
+		for (final CursorProcessor nextBlock : nextBlocks) {
 			subBlock.dequeue(nextBlock);
 		}
 
@@ -77,7 +80,7 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 		subBlocks.add(subBlock);
 	}
 
-	public void removeSubBlock(final TouchPointProcessorBlock<TouchPointProcessor> subBlock) {
+	public void removeSubBlock(final CursorProcessorBlock<CursorProcessor> subBlock) {
 
 		// Disconnect sub-block from everything, and reconnect the rest
 		final int subBlockIndex = subBlocks.indexOf(subBlock);
@@ -87,14 +90,13 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 			final int previousSubBlockIndex = subBlockIndex - 1;
 			if (previousSubBlockIndex >= 0) {
 				// Disconnect it from previous sub-block
-				final TouchPointProcessorBlock<TouchPointProcessor> previousSubBlock =
-						subBlocks.get(previousSubBlockIndex);
+				final CursorProcessorBlock<CursorProcessor> previousSubBlock = subBlocks.get(previousSubBlockIndex);
 				previousSubBlock.dequeue(subBlock);
 
 				// Reconnect next sub-block to previous sub-block
 				final int nextSubBlockIndex = subBlockIndex + 1;
 				if (nextSubBlockIndex < subBlocks.size()) {
-					final TouchPointProcessorBlock<TouchPointProcessor> nextSubBlock = subBlocks.get(nextSubBlockIndex);
+					final CursorProcessorBlock<CursorProcessor> nextSubBlock = subBlocks.get(nextSubBlockIndex);
 					previousSubBlock.queue(nextSubBlock);
 				}
 			}
@@ -118,24 +120,24 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#process(Collection)
+	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#process(Collection)
 	 */
 	@Override
-	public void process(final Collection<TouchPoint> data) {
+	public void process(final Collection<Cursor> cursors) {
 		if (!subBlocks.isEmpty()) {
-			final TouchPointProcessor firstSubBlock = subBlocks.get(0);
-			firstSubBlock.process(data);
+			final CursorProcessor firstSubBlock = subBlocks.get(0);
+			firstSubBlock.process(cursors);
 		}
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#queue(Object)
+	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#queue(Object)
 	 */
 	@Override
-	public void queue(final TouchPointProcessor nextBlock) {
+	public void queue(final CursorProcessor nextBlock) {
 		// Connect next block to last sub-block
 		if (!subBlocks.isEmpty()) {
-			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
+			final CursorProcessorBlock<CursorProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
 			lastSubBlock.queue(nextBlock);
 		}
 
@@ -144,13 +146,13 @@ public class CompositeTouchPointProcessorBlock implements TouchPointProcessorBlo
 	}
 
 	/**
-	 * @see TouchPointProcessorBlock#dequeue(Object)
+	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#dequeue(Object)
 	 */
 	@Override
-	public void dequeue(final TouchPointProcessor nextBlock) {
+	public void dequeue(final CursorProcessor nextBlock) {
 		// Disconnect next block from last sub-block
 		if (!subBlocks.isEmpty()) {
-			final TouchPointProcessorBlock<TouchPointProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
+			final CursorProcessorBlock<CursorProcessor> lastSubBlock = subBlocks.get(subBlocks.size() - 1);
 			lastSubBlock.dequeue(nextBlock);
 		}
 

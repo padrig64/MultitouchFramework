@@ -23,12 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.area;
 
-import com.github.gestureengine.api.area.Touchable;
+import com.github.gestureengine.api.area.CursorToAreaDispatcher;
+import com.github.gestureengine.api.area.TouchableArea;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorAreaProcessor;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public interface TouchPointAreaProcessor {
+public abstract class AbstractCursorToAreaDispatcher implements CursorToAreaDispatcher {
 
-	public void process(Collection<TouchPoint> touchPoints, Collection<Touchable> touchedAreas);
+	private final List<CursorAreaProcessor> nextBlocks = new ArrayList<CursorAreaProcessor>();
+
+	@Override
+	public void queue(final CursorAreaProcessor cursorAreaProcessor) {
+		nextBlocks.add(cursorAreaProcessor);
+	}
+
+	@Override
+	public void dequeue(final CursorAreaProcessor cursorAreaProcessor) {
+		nextBlocks.remove(cursorAreaProcessor);
+	}
+
+	protected void forwardToNextBlocks(final Collection<Cursor> cursors,
+									   final Collection<TouchableArea> touchableAreas) {
+		for (final CursorAreaProcessor nextBlock : nextBlocks) {
+			nextBlock.process(cursors, touchableAreas);
+		}
+	}
 }

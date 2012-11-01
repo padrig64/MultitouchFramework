@@ -23,8 +23,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.area;
 
-public interface TouchPointAreaProcessorBlock<N> extends TouchPointAreaProcessor, Block<N> {
-	// Nothing to be done
+import com.github.gestureengine.api.flow.Cursor;
+import java.util.Collection;
+
+public class DefaultCursorToAreaDispatcher extends AbstractCursorToAreaDispatcher {
+
+	@Override
+	public void process(final Collection<Cursor> cursors) {
+		for (final Cursor cursor : cursors) {
+			// TODO
+		}
+	}
 }

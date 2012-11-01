@@ -69,8 +69,8 @@ public class Bounds {
 		return height;
 	}
 
-	public boolean isIn(final TouchPoint touchPoint) {
-		return isIn(touchPoint.getX(), touchPoint.getY());
+	public boolean isIn(final Cursor cursor) {
+		return isIn(cursor.getX(), cursor.getY());
 	}
 
 	public boolean isIn(final int x, final int y) {

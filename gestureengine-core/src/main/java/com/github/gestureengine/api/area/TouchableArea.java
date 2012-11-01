@@ -27,7 +27,7 @@ package com.github.gestureengine.api.area;
 
 import com.github.gestureengine.api.flow.Bounds;
 
-public interface Touchable {
+public interface TouchableArea {
 
 	public Bounds getTouchableBounds();
 }

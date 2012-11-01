@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.api.flow.Cursor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,57 +34,57 @@ public class BoundingBoxFilter extends AbstractInputFilter {
 
 	private static final int MAX_DIFF = 10;
 
-	private Map<Long, TouchPoint> filteredTouchPoints = new HashMap<Long, TouchPoint>();
+	private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints) {
-		// Quick way to remove the points that are no longer there
-		final Map<Long, TouchPoint> oldFilteredPoints = filteredTouchPoints;
-		filteredTouchPoints = new HashMap<Long, TouchPoint>();
+	public void process(final Collection<Cursor> cursors) {
+		// Quick way to remove the cursors that are no longer there
+		final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
+		filteredCursors = new HashMap<Long, Cursor>();
 
-		for (final TouchPoint rawTouchPoint : touchPoints) {
-			final TouchPoint oldFilteredTouchPoint = oldFilteredPoints.get(rawTouchPoint.getId());
-			if (oldFilteredTouchPoint == null) {
-				// Touch point was not yet filtered, so just added it now to the list
-				filteredTouchPoints.put(rawTouchPoint.getId(), rawTouchPoint);
+		for (final Cursor rawCursor : cursors) {
+			final Cursor oldFilteredCursor = oldFilteredCursors.get(rawCursor.getId());
+			if (oldFilteredCursor == null) {
+				// Cursor was not yet filtered, so just added it now to the list
+				filteredCursors.put(rawCursor.getId(), rawCursor);
 			} else {
-				// Touch point was already filtered
-				final TouchPoint newFilteredTouchPoint = filterTouchPoint(rawTouchPoint, oldFilteredTouchPoint);
-				filteredTouchPoints.put(rawTouchPoint.getId(), newFilteredTouchPoint);
+				// Cursor was already filtered
+				final Cursor newFilteredCursor = filterCursor(rawCursor, oldFilteredCursor);
+				filteredCursors.put(rawCursor.getId(), newFilteredCursor);
 			}
 		}
 
-		forwardToNextBlocks(filteredTouchPoints.values());
+		forwardToNextBlocks(filteredCursors.values());
 	}
 
-	private TouchPoint filterTouchPoint(final TouchPoint rawTouchPoint, final TouchPoint oldFilteredTouchPoint) {
+	private Cursor filterCursor(final Cursor rawCursor, final Cursor oldFilteredCursor) {
 		final int filteredX;
 		final int filteredY;
 
 		// Filter on the X axis
-		if (rawTouchPoint.getX() < (oldFilteredTouchPoint.getX() - MAX_DIFF)) {
+		if (rawCursor.getX() < (oldFilteredCursor.getX() - MAX_DIFF)) {
 			// New position is out of the box, so move the box
-			filteredX = rawTouchPoint.getX() + MAX_DIFF;
-		} else if (rawTouchPoint.getX() > (oldFilteredTouchPoint.getX() + MAX_DIFF)) {
+			filteredX = rawCursor.getX() + MAX_DIFF;
+		} else if (rawCursor.getX() > (oldFilteredCursor.getX() + MAX_DIFF)) {
 			// New position is out of the box, so move the box
-			filteredX = rawTouchPoint.getX() - MAX_DIFF;
+			filteredX = rawCursor.getX() - MAX_DIFF;
 		} else {
 			// Just reuse the old position
-			filteredX = oldFilteredTouchPoint.getX();
+			filteredX = oldFilteredCursor.getX();
 		}
 
 		// Filter on the Y axis
-		if (rawTouchPoint.getY() < (oldFilteredTouchPoint.getY() - MAX_DIFF)) {
+		if (rawCursor.getY() < (oldFilteredCursor.getY() - MAX_DIFF)) {
 			// New position is out of the box, so move the box
-			filteredY = rawTouchPoint.getY() + MAX_DIFF;
-		} else if (rawTouchPoint.getY() > (oldFilteredTouchPoint.getY() + MAX_DIFF)) {
+			filteredY = rawCursor.getY() + MAX_DIFF;
+		} else if (rawCursor.getY() > (oldFilteredCursor.getY() + MAX_DIFF)) {
 			// New position is out of the box, so move the box
-			filteredY = rawTouchPoint.getY() - MAX_DIFF;
+			filteredY = rawCursor.getY() - MAX_DIFF;
 		} else {
 			// Just reuse the old position
-			filteredY = oldFilteredTouchPoint.getY();
+			filteredY = oldFilteredCursor.getY();
 		}
 
-		return new TouchPoint(rawTouchPoint.getId(), filteredX, filteredY);
+		return new Cursor(rawCursor.getId(), filteredX, filteredY);
 	}
 }

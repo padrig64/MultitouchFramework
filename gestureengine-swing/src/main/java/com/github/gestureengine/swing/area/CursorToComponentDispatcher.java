@@ -23,54 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.swing.flow;
+package com.github.gestureengine.swing.area;
 
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.api.flow.TouchPointProcessor;
-import com.github.gestureengine.api.flow.TouchPointProcessorBlock;
-import java.util.ArrayList;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.base.area.AbstractCursorToAreaDispatcher;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import javax.swing.SwingUtilities;
 
-public class EDTTouchPointProcessorBlock implements TouchPointProcessorBlock<TouchPointProcessor> {
-
-	private final List<TouchPointProcessor> nextBlocks =
-			Collections.synchronizedList(new ArrayList<TouchPointProcessor>());
-
-	public EDTTouchPointProcessorBlock() {
-		// Nothing to be done
-	}
-
-	public EDTTouchPointProcessorBlock(final TouchPointProcessor firstNextBlock) {
-		nextBlocks.add(firstNextBlock);
-	}
+public class CursorToComponentDispatcher extends AbstractCursorToAreaDispatcher {
 
 	@Override
-	public void queue(final TouchPointProcessor nextBlock) {
-		nextBlocks.add(nextBlock);
-	}
+	public void process(final Collection<Cursor> cursors) {
 
-	@Override
-	public void dequeue(final TouchPointProcessor nextBlock) {
-		nextBlocks.remove(nextBlock);
-	}
-
-	@Override
-	public void process(final Collection<TouchPoint> data) {
-		// Just point the points in a new list, but not need to clone them
-		final Collection<TouchPoint> copiedData = new ArrayList<TouchPoint>(data);
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				synchronized (nextBlocks) {
-					for (final TouchPointProcessor nextBlock : nextBlocks) {
-						nextBlock.process(copiedData);
-					}
-				}
-			}
-		});
 	}
 }

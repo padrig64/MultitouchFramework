@@ -25,35 +25,35 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.api.flow.Cursor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class NoChangeFilter extends AbstractInputFilter {
 
-	private Set<TouchPoint> lastTouchPoints = new HashSet<TouchPoint>();
+	private Set<Cursor> lastCursors = new HashSet<Cursor>();
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints) {
+	public void process(final Collection<Cursor> cursors) {
 		boolean changed = false;
 
-		if (touchPoints.size() == lastTouchPoints.size()) {
-			// Same number of points as last event, so check if all points are the same
-			for (final TouchPoint touchPoint : touchPoints) {
-				if (!lastTouchPoints.contains(touchPoint)) {
+		if (cursors.size() == lastCursors.size()) {
+			// Same number of cursors as last event, so check if all cursors are the same
+			for (final Cursor cursor : cursors) {
+				if (!lastCursors.contains(cursor)) {
 					changed = true;
 					break;
 				}
 			}
 		} else {
-			// Not the same number of points as last event, so process them
+			// Not the same number of cursors as last event, so process them
 			changed = true;
 		}
 
 		if (changed) {
-			lastTouchPoints = new HashSet<TouchPoint>(touchPoints);
-			forwardToNextBlocks(touchPoints);
+			lastCursors = new HashSet<Cursor>(cursors);
+			forwardToNextBlocks(cursors);
 		}
 	}
 }

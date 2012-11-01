@@ -25,17 +25,17 @@
 
 package com.github.gestureengine.api.input.filter;
 
-import com.github.gestureengine.api.flow.TouchPointProcessor;
-import com.github.gestureengine.api.flow.TouchPointProcessorBlock;
+import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.flow.CursorProcessorBlock;
 
 /**
- * Interface to be implemented by input filters.<br>Input filters are touch point processors that filter the input touch
- * points. They provide the filtered touch points to one or several other touch point processors, typically other {@link
- * InputFilter}s or {@link com.github.gestureengine.api.area.TouchPointToAreaProcessor}s.
+ * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors.
+ * They provide the filtered cursors to one or several other cursor processors, typically other {@link InputFilter}s or
+ * {@link com.github.gestureengine.api.area.CursorToAreaDispatcher}s.
  *
- * @see TouchPointProcessorBlock
- * @see TouchPointProcessor
+ * @see com.github.gestureengine.api.flow.CursorProcessorBlock
+ * @see com.github.gestureengine.api.flow.CursorProcessor
  */
-public interface InputFilter extends TouchPointProcessorBlock<TouchPointProcessor> {
+public interface InputFilter extends CursorProcessorBlock<CursorProcessor> {
 	// Nothing more to be done
 }

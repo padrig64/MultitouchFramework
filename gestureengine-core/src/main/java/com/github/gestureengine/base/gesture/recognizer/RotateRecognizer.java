@@ -25,15 +25,15 @@
 
 package com.github.gestureengine.base.gesture.recognizer;
 
-import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.flow.TouchPoint;
+import com.github.gestureengine.api.area.TouchableArea;
+import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.base.gesture.listener.RotateListener;
 import java.util.Collection;
 
 public class RotateRecognizer extends AbstractGestureRecognizer<RotateListener> {
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints, final Collection<Touchable> touchedAreas) {
+	public void process(final Collection<Cursor> cursors, final Collection<TouchableArea> touchableAreas) {
 		// TODO
 	}
 }

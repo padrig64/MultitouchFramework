@@ -25,9 +25,65 @@
 
 package com.github.gestureengine.api.flow;
 
-import java.util.Collection;
+public class Cursor {
 
-public interface TouchPointProcessor {
+	private final long id;
 
-	public void process(Collection<TouchPoint> touchPoints);
+	private final int x;
+
+	private final int y;
+
+	public Cursor(final Cursor cursor) {
+		this(cursor.id, cursor.x, cursor.y);
+	}
+
+	public Cursor(final long id, final int x, final int y) {
+		this.id = id;
+		this.x = x;
+		this.y = y;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = (int) (id ^ (id >>> 32));
+		hash = 31 * hash + x;
+		hash = 31 * hash + y;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		final boolean equal;
+
+		if (this == o) {
+			// Same instance
+			equal = true;
+		} else if ((o == null) || (getClass() != o.getClass())) {
+			// Different class
+			equal = false;
+		} else {
+			// Same class, so check attributes
+			final Cursor that = (Cursor) o;
+			equal = (id == that.id) && (x == that.x) && (y == that.y);
+		}
+
+		return equal;
+	}
+
+	@Override
+	public String toString() {
+		return "{id=" + id + "; x=" + x + "; y=" + y + "}";
+	}
 }

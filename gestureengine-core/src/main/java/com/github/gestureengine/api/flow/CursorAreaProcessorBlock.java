@@ -23,11 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.area;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.flow.TouchPointAreaProcessor;
-import com.github.gestureengine.api.flow.TouchPointProcessorBlock;
-
-public interface TouchPointToAreaProcessor extends TouchPointProcessorBlock<TouchPointAreaProcessor> {
+public interface CursorAreaProcessorBlock<N> extends CursorAreaProcessor, Block<N> {
 	// Nothing to be done
 }

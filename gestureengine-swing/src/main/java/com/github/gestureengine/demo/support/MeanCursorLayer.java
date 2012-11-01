@@ -25,62 +25,67 @@
 
 package com.github.gestureengine.demo.support;
 
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorProcessor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import javax.swing.UIManager;
 
-public class TouchPointsLayer implements Layer, TouchPointProcessor {
+public class MeanCursorLayer implements Layer, CursorProcessor {
 
-	private static final Color TOUCH_POINT_COLOR = UIManager.getColor("nimbusInfoBlue");
+	private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
-	private static final int TOUCH_POINT_SIZE = 6;
+	private static final int MEAN_CURSOR_SIZE = 6;
 
 	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
 	private final Canvas canvas;
 
-	private Collection<TouchPoint> touchPoints = null;
+	private Cursor meanCursor = null;
 
-	public TouchPointsLayer(final Canvas canvas) {
+	public MeanCursorLayer(final Canvas canvas) {
 		this.canvas = canvas;
 	}
 
 	@Override
-	public void process(final Collection<TouchPoint> touchPoints) {
-		this.touchPoints = touchPoints;
+	public void process(final Collection<Cursor> cursors) {
+		if (cursors.isEmpty()) {
+			meanCursor = null;
+		} else {
+			// Calculate mean cursor
+			int meanX = 0;
+			int meanY = 0;
+			for (final Cursor cursor : cursors) {
+				meanX += cursor.getX();
+				meanY += cursor.getY();
+			}
+			meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
+		}
+
+		// Trigger repaint
 		canvas.repaint();
 	}
 
 	@Override
 	public void paint(final Graphics2D g2d) {
-		if ((touchPoints != null) && !touchPoints.isEmpty()) {
+		if (meanCursor != null) {
 			// Prepare for painting
-			final List<Point> canvasPoints = new ArrayList<Point>();
-			for (final TouchPoint touchPoint : touchPoints) {
-				final Point canvasPoint = convertTouchPointToCanvas(touchPoint);
-				canvasPoints.add(canvasPoint);
-			}
+			final Point canvasMeanPoint = convertCursorToCanvas(meanCursor);
 
-			// Paint touch points
-			g2d.setColor(TOUCH_POINT_COLOR);
-			for (final Point canvasPoint : canvasPoints) {
-				g2d.fillOval(canvasPoint.x - TOUCH_POINT_SIZE / 2, canvasPoint.y - TOUCH_POINT_SIZE / 2,
-						TOUCH_POINT_SIZE, TOUCH_POINT_SIZE);
-			}
+			// Paint mean cursor
+			g2d.setColor(MEAN_CURSOR_COLOR);
+			g2d.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
+					MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
 		}
 	}
 
-	private Point convertTouchPointToCanvas(final TouchPoint screenTouchPoint) {
-		final int canvasX = screenTouchPoint.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasY = screenTouchPoint.getY() * canvas.getHeight() / SCREEN_SIZE.height;
+	private Point convertCursorToCanvas(final Cursor screenCursor) {
+		final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
+		final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
 
 		return new Point(canvasX, canvasY);
 	}

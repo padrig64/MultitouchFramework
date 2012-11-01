@@ -25,23 +25,23 @@
 
 package com.github.gestureengine.demo;
 
-import com.github.gestureengine.api.area.TouchPointToAreaProcessor;
-import com.github.gestureengine.api.area.Touchable;
-import com.github.gestureengine.api.flow.TouchPoint;
-import com.github.gestureengine.api.flow.TouchPointAreaProcessor;
-import com.github.gestureengine.api.flow.TouchPointProcessor;
+import com.github.gestureengine.api.area.CursorToAreaDispatcher;
+import com.github.gestureengine.api.area.TouchableArea;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorAreaProcessor;
+import com.github.gestureengine.api.flow.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.base.area.TouchPointToScreenProcessor;
+import com.github.gestureengine.base.area.CursorToScreenDispatcher;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
 import com.github.gestureengine.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.gestureengine.demo.support.Canvas;
+import com.github.gestureengine.demo.support.CursorsLayer;
 import com.github.gestureengine.demo.support.Layer;
+import com.github.gestureengine.demo.support.MeanCursorLayer;
 import com.github.gestureengine.demo.support.MeanLinesLayer;
-import com.github.gestureengine.demo.support.MeanPointLayer;
-import com.github.gestureengine.demo.support.TouchPointsLayer;
-import com.github.gestureengine.swing.flow.EDTTouchPointProcessorBlock;
+import com.github.gestureengine.swing.flow.EDTCursorProcessorBlock;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -93,27 +93,27 @@ public class DemoApp extends JFrame {
 
 	private enum LayerProcessor {
 
-		MEAN_POINT("Filtered mean point", new MeanPointLayer(canvas)),
-		TOUCH_POINTS("Raw touch points", new TouchPointsLayer(canvas)),
-		BOUNDING_BOX_FILTER_OUTPUT("Filtered touch points", new BoundingBoxFilterOutputLayer(canvas)),
-		MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas));
+		FILTERED_MEAN_CURSOR("Filtered mean cursor", new MeanCursorLayer(canvas)),
+		RAW_CURSORS("Raw cursors", new CursorsLayer(canvas)),
+		FILTERED_CURSORS("Filtered cursors", new BoundingBoxFilterOutputLayer(canvas)),
+		FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas));
 
 		private final String presentationName;
 		private final Layer layer;
-		private final TouchPointProcessor touchPointProcessor;
+		private final CursorProcessor cursorProcessor;
 
 		LayerProcessor(final String presentationName, final Object layer) {
 			this.presentationName = presentationName;
 			this.layer = (Layer) layer;
-			this.touchPointProcessor = (TouchPointProcessor) layer;
+			this.cursorProcessor = (CursorProcessor) layer;
 		}
 
 		public Layer getLayer() {
 			return layer;
 		}
 
-		public TouchPointProcessor getTouchPointProcessor() {
-			return touchPointProcessor;
+		public CursorProcessor getCursorProcessor() {
+			return cursorProcessor;
 		}
 
 		@Override
@@ -171,31 +171,31 @@ public class DemoApp extends JFrame {
 		// Create input source
 		final TuioController inputController = new TuioController();
 
-		// Configure layers for raw touch points
-		final EDTTouchPointProcessorBlock edtRawTouchPointProcessorBlock = new EDTTouchPointProcessorBlock();
-		edtRawTouchPointProcessorBlock.queue(LayerProcessor.TOUCH_POINTS.getTouchPointProcessor());
-		inputController.queue(edtRawTouchPointProcessorBlock);
+		// Configure layers for raw cursors
+		final EDTCursorProcessorBlock edtRawCursorProcessorBlock = new EDTCursorProcessorBlock();
+		edtRawCursorProcessorBlock.queue(LayerProcessor.RAW_CURSORS.getCursorProcessor());
+		inputController.queue(edtRawCursorProcessorBlock);
 
-		// Configure touch point filtering
+		// Configure cursor filtering
 		final InputFilter boundingBoxFilter = new BoundingBoxFilter();
 		inputController.queue(boundingBoxFilter);
 		final NoChangeFilter noChangeFilter = new NoChangeFilter();
 		boundingBoxFilter.queue(noChangeFilter);
 
-		// Configure layers for filtered touch points
-		final EDTTouchPointProcessorBlock edtFilteredTouchPointProcessBlock = new EDTTouchPointProcessorBlock();
-		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.BOUNDING_BOX_FILTER_OUTPUT.getTouchPointProcessor());
-		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.MEAN_POINT.getTouchPointProcessor());
-		edtFilteredTouchPointProcessBlock.queue(LayerProcessor.MEAN_LINES.getTouchPointProcessor());
-		noChangeFilter.queue(edtFilteredTouchPointProcessBlock);
+		// Configure layers for filtered cursors
+		final EDTCursorProcessorBlock edtFilteredCursorProcessorBlock = new EDTCursorProcessorBlock();
+		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_CURSORS.getCursorProcessor());
+		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_CURSOR.getCursorProcessor());
+		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_LINES.getCursorProcessor());
+		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
 
-		// Configure touch point to area dispatching
-		final TouchPointToAreaProcessor screenProcessor = new TouchPointToScreenProcessor();
-		screenProcessor.queue(new TouchPointAreaProcessor() {
+		// Configure cursor to area dispatching
+		final CursorToAreaDispatcher screenProcessor = new CursorToScreenDispatcher();
+		screenProcessor.queue(new CursorAreaProcessor() {
 			@Override
-			public void process(Collection<TouchPoint> touchPoints, Collection<Touchable> touchedAreas) {
+			public void process(Collection<Cursor> cursors, Collection<TouchableArea> touchableAreas) {
 				System.out.println(
-						"DemoApp.process: " + touchPoints + " " + touchedAreas.iterator().next().getTouchableBounds());
+						"DemoApp.process: " + cursors + " " + touchableAreas.iterator().next().getTouchableBounds());
 			}
 		});
 		noChangeFilter.queue(screenProcessor);
