@@ -23,11 +23,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.region;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.CursorProcessorBlock;
+import com.github.gestureengine.api.region.Region;
+import java.util.Collection;
 
-public interface CursorToRegionDispatcher extends CursorProcessorBlock<CursorPerRegionProcessor> {
-	// Nothing to be done
+public interface CursorPerRegionProcessor {
+
+	public void process(Region region, Collection<Cursor> cursors);
 }

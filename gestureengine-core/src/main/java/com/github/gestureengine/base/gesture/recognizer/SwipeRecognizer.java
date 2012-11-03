@@ -33,7 +33,7 @@ import java.util.Collection;
 public class SwipeRecognizer extends AbstractGestureRecognizer<SwipeListener> {
 
 	@Override
-	public void process(final Collection<Cursor> cursors, final Collection<Region> regions) {
+	public void process(final Region region, final Collection<Cursor> cursors) {
 		// TODO
 	}
 }

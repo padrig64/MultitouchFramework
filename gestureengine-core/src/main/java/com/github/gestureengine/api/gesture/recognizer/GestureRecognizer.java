@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.api.gesture.recognizer;
 
-import com.github.gestureengine.api.flow.CursorRegionProcessorBlock;
+import com.github.gestureengine.api.flow.CursorPerRegionProcessorBlock;
 import com.github.gestureengine.api.gesture.listener.GestureListener;
 
-public interface GestureRecognizer<L extends GestureListener> extends CursorRegionProcessorBlock<L> {
+public interface GestureRecognizer<L extends GestureListener> extends CursorPerRegionProcessorBlock<L> {
 	// Nothing to be done
 }

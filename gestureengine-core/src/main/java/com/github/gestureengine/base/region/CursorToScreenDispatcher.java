@@ -25,40 +25,15 @@
 
 package com.github.gestureengine.base.region;
 
-import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.Region;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
-	private static class TouchableScreen implements Region {
-
-		private final Bounds screenBounds;
-
-		public TouchableScreen() {
-			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			screenBounds = new Bounds("Screen", 0, 0, screenSize.width, screenSize.height);
-		}
-
-		@Override
-		public Bounds getTouchableBounds() {
-			return screenBounds;
-		}
-	}
-
-	private final Collection<Region> regions;
-
-	public CursorToScreenDispatcher() {
-		regions = new ArrayList<Region>();
-		regions.add(new TouchableScreen());
-	}
+	private static final ScreenRegion SCREEN_REGION = new ScreenRegion();
 
 	@Override
 	public void process(final Collection<Cursor> cursors) {
-		forwardToNextBlocks(cursors, regions);
+		forwardToNextBlocks(SCREEN_REGION, cursors);
 	}
 }

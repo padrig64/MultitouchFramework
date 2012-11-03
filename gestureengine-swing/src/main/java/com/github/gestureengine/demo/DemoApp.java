@@ -26,15 +26,15 @@
 package com.github.gestureengine.demo;
 
 import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.flow.CursorRegionProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.api.region.CursorToRegionDispatcher;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
-import com.github.gestureengine.base.region.CursorToScreenDispatcher;
+import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
 import com.github.gestureengine.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.gestureengine.demo.support.Canvas;
 import com.github.gestureengine.demo.support.CursorsLayer;
@@ -173,8 +173,8 @@ public class DemoApp extends JFrame {
 
 		// Configure layers for raw cursors
 		final EDTCursorProcessorBlock edtRawCursorProcessorBlock = new EDTCursorProcessorBlock();
-		edtRawCursorProcessorBlock.queue(LayerProcessor.RAW_CURSORS.getCursorProcessor());
 		inputController.queue(edtRawCursorProcessorBlock);
+		edtRawCursorProcessorBlock.queue(LayerProcessor.RAW_CURSORS.getCursorProcessor());
 
 		// Configure cursor filtering
 		final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -184,21 +184,29 @@ public class DemoApp extends JFrame {
 
 		// Configure layers for filtered cursors
 		final EDTCursorProcessorBlock edtFilteredCursorProcessorBlock = new EDTCursorProcessorBlock();
+		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
 		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_CURSORS.getCursorProcessor());
 		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_CURSOR.getCursorProcessor());
 		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_LINES.getCursorProcessor());
-		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
 
 		// Configure cursor to region dispatching
-		final CursorToRegionDispatcher screenProcessor = new CursorToScreenDispatcher();
-		screenProcessor.queue(new CursorRegionProcessor() {
+//		final CursorToRegionDispatcher cursorToScreenProcessor = new CursorToScreenDispatcher();
+//		noChangeFilter.queue(cursorToScreenProcessor);
+//		cursorToScreenProcessor.queue(new CursorRegionProcessor() {
+//			@Override
+//			public void process(Collection<Cursor> cursors, Collection<Region> regions) {
+//				System.out.println("DemoApp.process: " + cursors + " " + region);
+//			}
+//		});
+
+		final CursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
+		noChangeFilter.queue(cursorToRegionDispatcher);
+		cursorToRegionDispatcher.queue(new CursorPerRegionProcessor() {
 			@Override
-			public void process(Collection<Cursor> cursors, Collection<Region> regions) {
-				System.out
-						.println("DemoApp.process: " + cursors + " " + regions.iterator().next().getTouchableBounds());
+			public void process(final Region region, final Collection<Cursor> cursors) {
+				System.out.println("DemoApp.process: " + cursors + " " + region);
 			}
 		});
-		noChangeFilter.queue(screenProcessor);
 
 		// Activate input controller
 		inputController.start();

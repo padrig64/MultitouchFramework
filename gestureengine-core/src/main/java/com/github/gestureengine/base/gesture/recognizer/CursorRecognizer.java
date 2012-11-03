@@ -27,13 +27,13 @@ package com.github.gestureengine.base.gesture.recognizer;
 
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.region.Region;
-import com.github.gestureengine.base.gesture.listener.CursorListener;
+import com.github.gestureengine.base.gesture.listener.TouchListener;
 import java.util.Collection;
 
-public class CursorRecognizer extends AbstractGestureRecognizer<CursorListener> {
+public class CursorRecognizer extends AbstractGestureRecognizer<TouchListener> {
 
 	@Override
-	public void process(final Collection<Cursor> cursors, final Collection<Region> regions) {
+	public void process(final Region region, final Collection<Cursor> cursors) {
 		// TODO
 	}
 }

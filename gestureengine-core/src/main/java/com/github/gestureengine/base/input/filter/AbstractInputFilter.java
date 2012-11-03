@@ -48,7 +48,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 
 	/**
 	 * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-	 * input filters or region controllers.
+	 * input filters or cursor-to-region dispatchers.
 	 *
 	 * @param cursorProcessor Cursor processor to be connected.
 	 */
@@ -59,7 +59,7 @@ public abstract class AbstractInputFilter implements InputFilter {
 
 	/**
 	 * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-	 * instance, input filters or region controllers.
+	 * instance, input filters or cursor-to-region dispatchers.
 	 *
 	 * @param cursorProcessor Cursor processor to be disconnected.
 	 */

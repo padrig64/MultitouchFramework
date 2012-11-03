@@ -23,12 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.gesture.listener;
 
-import com.github.gestureengine.api.region.Region;
-import java.util.Collection;
+import com.github.gestureengine.api.gesture.listener.GestureListener;
 
-public interface CursorRegionProcessor {
-
-	public void process(Collection<Cursor> cursors, Collection<Region> regions);
+public interface TouchListener extends GestureListener {
+	// TODO
 }

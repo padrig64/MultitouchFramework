@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorRegionProcessor;
+import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.CursorToRegionDispatcher;
 import com.github.gestureengine.api.region.Region;
 import java.util.ArrayList;
@@ -35,21 +35,21 @@ import java.util.List;
 
 public abstract class AbstractCursorToRegionDispatcher implements CursorToRegionDispatcher {
 
-	private final List<CursorRegionProcessor> nextBlocks = new ArrayList<CursorRegionProcessor>();
+	private final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
 
 	@Override
-	public void queue(final CursorRegionProcessor cursorRegionProcessor) {
+	public void queue(final CursorPerRegionProcessor cursorRegionProcessor) {
 		nextBlocks.add(cursorRegionProcessor);
 	}
 
 	@Override
-	public void dequeue(final CursorRegionProcessor cursorRegionProcessor) {
+	public void dequeue(final CursorPerRegionProcessor cursorRegionProcessor) {
 		nextBlocks.remove(cursorRegionProcessor);
 	}
 
-	protected void forwardToNextBlocks(final Collection<Cursor> cursors, final Collection<Region> regions) {
-		for (final CursorRegionProcessor nextBlock : nextBlocks) {
-			nextBlock.process(cursors, regions);
+	protected void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
+		for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+			nextBlock.process(region, cursors);
 		}
 	}
 }

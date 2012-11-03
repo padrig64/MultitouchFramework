@@ -23,8 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.base.region;
 
-public interface CursorRegionProcessorBlock<N> extends CursorRegionProcessor, Block<N> {
-	// Nothing to be done
+import com.github.gestureengine.api.flow.Bounds;
+import com.github.gestureengine.api.region.Region;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+public class ScreenRegion implements Region {
+
+	private final Bounds screenBounds;
+
+	public ScreenRegion() {
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenBounds = new Bounds("Screen", 0, 0, screenSize.width, screenSize.height);
+	}
+
+	@Override
+	public Bounds getTouchableBounds() {
+		return screenBounds;
+	}
 }
