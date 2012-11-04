@@ -26,13 +26,17 @@
 package com.github.gestureengine.swing.region;
 
 import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.region.AbstractCursorToRegionDispatcher;
-import java.util.Collection;
 
 public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
 
+	/**
+	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+	 */
 	@Override
-	public void process(final Collection<Cursor> cursors) {
+	protected Region findTouchedRegion(final Cursor cursor) {
 		// TODO
+		return null;
 	}
 }

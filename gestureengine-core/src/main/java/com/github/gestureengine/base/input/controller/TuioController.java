@@ -32,6 +32,7 @@ import com.mlawrie.yajtl.TUIOEvent;
 import com.mlawrie.yajtl.TUIOReceiver;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.net.BindException;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -159,8 +160,10 @@ public class TuioController extends AbstractInputController {
 			if (tuioClient == null) {
 				try {
 					tuioClient = new TUIOReceiver(screenSize.width, screenSize.height, tuioPort);
+				} catch (BindException e) {
+					LOGGER.error("Could not connect to TUIO server on port " + tuioPort + ": " + e.getMessage(), e);
 				} catch (SocketException e) {
-					LOGGER.error("Could not connect to TUIO server", e);
+					LOGGER.error("Could not connect to TUIO server on port " + tuioPort + ": " + e.getMessage(), e);
 				}
 			}
 

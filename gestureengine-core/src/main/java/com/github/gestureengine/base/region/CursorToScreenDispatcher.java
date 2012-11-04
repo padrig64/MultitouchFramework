@@ -26,14 +26,15 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import java.util.Collection;
+import com.github.gestureengine.api.region.Region;
 
 public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
-	private static final ScreenRegion SCREEN_REGION = new ScreenRegion();
-
+	/**
+	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+	 */
 	@Override
-	public void process(final Collection<Cursor> cursors) {
-		forwardToNextBlocks(SCREEN_REGION, cursors);
+	protected Region findTouchedRegion(final Cursor cursor) {
+		return SCREEN_REGION;
 	}
 }

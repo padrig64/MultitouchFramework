@@ -31,11 +31,81 @@ import com.github.gestureengine.api.region.CursorToRegionDispatcher;
 import com.github.gestureengine.api.region.Region;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractCursorToRegionDispatcher implements CursorToRegionDispatcher {
 
+	/**
+	 * Logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCursorToRegionDispatcher.class);
+
+	/**
+	 * Default region that would hold the cursors if no other region on top of it would hold those cursors.
+	 */
+	public static final Region SCREEN_REGION = new ScreenRegion(); // Whole screen
+
+	private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
+
 	private final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
+
+	/**
+	 * @see AbstractCursorToRegionDispatcher#process(Collection)
+	 */
+	@Override
+	public void process(final Collection<Cursor> cursors) {
+		final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
+		final Map<Region, Collection<Cursor>> updatesToBeForwarded = new HashMap<Region, Collection<Cursor>>();
+
+		for (final Cursor cursor : cursors) {
+			// Find the region holding the cursor
+			Region region = oldCursorToRegion.get(cursor.getId());
+			if (region == null) {
+				// Find a new candidate region to hold the cursor
+				region = findTouchedRegion(cursor);
+			} else {
+				// Region already holds the cursor
+				oldCursorToRegion.remove(cursor.getId());
+			}
+
+			if (region == null) {
+				LOGGER.info("No region found for cursor: " + cursor);
+			} else {
+				// Update cursor for this region
+				newCursorToRegion.put(cursor.getId(), region);
+
+				Collection<Cursor> cursorsForThisRegion = updatesToBeForwarded.get(region);
+				if (cursorsForThisRegion == null) {
+					cursorsForThisRegion = new HashSet<Cursor>();
+					updatesToBeForwarded.put(region, cursorsForThisRegion);
+				}
+				cursorsForThisRegion.add(cursor);
+			}
+		}
+
+		// Clean up old mapping to notify for regions that have no more cursor
+		for (final Region oldRegion : oldCursorToRegion.values()) {
+			if (!updatesToBeForwarded.containsKey(oldRegion)) {
+				updatesToBeForwarded.put(oldRegion, Collections.<Cursor>emptySet());
+			}
+		}
+
+		// Forward updated regions and cursors to next blocks
+		for (final Map.Entry<Region, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
+			forwardToNextBlocks(entry.getKey(), entry.getValue());
+		}
+
+		// Save mapping for next time
+		oldCursorToRegion = newCursorToRegion;
+	}
+
+	protected abstract Region findTouchedRegion(final Cursor cursor);
 
 	@Override
 	public void queue(final CursorPerRegionProcessor cursorRegionProcessor) {
