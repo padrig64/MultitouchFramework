@@ -33,6 +33,6 @@ public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatche
 
 	@Override
 	public void process(final Collection<Cursor> cursors) {
-
+		// TODO
 	}
 }

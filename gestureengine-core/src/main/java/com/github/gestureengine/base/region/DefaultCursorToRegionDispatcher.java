@@ -27,10 +27,12 @@ package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.region.Region;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,41 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
 
 	private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
 
+	private final List<Region> regions = new ArrayList<Region>();
+
+	public List<Region> getRegions() {
+		return regions;
+	}
+
+	public void addRegionOnTop(final Region region) {
+		regions.add(region);
+	}
+
+	public void insertRegionAt(final int i, final Region region) {
+		regions.add(i, region);
+	}
+
+	public void setRegionAt(final int i, final Region region) {
+		regions.set(i, region);
+	}
+
+	public void insertRegionAbove(final Region lowerRegion, final Region region) {
+		final int i = regions.lastIndexOf(lowerRegion);
+		if (i < 0) {
+			// Add region on top of everything
+			regions.add(region);
+		} else {
+			regions.add(i + 1, region);
+		}
+	}
+
+	public void removeRegion(final Region region) {
+		regions.remove(region);
+	}
+
+	/**
+	 * @see AbstractCursorToRegionDispatcher#process(Collection)
+	 */
 	@Override
 	public void process(final Collection<Cursor> cursors) {
 		final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
@@ -80,9 +117,11 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
 			}
 		}
 
-		// Clean up old mapping for notify regions that have no more cursor
+		// Clean up old mapping to notify for regions that have no more cursor
 		for (final Region oldRegion : oldCursorToRegion.values()) {
-			updatesToBeForwarded.put(oldRegion, Collections.<Cursor>emptySet());
+			if (!updatesToBeForwarded.containsKey(oldRegion)) {
+				updatesToBeForwarded.put(oldRegion, Collections.<Cursor>emptySet());
+			}
 		}
 
 		// Forward updated regions and cursors to next blocks
@@ -95,8 +134,17 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
 	}
 
 	private Region findRegionForCursor(final Cursor cursor) {
-		// TODO
-		return SCREEN_REGION;
+		Region foundRegion = SCREEN_REGION;
+
+		for (int i = regions.size() - 1; i >= 0; i--) {
+			final Region region = regions.get(i);
+			if (region.getTouchableBounds().isIn(cursor)) {
+				foundRegion = region;
+				break;
+			}
+		}
+
+		return foundRegion;
 	}
 
 //	private void forwardToNextBlocks() {

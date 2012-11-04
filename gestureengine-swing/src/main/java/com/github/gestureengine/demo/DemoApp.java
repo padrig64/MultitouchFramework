@@ -29,7 +29,6 @@ import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.api.region.CursorToRegionDispatcher;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
@@ -41,6 +40,8 @@ import com.github.gestureengine.demo.support.CursorsLayer;
 import com.github.gestureengine.demo.support.Layer;
 import com.github.gestureengine.demo.support.MeanCursorLayer;
 import com.github.gestureengine.demo.support.MeanLinesLayer;
+import com.github.gestureengine.demo.support.RegionsLayer;
+import com.github.gestureengine.swing.flow.EDTCursorPerRegionProcessorBlock;
 import com.github.gestureengine.swing.flow.EDTCursorProcessorBlock;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -96,24 +97,25 @@ public class DemoApp extends JFrame {
 		FILTERED_MEAN_CURSOR("Filtered mean cursor", new MeanCursorLayer(canvas)),
 		RAW_CURSORS("Raw cursors", new CursorsLayer(canvas)),
 		FILTERED_CURSORS("Filtered cursors", new BoundingBoxFilterOutputLayer(canvas)),
-		FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas));
+		FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas)),
+		REGIONS("Regions", new RegionsLayer(canvas));
 
 		private final String presentationName;
 		private final Layer layer;
-		private final CursorProcessor cursorProcessor;
+		private final Object processor;
 
 		LayerProcessor(final String presentationName, final Object layer) {
 			this.presentationName = presentationName;
 			this.layer = (Layer) layer;
-			this.cursorProcessor = (CursorProcessor) layer;
+			this.processor = layer;
 		}
 
 		public Layer getLayer() {
 			return layer;
 		}
 
-		public CursorProcessor getCursorProcessor() {
-			return cursorProcessor;
+		public Object getProcessor() {
+			return processor;
 		}
 
 		@Override
@@ -174,7 +176,7 @@ public class DemoApp extends JFrame {
 		// Configure layers for raw cursors
 		final EDTCursorProcessorBlock edtRawCursorProcessorBlock = new EDTCursorProcessorBlock();
 		inputController.queue(edtRawCursorProcessorBlock);
-		edtRawCursorProcessorBlock.queue(LayerProcessor.RAW_CURSORS.getCursorProcessor());
+		edtRawCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
 
 		// Configure cursor filtering
 		final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -185,9 +187,9 @@ public class DemoApp extends JFrame {
 		// Configure layers for filtered cursors
 		final EDTCursorProcessorBlock edtFilteredCursorProcessorBlock = new EDTCursorProcessorBlock();
 		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_CURSORS.getCursorProcessor());
-		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_CURSOR.getCursorProcessor());
-		edtFilteredCursorProcessorBlock.queue(LayerProcessor.FILTERED_MEAN_LINES.getCursorProcessor());
+		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor());
+		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
+		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_LINES.getProcessor());
 
 		// Configure cursor to region dispatching
 //		final CursorToRegionDispatcher cursorToScreenProcessor = new CursorToScreenDispatcher();
@@ -199,7 +201,7 @@ public class DemoApp extends JFrame {
 //			}
 //		});
 
-		final CursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
+		final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
 		noChangeFilter.queue(cursorToRegionDispatcher);
 		cursorToRegionDispatcher.queue(new CursorPerRegionProcessor() {
 			@Override
@@ -207,6 +209,13 @@ public class DemoApp extends JFrame {
 				System.out.println("DemoApp.process: " + cursors + " " + region);
 			}
 		});
+
+		// Configure layer for regions
+		final EDTCursorPerRegionProcessorBlock edtCursorPerRegionProcessorBlock =
+				new EDTCursorPerRegionProcessorBlock();
+		cursorToRegionDispatcher.queue(edtCursorPerRegionProcessorBlock);
+		((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
+		edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
 
 		// Activate input controller
 		inputController.start();
