@@ -30,7 +30,9 @@ import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,11 +40,13 @@ import javax.swing.UIManager;
 
 public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 
+	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+
 	private final Canvas canvas;
 
 	private DefaultCursorToRegionDispatcher cursorToRegionDispatcher = null;
 
-	private Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
+	private final Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
 
 	public RegionsLayer(final Canvas canvas) {
 		this.canvas = canvas;
@@ -69,7 +73,7 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 		// Draw all regions
 		if (cursorToRegionDispatcher != null) {
 			for (final Region region : cursorToRegionDispatcher.getRegions()) {
-				final Bounds bounds = region.getTouchableBounds();
+				final Bounds bounds = convertScreenBoundsToCanvas(region.getTouchableBounds());
 				g2d.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth() - 1, bounds.getHeight() - 1);
 			}
 		}
@@ -77,9 +81,20 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 		// Fill all touched regions
 		for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
 			if (!entry.getValue().isEmpty()) {
-				final Bounds bounds = entry.getKey().getTouchableBounds();
-				g2d.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+				if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
+					final Bounds bounds = convertScreenBoundsToCanvas(entry.getKey().getTouchableBounds());
+					g2d.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+				}
 			}
 		}
+	}
+
+	private Bounds convertScreenBoundsToCanvas(final Bounds screenBounds) {
+		final int canvasX = screenBounds.getX() * canvas.getWidth() / SCREEN_SIZE.width;
+		final int canvasY = screenBounds.getY() * canvas.getHeight() / SCREEN_SIZE.height;
+		final int canvasWidth = screenBounds.getWidth() * canvas.getWidth() / SCREEN_SIZE.width;
+		final int canvasHeight = screenBounds.getHeight() * canvas.getHeight() / SCREEN_SIZE.height;
+
+		return new Bounds(screenBounds.getId(), canvasX, canvasY, canvasWidth, canvasHeight);
 	}
 }

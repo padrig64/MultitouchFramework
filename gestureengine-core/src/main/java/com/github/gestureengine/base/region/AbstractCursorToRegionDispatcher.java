@@ -39,6 +39,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Abstract implementation of a cursor to region dispatcher.<br>It provides implementation of the (de-)queuing of
+ * blocks, as well as the basic dispatching of cursors to regions and the forwarding of the results to the queued
+ * blocks. However, the discovery of a region for a single cursor is left to concrete sub-classes.<br>This
+ * implementation makes the regions catch the cursors on finger down, and release the cursors on finger up only. But the
+ * regions will hold the cursors even if they leave these regions. This makes it more convenient for users working on
+ * small regions of the screen (for instance, when several users are working on different small maps displayed on the
+ * same device).
+ *
+ * @see #findTouchedRegion(Cursor)
+ */
 public abstract class AbstractCursorToRegionDispatcher implements CursorToRegionDispatcher {
 
 	/**
@@ -51,9 +62,31 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 	 */
 	public static final Region SCREEN_REGION = new ScreenRegion(); // Whole screen
 
+	/**
+	 * Mapping between cursors and region resulting from the call to {@link #process(Collection)}.
+	 */
 	private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
 
+	/**
+	 * Cursor-per-region processors connected and processing the output regions and cursors from this dispatcher.
+	 */
 	private final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
+
+	/**
+	 * @see CursorToRegionDispatcher#queue(Object)
+	 */
+	@Override
+	public void queue(final CursorPerRegionProcessor cursorRegionProcessor) {
+		nextBlocks.add(cursorRegionProcessor);
+	}
+
+	/**
+	 * @see CursorToRegionDispatcher#dequeue(Object)
+	 */
+	@Override
+	public void dequeue(final CursorPerRegionProcessor cursorRegionProcessor) {
+		nextBlocks.remove(cursorRegionProcessor);
+	}
 
 	/**
 	 * @see AbstractCursorToRegionDispatcher#process(Collection)
@@ -105,19 +138,23 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 		oldCursorToRegion = newCursorToRegion;
 	}
 
+	/**
+	 * Finds the region that is touched by the specified cursor.
+	 *
+	 * @param cursor Cursor pointing to the region to be found.
+	 *
+	 * @return Touched region if found, null otherwise.
+	 */
 	protected abstract Region findTouchedRegion(final Cursor cursor);
 
-	@Override
-	public void queue(final CursorPerRegionProcessor cursorRegionProcessor) {
-		nextBlocks.add(cursorRegionProcessor);
-	}
-
-	@Override
-	public void dequeue(final CursorPerRegionProcessor cursorRegionProcessor) {
-		nextBlocks.remove(cursorRegionProcessor);
-	}
-
-	protected void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
+	/**
+	 * Forwards the specified region with its cursors to the next blocks.<br>Typically, this method is called for each
+	 * region touch by the cursors processed in {@link #process(Collection)}.
+	 *
+	 * @param region Region holding the specified cursors.
+	 * @param cursors Cursors for the specified region.
+	 */
+	private void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
 		for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
 			nextBlock.process(region, cursors);
 		}

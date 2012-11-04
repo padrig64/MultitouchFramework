@@ -25,6 +25,7 @@
 
 package com.github.gestureengine.demo;
 
+import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
@@ -37,6 +38,7 @@ import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
 import com.github.gestureengine.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.gestureengine.demo.support.Canvas;
 import com.github.gestureengine.demo.support.CursorsLayer;
+import com.github.gestureengine.demo.support.DummyRegion;
 import com.github.gestureengine.demo.support.Layer;
 import com.github.gestureengine.demo.support.MeanCursorLayer;
 import com.github.gestureengine.demo.support.MeanLinesLayer;
@@ -202,6 +204,8 @@ public class DemoApp extends JFrame {
 //		});
 
 		final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
+		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("TopLeft", 0, 0, 500, 500));
+		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("SomewhereElse",  700, 200, 100, 100));
 		noChangeFilter.queue(cursorToRegionDispatcher);
 		cursorToRegionDispatcher.queue(new CursorPerRegionProcessor() {
 			@Override
