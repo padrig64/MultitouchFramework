@@ -25,7 +25,6 @@
 
 package com.github.gestureengine.demo;
 
-import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
@@ -46,7 +45,7 @@ import com.github.gestureengine.demo.support.RegionsLayer;
 import com.github.gestureengine.swing.flow.EDTCursorPerRegionProcessorBlock;
 import com.github.gestureengine.swing.flow.EDTCursorProcessorBlock;
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -61,6 +60,9 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +95,22 @@ public class DemoApp extends JFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DemoApp.class);
 
 	private static final Canvas canvas = new Canvas();
+
+	private enum GestureProcessor {
+
+		PAN("Navigation - Pan");
+
+		private final String presentationName;
+
+		GestureProcessor(final String presentationName) {
+			this.presentationName = presentationName;
+		}
+
+		@Override
+		public String toString() {
+			return presentationName;
+		}
+	}
 
 	private enum LayerProcessor {
 
@@ -143,12 +161,49 @@ public class DemoApp extends JFrame {
 
 	private void initComponents() {
 		final JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBackground(Color.WHITE);
 		setContentPane(canvas);
 
 		// Create layer list
-		final JPanel layerListPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]related[]"));
-		contentPane.add(new JScrollPane(layerListPanel), BorderLayout.WEST);
+		final JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
+		contentPane.add(new JScrollPane(controlPanel), BorderLayout.WEST);
+
+		controlPanel.add(createGestureListPanel());
+		controlPanel.add(createLayerListPanel());
+
+		// Configure canvas
+		final LayerProcessor[] layerProcessors = LayerProcessor.values();
+		for (int i = layerProcessors.length - 1; i >= 0; i--) {
+			canvas.addLayer(layerProcessors[i].getLayer());
+		}
+		final CompoundBorder canvasBorder =
+				new CompoundBorder(new MatteBorder(2, 1, 2, 2, UIManager.getColor("background")),
+						new LineBorder(UIManager.getColor("nimbusBorder")));
+		canvas.setBorder(canvasBorder);
+		contentPane.add(canvas, BorderLayout.CENTER);
+		setContentPane(contentPane);
+	}
+
+	private Component createGestureListPanel() {
+		final JPanel gestureListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+
+		final JLabel titleLabel = new JLabel("Gestures");
+		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
+		gestureListPanel.add(titleLabel);
+
+		// Add gestures to the list
+		final GestureProcessor[] gestureProcessors = GestureProcessor.values();
+		for (final GestureProcessor gestureProcessor : gestureProcessors) {
+			final JCheckBox gestureControlCheckBox = new JCheckBox(gestureProcessor.toString());
+			// TODO
+			gestureControlCheckBox.setSelected(true);
+			gestureListPanel.add(gestureControlCheckBox, "gap 10");
+		}
+
+		return gestureListPanel;
+	}
+
+	private Component createLayerListPanel() {
+		final JPanel layerListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
 
 		final JLabel titleLabel = new JLabel("Layers");
 		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
@@ -163,12 +218,7 @@ public class DemoApp extends JFrame {
 			layerListPanel.add(layerControlCheckBox, "gap 10");
 		}
 
-		// Configure canvas
-		for (int i = layerProcessors.length - 1; i >= 0; i--) {
-			canvas.addLayer(layerProcessors[i].getLayer());
-		}
-		contentPane.add(canvas, BorderLayout.CENTER);
-		setContentPane(contentPane);
+		return layerListPanel;
 	}
 
 	private void initGestureProfile() {
@@ -205,7 +255,7 @@ public class DemoApp extends JFrame {
 
 		final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
 		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("TopLeft", 0, 0, 500, 500));
-		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("SomewhereElse",  700, 200, 100, 100));
+		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("SomewhereElse", 700, 200, 100, 100));
 		noChangeFilter.queue(cursorToRegionDispatcher);
 		cursorToRegionDispatcher.queue(new CursorPerRegionProcessor() {
 			@Override

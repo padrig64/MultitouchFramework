@@ -28,6 +28,7 @@ package com.github.gestureengine.demo.support;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -74,16 +75,18 @@ public class Canvas extends JComponent {
 	}
 
 	@Override
-	public void paint(final Graphics graphics) {
-		super.paint(graphics);
+	protected void paintComponent(final Graphics graphics) {
+		final Insets insets = getInsets();
+		final int contentWidth = getWidth() - insets.left - insets.right;
+		final int contentHeight = getHeight() - insets.top - insets.bottom;
 
 		// Clear background
 		graphics.setColor(BACKGROUND_COLOR);
-		graphics.fillRect(0, 0, getWidth(), getHeight());
+		graphics.fillRect(insets.left, insets.top, contentWidth, contentHeight);
 
 		// Set anti-aliasing
 		if (graphics instanceof Graphics2D) {
-			final Graphics2D g2d = (Graphics2D) graphics;
+			final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 			// Draw all visible layers
@@ -92,6 +95,8 @@ public class Canvas extends JComponent {
 					layer.paint(g2d);
 				}
 			}
+
+			g2d.dispose();
 		}
 	}
 }
