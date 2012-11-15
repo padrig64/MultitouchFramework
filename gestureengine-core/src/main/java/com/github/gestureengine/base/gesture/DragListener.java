@@ -23,11 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture.recognizer;
+package com.github.gestureengine.base.gesture;
 
-import com.github.gestureengine.api.flow.CursorPerRegionProcessorBlock;
-import com.github.gestureengine.api.gesture.listener.GestureListener;
+import com.github.gestureengine.api.gesture.GestureListener;
 
-public interface GestureRecognizer<L extends GestureListener> extends CursorPerRegionProcessorBlock<L> {
-	// Nothing to be done
+public interface DragListener extends GestureListener {
+
+	public void dragStarted();
+
+	public void dragPerformed(int totalX, int totaly, int diffX, int diffY);
+
+	public void dragEnded();
 }

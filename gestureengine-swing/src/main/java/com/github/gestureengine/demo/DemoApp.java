@@ -25,11 +25,10 @@
 
 package com.github.gestureengine.demo;
 
-import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.base.gesture.DragRecognizer;
 import com.github.gestureengine.base.input.controller.TuioController;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
@@ -51,7 +50,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collection;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -150,7 +148,7 @@ public class DemoApp extends JFrame {
 		setTitle("GestureEngine Demo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		initComponents();
+		initContentPane();
 		initGestureProfile();
 
 		// Set window size and location
@@ -159,9 +157,8 @@ public class DemoApp extends JFrame {
 		setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 3);
 	}
 
-	private void initComponents() {
+	private void initContentPane() {
 		final JPanel contentPane = new JPanel(new BorderLayout());
-		setContentPane(canvas);
 
 		// Create layer list
 		final JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
@@ -171,16 +168,18 @@ public class DemoApp extends JFrame {
 		controlPanel.add(createLayerListPanel());
 
 		// Configure canvas
-		final LayerProcessor[] layerProcessors = LayerProcessor.values();
-		for (int i = layerProcessors.length - 1; i >= 0; i--) {
-			canvas.addLayer(layerProcessors[i].getLayer());
-		}
 		final CompoundBorder canvasBorder =
 				new CompoundBorder(new MatteBorder(2, 1, 2, 2, UIManager.getColor("background")),
 						new LineBorder(UIManager.getColor("nimbusBorder")));
 		canvas.setBorder(canvasBorder);
 		contentPane.add(canvas, BorderLayout.CENTER);
 		setContentPane(contentPane);
+
+		// Add layers to canvas
+		final LayerProcessor[] layerProcessors = LayerProcessor.values();
+		for (int i = layerProcessors.length - 1; i >= 0; i--) {
+			canvas.addLayer(layerProcessors[i].getLayer());
+		}
 	}
 
 	private Component createGestureListPanel() {
@@ -243,26 +242,11 @@ public class DemoApp extends JFrame {
 		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
 		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_LINES.getProcessor());
 
-		// Configure cursor to region dispatching
-//		final CursorToRegionDispatcher cursorToScreenProcessor = new CursorToScreenDispatcher();
-//		noChangeFilter.queue(cursorToScreenProcessor);
-//		cursorToScreenProcessor.queue(new CursorRegionProcessor() {
-//			@Override
-//			public void process(Collection<Cursor> cursors, Collection<Region> regions) {
-//				System.out.println("DemoApp.process: " + cursors + " " + region);
-//			}
-//		});
-
+		// Configure cursor to region dispatcher
 		final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
-		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("TopLeft", 0, 0, 500, 500));
+		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("TopLeft", 10, 10, 500, 500));
 		cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("SomewhereElse", 700, 200, 100, 100));
 		noChangeFilter.queue(cursorToRegionDispatcher);
-		cursorToRegionDispatcher.queue(new CursorPerRegionProcessor() {
-			@Override
-			public void process(final Region region, final Collection<Cursor> cursors) {
-				System.out.println("DemoApp.process: " + cursors + " " + region);
-			}
-		});
 
 		// Configure layer for regions
 		final EDTCursorPerRegionProcessorBlock edtCursorPerRegionProcessorBlock =
@@ -270,6 +254,9 @@ public class DemoApp extends JFrame {
 		cursorToRegionDispatcher.queue(edtCursorPerRegionProcessorBlock);
 		((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
 		edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
+
+		// Configure gestures
+		new DragRecognizer();
 
 		// Activate input controller
 		inputController.start();

@@ -23,17 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.base.gesture;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.Region;
-import com.github.gestureengine.base.gesture.listener.PanListener;
-import java.util.Collection;
+import com.github.gestureengine.api.gesture.GestureListener;
+import com.github.gestureengine.api.gesture.GestureRecognizer;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PanRecognizer extends AbstractGestureRecognizer<PanListener> {
+public abstract class AbstractGestureRecognizer<L extends GestureListener> implements GestureRecognizer<L> {
+
+	protected List<L> gestureListeners = new ArrayList<L>();
 
 	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
-		// TODO
+	public void dequeue(final L gestureListener) {
+		gestureListeners.add(gestureListener);
+	}
+
+	@Override
+	public void queue(final L gestureListener) {
+		gestureListeners.remove(gestureListener);
 	}
 }

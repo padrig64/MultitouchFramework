@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture.listener;
+package com.github.gestureengine.api.gesture;
 
 public interface GestureListener {
 	// TODO

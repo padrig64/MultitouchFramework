@@ -23,24 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.api.gesture;
 
-import com.github.gestureengine.api.gesture.listener.GestureListener;
-import com.github.gestureengine.api.gesture.recognizer.GestureRecognizer;
-import java.util.ArrayList;
-import java.util.List;
+import com.github.gestureengine.api.gesture.GestureListener;
 
-public abstract class AbstractGestureRecognizer<L extends GestureListener> implements GestureRecognizer<L> {
+public interface GestureDefinition<L extends GestureListener> {
 
-	protected List<L> gestureListeners = new ArrayList<L>();
+	public Object getId();
 
-	@Override
-	public void dequeue(final L gestureListener) {
-		gestureListeners.add(gestureListener);
-	}
-
-	@Override
-	public void queue(final L gestureListener) {
-		gestureListeners.remove(gestureListener);
-	}
+	public L getListenerClass();
 }

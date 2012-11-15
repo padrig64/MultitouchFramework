@@ -88,7 +88,7 @@ public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProce
 		// Just put the cursors in a new list, no need to clone them
 		final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
 
-		SwingUtilities.invokeLater(new Runnable() {
+		final Runnable edtRunnable = new Runnable() {
 			@Override
 			public void run() {
 				synchronized (nextBlocks) {
@@ -97,6 +97,11 @@ public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProce
 					}
 				}
 			}
-		});
+		};
+		if (SwingUtilities.isEventDispatchThread()) {
+			edtRunnable.run();
+		} else {
+			SwingUtilities.invokeLater(edtRunnable);
+		}
 	}
 }

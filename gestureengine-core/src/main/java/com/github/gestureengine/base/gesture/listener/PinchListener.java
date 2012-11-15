@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.base.gesture.listener;
 
-import com.github.gestureengine.api.gesture.listener.GestureListener;
+import com.github.gestureengine.api.gesture.GestureListener;
 
 public interface PinchListener extends GestureListener {
 	// TODO

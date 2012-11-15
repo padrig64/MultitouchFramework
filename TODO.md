@@ -1,5 +1,6 @@
 . BoundingBoxFilter should reset the box if the cursor is up
 
+. Gesture lock
 . Better packaging: swing, basic gestures, windows 7 touch, macbook trackpad, javafx, etc.
 . Windows Touch events
 . MacBook trackpad / magic mouse events

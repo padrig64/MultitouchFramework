@@ -23,13 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture.definition;
+package com.github.gestureengine.api.gesture;
 
-import com.github.gestureengine.api.gesture.listener.GestureListener;
+import com.github.gestureengine.api.flow.CursorPerRegionProcessorBlock;
+import com.github.gestureengine.api.gesture.GestureListener;
 
-public interface GestureDefinition<L extends GestureListener> {
-
-	public Object getId();
-
-	public L getListenerClass();
+public interface GestureRecognizer<L extends GestureListener> extends CursorPerRegionProcessorBlock<L> {
+	// Nothing to be done
 }
