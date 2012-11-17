@@ -31,7 +31,7 @@ import com.github.gestureengine.api.gesture.GestureRecognizer;
 import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.api.region.CursorToRegionDispatcher;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 import com.github.gestureengine.base.flow.CompositeCursorProcessorBlock;
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
@@ -120,11 +120,11 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
 	@Override
 	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
-															   final L gestureListener, final Region touchableObject) {
+															   final L gestureListener, final TouchableRegion touchableObject) {
 	}
 
 	@Override
 	public <L extends GestureListener> void removeGestureListener(final L gestureListener,
-																  final Region touchableObject) {
+																  final TouchableRegion touchableObject) {
 	}
 }

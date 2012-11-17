@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.gesture;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragListener> {
 
 	private int maxCursorCount;
 
-	private final Map<Region, Context> regionContexts = new HashMap<Region, Context>();
+	private final Map<TouchableRegion, Context> regionContexts = new HashMap<TouchableRegion, Context>();
 
 	public DragRecognizer() {
 		this(1, -1);
@@ -71,10 +71,10 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragListener> {
 	}
 
 	/**
-	 * @see AbstractGestureRecognizer#process(Region, Collection)
+	 * @see AbstractGestureRecognizer#process(com.github.gestureengine.api.region.TouchableRegion, Collection)
 	 */
 	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
+	public void process(final TouchableRegion region, final Collection<Cursor> cursors) {
 		final Context context = getContext(region);
 
 		if (isValid(context.previousCursorCount) && isValid(cursors.size())) {
@@ -125,7 +125,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragListener> {
 //		previousCursorCount = cursorCount;
 	}
 
-	private Context getContext(final Region region) {
+	private Context getContext(final TouchableRegion region) {
 		Context context = regionContexts.get(region);
 		if (context == null) {
 			context = new Context();

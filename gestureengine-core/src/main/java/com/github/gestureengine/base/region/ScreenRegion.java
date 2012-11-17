@@ -26,11 +26,12 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Bounds;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.region.TouchableRegion;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-public class ScreenRegion implements Region {
+public class ScreenRegion implements TouchableRegion {
 
 	private final Bounds screenBounds;
 
@@ -40,7 +41,7 @@ public class ScreenRegion implements Region {
 	}
 
 	@Override
-	public Bounds getTouchableBounds() {
-		return screenBounds;
+	public boolean isTouched(final Cursor cursor) {
+		return screenBounds.isIn(cursor.getX(), cursor.getY());
 	}
 }

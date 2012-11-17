@@ -28,7 +28,7 @@ package com.github.gestureengine.base.region;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.CursorToRegionDispatcher;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -60,12 +60,12 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 	/**
 	 * Default region that would hold the cursors if no other region on top of it would hold those cursors.
 	 */
-	public static final Region SCREEN_REGION = new ScreenRegion(); // Whole screen
+	public static final TouchableRegion SCREEN_REGION = new ScreenRegion(); // Whole screen
 
 	/**
 	 * Mapping between cursors and region resulting from the call to {@link #process(Collection)}.
 	 */
-	private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
+	private Map<Long, TouchableRegion> oldCursorToRegion = new HashMap<Long, TouchableRegion>(); // Initially, no cursor down
 
 	/**
 	 * Cursor-per-region processors connected and processing the output regions and cursors from this dispatcher.
@@ -93,12 +93,12 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 	 */
 	@Override
 	public void process(final Collection<Cursor> cursors) {
-		final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
-		final Map<Region, Collection<Cursor>> updatesToBeForwarded = new HashMap<Region, Collection<Cursor>>();
+		final Map<Long, TouchableRegion> newCursorToRegion = new HashMap<Long, TouchableRegion>();
+		final Map<TouchableRegion, Collection<Cursor>> updatesToBeForwarded = new HashMap<TouchableRegion, Collection<Cursor>>();
 
 		for (final Cursor cursor : cursors) {
 			// Find the region holding the cursor
-			Region region = oldCursorToRegion.get(cursor.getId());
+			TouchableRegion region = oldCursorToRegion.get(cursor.getId());
 			if (region == null) {
 				// Find a new candidate region to hold the cursor
 				region = findTouchedRegion(cursor);
@@ -123,14 +123,14 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 		}
 
 		// Clean up old mapping to notify for regions that have no more cursor
-		for (final Region oldRegion : oldCursorToRegion.values()) {
+		for (final TouchableRegion oldRegion : oldCursorToRegion.values()) {
 			if (!updatesToBeForwarded.containsKey(oldRegion)) {
 				updatesToBeForwarded.put(oldRegion, Collections.<Cursor>emptySet());
 			}
 		}
 
 		// Forward updated regions and cursors to next blocks
-		for (final Map.Entry<Region, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
+		for (final Map.Entry<TouchableRegion, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
 			forwardToNextBlocks(entry.getKey(), entry.getValue());
 		}
 
@@ -145,7 +145,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 	 *
 	 * @return Touched region if found, null otherwise.
 	 */
-	protected abstract Region findTouchedRegion(final Cursor cursor);
+	protected abstract TouchableRegion findTouchedRegion(final Cursor cursor);
 
 	/**
 	 * Forwards the specified region with its cursors to the next blocks.<br>Typically, this method is called for each
@@ -154,7 +154,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 	 * @param region Region holding the specified cursors.
 	 * @param cursors Cursors for the specified region.
 	 */
-	private void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
+	private void forwardToNextBlocks(final TouchableRegion region, final Collection<Cursor> cursors) {
 		for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
 			nextBlock.process(region, cursors);
 		}

@@ -30,7 +30,7 @@ import com.github.gestureengine.api.gesture.GestureListener;
 import com.github.gestureengine.api.gesture.GestureRecognizer;
 import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 
 public interface GestureEngineProfile {
 
@@ -55,7 +55,7 @@ public interface GestureEngineProfile {
 	public <L extends GestureListener> void removeGestureListener(L gestureListener);
 
 	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener, Region touchableObject);
+															   L gestureListener, TouchableRegion touchableObject);
 
-	public <L extends GestureListener> void removeGestureListener(L gestureListener, Region touchableObject);
+	public <L extends GestureListener> void removeGestureListener(L gestureListener, TouchableRegion touchableObject);
 }

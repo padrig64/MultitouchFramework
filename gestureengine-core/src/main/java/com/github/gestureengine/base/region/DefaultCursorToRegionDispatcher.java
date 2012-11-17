@@ -26,31 +26,31 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispatcher {
 
-	private final List<Region> regions = new ArrayList<Region>();
+	private final List<TouchableRegion> regions = new ArrayList<TouchableRegion>();
 
-	public List<Region> getRegions() {
+	public List<TouchableRegion> getRegions() {
 		return regions;
 	}
 
-	public void addRegionOnTop(final Region region) {
+	public void addRegionOnTop(final TouchableRegion region) {
 		regions.add(region);
 	}
 
-	public void insertRegionAt(final int i, final Region region) {
+	public void insertRegionAt(final int i, final TouchableRegion region) {
 		regions.add(i, region);
 	}
 
-	public void setRegionAt(final int i, final Region region) {
+	public void setRegionAt(final int i, final TouchableRegion region) {
 		regions.set(i, region);
 	}
 
-	public void insertRegionAbove(final Region lowerRegion, final Region region) {
+	public void insertRegionAbove(final TouchableRegion lowerRegion, final TouchableRegion region) {
 		final int i = regions.lastIndexOf(lowerRegion);
 		if (i < 0) {
 			// Add region on top of everything
@@ -60,7 +60,7 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
 		}
 	}
 
-	public void removeRegion(final Region region) {
+	public void removeRegion(final TouchableRegion region) {
 		regions.remove(region);
 	}
 
@@ -68,12 +68,12 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
 	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion
 	 */
 	@Override
-	protected Region findTouchedRegion(final Cursor cursor) {
-		Region foundRegion = SCREEN_REGION;
+	protected TouchableRegion findTouchedRegion(final Cursor cursor) {
+		TouchableRegion foundRegion = SCREEN_REGION;
 
 		for (int i = regions.size() - 1; i >= 0; i--) {
-			final Region region = regions.get(i);
-			if (region.getTouchableBounds().isIn(cursor)) {
+			final TouchableRegion region = regions.get(i);
+			if (region.isTouched(cursor)) {
 				foundRegion = region;
 				break;
 			}

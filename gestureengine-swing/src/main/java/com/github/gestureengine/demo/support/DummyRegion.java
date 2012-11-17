@@ -26,9 +26,10 @@
 package com.github.gestureengine.demo.support;
 
 import com.github.gestureengine.api.flow.Bounds;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.region.TouchableRegion;
 
-public class DummyRegion implements Region {
+public class DummyRegion implements TouchableRegion {
 
 	private final Bounds bounds;
 
@@ -44,11 +45,12 @@ public class DummyRegion implements Region {
 		return bounds.getId();
 	}
 
-	/**
-	 * @see Region#getTouchableBounds()
-	 */
-	@Override
 	public Bounds getTouchableBounds() {
 		return bounds;
+	}
+
+	@Override
+	public boolean isTouched(final Cursor cursor) {
+		return bounds.isIn(cursor.getX(), cursor.getY());
 	}
 }

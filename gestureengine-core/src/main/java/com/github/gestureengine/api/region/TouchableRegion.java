@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.api.region;
 
-import com.github.gestureengine.api.flow.Bounds;
+import com.github.gestureengine.api.flow.Cursor;
 
-public interface Region {
+public interface TouchableRegion {
 
-	public Bounds getTouchableBounds();
+	public boolean isTouched(Cursor cursor);
 }

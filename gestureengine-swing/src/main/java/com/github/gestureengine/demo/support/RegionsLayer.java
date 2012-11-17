@@ -28,7 +28,7 @@ package com.github.gestureengine.demo.support;
 import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.TouchableRegion;
 import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -46,7 +46,8 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 
 	private DefaultCursorToRegionDispatcher cursorToRegionDispatcher = null;
 
-	private final Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
+	private final Map<TouchableRegion, Collection<Cursor>> cursorsForRegions =
+			new HashMap<TouchableRegion, Collection<Cursor>>();
 
 	public RegionsLayer(final Canvas canvas) {
 		this.canvas = canvas;
@@ -61,7 +62,7 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 	}
 
 	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
+	public void process(final TouchableRegion region, final Collection<Cursor> cursors) {
 		cursorsForRegions.put(region, cursors);
 		canvas.repaint();
 	}
@@ -72,17 +73,18 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 
 		// Draw all regions
 		if (cursorToRegionDispatcher != null) {
-			for (final Region region : cursorToRegionDispatcher.getRegions()) {
-				final Bounds bounds = convertScreenBoundsToCanvas(region.getTouchableBounds());
+			for (final TouchableRegion region : cursorToRegionDispatcher.getRegions()) {
+				final Bounds bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
 				g2d.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth() - 1, bounds.getHeight() - 1);
 			}
 		}
 
 		// Fill all touched regions
-		for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
+		for (final Map.Entry<TouchableRegion, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
 			if (!entry.getValue().isEmpty()) {
 				if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
-					final Bounds bounds = convertScreenBoundsToCanvas(entry.getKey().getTouchableBounds());
+					final Bounds bounds =
+							convertScreenBoundsToCanvas(((DummyRegion) entry.getKey()).getTouchableBounds());
 					g2d.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 				}
 			}
