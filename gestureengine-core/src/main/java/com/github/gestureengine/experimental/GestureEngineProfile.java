@@ -27,16 +27,16 @@ package com.github.gestureengine.experimental;
 
 import com.github.gestureengine.api.flow.Region;
 import com.github.gestureengine.api.gesture.GestureDefinition;
-import com.github.gestureengine.api.gesture.GestureListener;
+import com.github.gestureengine.api.gesture.GestureEvent;
 import com.github.gestureengine.api.gesture.GestureRecognizer;
-import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.input.source.InputSource;
 
 public interface GestureEngineProfile {
 
-	public InputController getInputController();
+	public InputSource getInputController();
 
-	public void setInputController(InputController inputController);
+	public void setInputController(InputSource inputController);
 
 	public void addInputFilter(InputFilter inputFilter);
 
@@ -44,18 +44,17 @@ public interface GestureEngineProfile {
 
 	// TODO
 
-	public <L extends GestureListener> void addGestureRecognizer(GestureDefinition<L> gestureDefinition,
-																 GestureRecognizer<L> gestureRecognizer);
+	public <E extends GestureEvent> void addGestureRecognizer(GestureDefinition<E> gestureDefinition,
+															  GestureRecognizer<E> gestureRecognizer);
 
-	public <L extends GestureListener> void removeGestureRecognizer(GestureRecognizer<L> gestureRecognizer);
+	public <E extends GestureEvent> void removeGestureRecognizer(GestureRecognizer<E> gestureRecognizer);
 
-	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener);
+	public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener);
 
-	public <L extends GestureListener> void removeGestureListener(L gestureListener);
+	public <E extends GestureEvent> void removeGestureListener(E gestureListener);
 
-	public <L extends GestureListener> void addGestureListener(GestureDefinition<L> gestureDefinition,
-															   L gestureListener, Region touchableObject);
+	public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener,
+															Region touchableObject);
 
-	public <L extends GestureListener> void removeGestureListener(L gestureListener, Region touchableObject);
+	public <E extends GestureEvent> void removeGestureListener(E gestureListener, Region touchableObject);
 }

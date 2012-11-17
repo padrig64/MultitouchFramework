@@ -25,6 +25,6 @@
 
 package com.github.gestureengine.base.input.controller;
 
-public class MouseKeyboardController extends AbstractInputController {
+public class MouseKeyboardSource extends AbstractInputSource {
 	// TODO
 }

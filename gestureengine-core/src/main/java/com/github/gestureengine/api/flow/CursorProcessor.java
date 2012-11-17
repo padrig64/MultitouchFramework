@@ -27,7 +27,15 @@ package com.github.gestureengine.api.flow;
 
 import java.util.Collection;
 
+/**
+ * Interface to be implemented by entities processing cursors.<br>It is typically implemented by input filters.
+ */
 public interface CursorProcessor {
 
+	/**
+	 * Processes the specified cursors.
+	 *
+	 * @param cursors Cursors to be processed.
+	 */
 	public void process(Collection<Cursor> cursors);
 }

@@ -43,9 +43,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Input controller making use of a TUIO client to provide cursors received from a TUIO server.
  *
- * @see AbstractInputController
+ * @see AbstractInputSource
  */
-public class TuioController extends AbstractInputController {
+public class TuioSource extends AbstractInputSource {
 
 	private class TuioClientAdapter implements TUIOEvent {
 
@@ -106,7 +106,7 @@ public class TuioController extends AbstractInputController {
 	/**
 	 * Logger for this class.
 	 */
-	private final static Logger LOGGER = LoggerFactory.getLogger(TuioController.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(TuioSource.class);
 
 	/**
 	 * Default port to be used to connect to the TUIO server.
@@ -133,7 +133,7 @@ public class TuioController extends AbstractInputController {
 	 *
 	 * @see #DEFAULT_TUIO_PORT
 	 */
-	public TuioController() {
+	public TuioSource() {
 		this(DEFAULT_TUIO_PORT);
 	}
 
@@ -142,12 +142,12 @@ public class TuioController extends AbstractInputController {
 	 *
 	 * @param tuioPort TUIO port number to connect to the TUIO server.
 	 */
-	public TuioController(final short tuioPort) {
+	public TuioSource(final short tuioPort) {
 		this.tuioPort = tuioPort;
 	}
 
 	/**
-	 * @see AbstractInputController#start()
+	 * @see AbstractInputSource#start()
 	 */
 	@Override
 	public void start() {
@@ -178,7 +178,7 @@ public class TuioController extends AbstractInputController {
 	}
 
 	/**
-	 * @see AbstractInputController#stop()
+	 * @see AbstractInputSource#stop()
 	 */
 	@Override
 	public void stop() {

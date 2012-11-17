@@ -23,15 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture;
+package com.github.gestureengine.base.gesture.drag;
 
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.base.gesture.AbstractGestureRecognizer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DragRecognizer extends AbstractGestureRecognizer<DragListener> {
+public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 
 	private class Context {
 

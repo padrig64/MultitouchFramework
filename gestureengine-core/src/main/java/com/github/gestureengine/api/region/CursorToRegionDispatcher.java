@@ -25,9 +25,10 @@
 
 package com.github.gestureengine.api.region;
 
+import com.github.gestureengine.api.flow.Block;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.CursorProcessorBlock;
+import com.github.gestureengine.api.flow.CursorProcessor;
 
-public interface CursorToRegionDispatcher extends CursorProcessorBlock<CursorPerRegionProcessor> {
+public interface CursorToRegionDispatcher extends CursorProcessor, Block<CursorPerRegionProcessor> {
 	// Nothing to be done
 }

@@ -23,18 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognizer;
+package com.github.gestureengine.base.input.controller;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.base.gesture.AbstractGestureRecognizer;
-import com.github.gestureengine.base.gesture.listener.SwipeListener;
-import java.util.Collection;
-
-public class SwipeRecognizer extends AbstractGestureRecognizer<SwipeListener> {
-
-	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
-		// TODO
-	}
+public class WindowsTouchSource extends AbstractInputSource {
+	// TODO
 }

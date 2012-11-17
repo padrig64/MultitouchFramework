@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.swing.flow;
 
+import com.github.gestureengine.api.flow.Block;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.flow.CursorProcessorBlock;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +37,7 @@ import javax.swing.SwingUtilities;
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
-public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProcessor> {
+public class EDTCursorProcessorBlock implements CursorProcessor, Block<CursorProcessor> {
 
 	/**
 	 * Blocks that are queued to this block.
@@ -63,7 +63,7 @@ public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProce
 	}
 
 	/**
-	 * @see CursorProcessorBlock#queue(Object)
+	 * @see Block#queue(Object)
 	 */
 	@Override
 	public void queue(final CursorProcessor nextBlock) {
@@ -71,7 +71,7 @@ public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProce
 	}
 
 	/**
-	 * @see CursorProcessorBlock#dequeue(Object)
+	 * @see Block#dequeue(Object)
 	 */
 	@Override
 	public void dequeue(final CursorProcessor nextBlock) {
@@ -81,7 +81,7 @@ public class EDTCursorProcessorBlock implements CursorProcessorBlock<CursorProce
 	/**
 	 * Forwards the specified cursors to the next blocks on the EDT.
 	 *
-	 * @see CursorProcessorBlock#process(Collection)
+	 * @see CursorProcessor#process(Collection)
 	 */
 	@Override
 	public void process(final Collection<Cursor> cursors) {

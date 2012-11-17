@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.input.controller;
 
 import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.input.controller.InputController;
+import com.github.gestureengine.api.input.source.InputSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +35,9 @@ import java.util.List;
  * processor to process the touch input, by calling their {@link com.github.gestureengine.api.flow.CursorProcessor#process(java.util.Collection)}
  * method.
  *
- * @see InputController
+ * @see com.github.gestureengine.api.input.source.InputSource
  */
-public abstract class AbstractInputController implements InputController {
+public abstract class AbstractInputSource implements InputSource {
 
 	/**
 	 * Flag indicating whether the input controller is started or not.
@@ -75,7 +75,7 @@ public abstract class AbstractInputController implements InputController {
 	}
 
 	/**
-	 * @see InputController#isStarted()
+	 * @see com.github.gestureengine.api.input.source.InputSource#isStarted()
 	 */
 	@Override
 	public boolean isStarted() {
@@ -83,7 +83,7 @@ public abstract class AbstractInputController implements InputController {
 	}
 
 	/**
-	 * @see InputController#start()
+	 * @see com.github.gestureengine.api.input.source.InputSource#start()
 	 */
 	@Override
 	public void start() {
@@ -93,7 +93,7 @@ public abstract class AbstractInputController implements InputController {
 	}
 
 	/**
-	 * @see InputController#stop()
+	 * @see com.github.gestureengine.api.input.source.InputSource#stop()
 	 */
 	@Override
 	public void stop() {

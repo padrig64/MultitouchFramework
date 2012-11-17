@@ -25,7 +25,18 @@
 
 package com.github.gestureengine.api.flow;
 
+/**
+ * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
+ * shape, a GUI component, etc.
+ */
 public interface Region {
 
+	/**
+	 * States whether the touchable region is touched by the specified cursor.
+	 *
+	 * @param cursor Cursor to be checked.
+	 *
+	 * @return True if the region is touched by the cursor, false otherwise.
+	 */
 	public boolean isTouched(Cursor cursor);
 }

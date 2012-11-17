@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.api.gesture;
 
-public interface GestureDefinition<L extends GestureListener> {
+public interface GestureDefinition<E extends GestureEvent> {
 
 	public Object getId();
 
-	public L getListenerClass();
+	public Class<E> getGestureEventClass();
 }

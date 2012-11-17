@@ -27,16 +27,15 @@ package com.github.gestureengine.experimental;
 
 import com.github.gestureengine.api.flow.Region;
 import com.github.gestureengine.api.gesture.GestureDefinition;
-import com.github.gestureengine.api.gesture.GestureListener;
+import com.github.gestureengine.api.gesture.GestureEvent;
 import com.github.gestureengine.api.gesture.GestureRecognizer;
-import com.github.gestureengine.api.input.controller.InputController;
 import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.input.source.InputSource;
 import com.github.gestureengine.api.region.CursorToRegionDispatcher;
-import com.github.gestureengine.base.flow.CompositeCursorProcessorBlock;
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
-	private InputController inputController = null;
+	private InputSource inputController = null;
 
 	private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
 
@@ -46,15 +45,15 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	 * @see com.github.gestureengine.experimental.GestureEngineProfile#getInputController()
 	 */
 	@Override
-	public InputController getInputController() {
+	public InputSource getInputController() {
 		return inputController;
 	}
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(InputController)
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
 	 */
 	@Override
-	public void setInputController(final InputController inputController) {
+	public void setInputController(final InputSource inputController) {
 		if (this.inputController != null) {
 			this.inputController.dequeue(filterComposition);
 		}
@@ -71,15 +70,15 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	 */
 	@Override
 	public void addInputFilter(final InputFilter inputFilter) {
-		filterComposition.addSubBlock(inputFilter);
+//		filterComposition.addSubBlock(inputFilter);
 	}
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#removeInputFilter(InputFilter)
+	 * @see GestureEngineProfile#removeInputFilter(InputFilter)
 	 */
 	@Override
 	public void removeInputFilter(final InputFilter inputFilter) {
-		filterComposition.removeSubBlock(inputFilter);
+//		filterComposition.removeSubBlock(inputFilter);
 	}
 
 	public CursorToRegionDispatcher getTouchableObjectController() {
@@ -99,32 +98,31 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureRecognizer(final GestureDefinition<L> gestureDefinition,
-																 final GestureRecognizer<L> gestureRecognizer) {
+	public <E extends GestureEvent> void addGestureRecognizer(final GestureDefinition<E> gestureDefinition,
+															  final GestureRecognizer<E> gestureRecognizer) {
 		toc.queue(gestureRecognizer);
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureRecognizer(final GestureRecognizer<L> gestureRecognizer) {
+	public <E extends GestureEvent> void removeGestureRecognizer(final GestureRecognizer<E> gestureRecognizer) {
 		toc.dequeue(gestureRecognizer);
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
-															   final L gestureListener) {
+	public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
+															final E gestureListener) {
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureListener(final L gestureListener) {
+	public <E extends GestureEvent> void removeGestureListener(final E gestureListener) {
 	}
 
 	@Override
-	public <L extends GestureListener> void addGestureListener(final GestureDefinition<L> gestureDefinition,
-															   final L gestureListener, final Region touchableObject) {
+	public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
+															final E gestureListener, final Region touchableObject) {
 	}
 
 	@Override
-	public <L extends GestureListener> void removeGestureListener(final L gestureListener,
-																  final Region touchableObject) {
+	public <E extends GestureEvent> void removeGestureListener(final E gestureListener, final Region touchableObject) {
 	}
 }

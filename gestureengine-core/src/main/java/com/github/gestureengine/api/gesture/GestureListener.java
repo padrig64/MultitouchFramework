@@ -25,6 +25,7 @@
 
 package com.github.gestureengine.api.gesture;
 
-public interface GestureListener {
-	// TODO
+public interface GestureListener<E> {
+
+	public void processGestureEvent(E event);
 }

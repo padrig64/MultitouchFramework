@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.swing.flow;
 
+import com.github.gestureengine.api.flow.Block;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.CursorPerRegionProcessorBlock;
 import com.github.gestureengine.api.flow.Region;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
-public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcessorBlock<CursorPerRegionProcessor> {
+public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcessor, Block<CursorPerRegionProcessor> {
 
 	/**
 	 * Blocks that are queued to this block.
@@ -65,7 +65,7 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 	}
 
 	/**
-	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#queue(Object)
+	 * @see Block#queue(Object)
 	 */
 	@Override
 	public void queue(final CursorPerRegionProcessor nextBlock) {
@@ -73,7 +73,7 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 	}
 
 	/**
-	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#dequeue(Object)
+	 * @see Block#dequeue(Object)
 	 */
 	@Override
 	public void dequeue(final CursorPerRegionProcessor nextBlock) {
@@ -83,7 +83,7 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 	/**
 	 * Forwards the specified cursors to the next blocks on the EDT.
 	 *
-	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#process(java.util.Collection)
+	 * @see CursorPerRegionProcessor#process(Region, Collection)
 	 */
 	@Override
 	public void process(final Region region, final Collection<Cursor> cursors) {

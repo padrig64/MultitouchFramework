@@ -23,8 +23,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.input.controller;
+package com.github.gestureengine.api.input.source;
 
-public class WindowsTouchController extends AbstractInputController {
-	// TODO
+import com.github.gestureengine.api.flow.Block;
+import com.github.gestureengine.api.flow.CursorProcessor;
+
+/**
+ * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
+ * touch input processing. They provide cursors to one or several cursor processors, typically {@link
+ * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.region.CursorToRegionDispatcher}s.
+ *
+ * @see Block
+ * @see com.github.gestureengine.api.flow.CursorProcessor
+ */
+public interface InputSource extends Block<CursorProcessor> {
+
+	/**
+	 * States whether the input controller is started and is able to provide cursors or not.
+	 *
+	 * @return True if the controller is started, false otherwise.
+	 */
+	public boolean isStarted();
+
+	/**
+	 * Starts the input controller so that it can provide cursors.
+	 */
+	public void start();
+
+	/**
+	 * Stops the input controller so that it no longer provide cursors.
+	 */
+	public void stop();
 }
