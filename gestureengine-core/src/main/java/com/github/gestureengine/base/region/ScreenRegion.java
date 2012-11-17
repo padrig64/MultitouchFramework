@@ -26,11 +26,11 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.TouchableRegion;
+import com.github.gestureengine.api.flow.Region;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-public class ScreenRegion implements TouchableRegion {
+public class ScreenRegion implements Region {
 
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 

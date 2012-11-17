@@ -28,7 +28,7 @@ package com.github.gestureengine.swing.flow;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessorBlock;
-import com.github.gestureengine.api.region.TouchableRegion;
+import com.github.gestureengine.api.flow.Region;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -86,7 +86,7 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 	 * @see com.github.gestureengine.api.flow.CursorProcessorBlock#process(java.util.Collection)
 	 */
 	@Override
-	public void process(final TouchableRegion region, final Collection<Cursor> cursors) {
+	public void process(final Region region, final Collection<Cursor> cursors) {
 		// Just put the cursors in a new list, no need to clone them
 		final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
 

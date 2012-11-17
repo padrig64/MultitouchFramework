@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.region;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.TouchableRegion;
+import com.github.gestureengine.api.flow.Region;
 
 public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
@@ -34,7 +34,7 @@ public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
 	 */
 	@Override
-	protected TouchableRegion findTouchedRegion(final Cursor cursor) {
+	protected Region findTouchedRegion(final Cursor cursor) {
 		return SCREEN_REGION;
 	}
 }

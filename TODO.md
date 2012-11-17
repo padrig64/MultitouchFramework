@@ -1,11 +1,15 @@
-. BoundingBoxFilter should reset the box if the cursor is up
+# FIXES
 
-. Gesture lock
-. Better packaging: swing, basic gestures, windows 7 touch, macbook trackpad, javafx, etc.
-. Windows Touch events
-. MacBook trackpad / magic mouse events
-. Mouse/keyboard simulated touch events
-. Handle unintended finger up
-. Plugin for NASA World Wind?
-. Android support?
+* BoundingBoxFilter should reset the box if the cursor is up
+
+# NEW STUFF
+
+* Gesture lock
+* Better packaging: swing, basic gestures, windows 7 touch, macbook trackpad, javafx, etc.
+* Windows Touch events
+* MacBook trackpad / magic mouse events
+* Mouse/keyboard simulated touch events
+* Handle unintended finger up
+* Plugin for NASA World Wind?
+* Android support?
 

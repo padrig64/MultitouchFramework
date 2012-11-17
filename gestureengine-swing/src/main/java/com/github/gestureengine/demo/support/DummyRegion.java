@@ -26,10 +26,10 @@
 package com.github.gestureengine.demo.support;
 
 import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.region.TouchableRegion;
+import com.github.gestureengine.api.flow.Region;
 import java.awt.Rectangle;
 
-public class DummyRegion implements TouchableRegion {
+public class DummyRegion implements Region {
 
 	private final String id;
 	private final Rectangle bounds;

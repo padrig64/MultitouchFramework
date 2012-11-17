@@ -25,10 +25,9 @@
 
 package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.region.TouchableRegion;
 import java.util.Collection;
 
 public interface CursorPerRegionProcessor {
 
-	public void process(TouchableRegion region, Collection<Cursor> cursors);
+	public void process(Region region, Collection<Cursor> cursors);
 }

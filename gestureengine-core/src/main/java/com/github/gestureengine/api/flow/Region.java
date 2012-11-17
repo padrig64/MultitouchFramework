@@ -23,11 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.region;
+package com.github.gestureengine.api.flow;
 
-import com.github.gestureengine.api.flow.Cursor;
-
-public interface TouchableRegion {
+public interface Region {
 
 	public boolean isTouched(Cursor cursor);
 }
