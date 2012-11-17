@@ -25,13 +25,13 @@
 
 package com.github.gestureengine.demo.support;
 
-import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.TouchableRegion;
 import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,8 +74,8 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 		// Draw all regions
 		if (cursorToRegionDispatcher != null) {
 			for (final TouchableRegion region : cursorToRegionDispatcher.getRegions()) {
-				final Bounds bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
-				g2d.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth() - 1, bounds.getHeight() - 1);
+				final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
+				g2d.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
 			}
 		}
 
@@ -83,20 +83,20 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 		for (final Map.Entry<TouchableRegion, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
 			if (!entry.getValue().isEmpty()) {
 				if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
-					final Bounds bounds =
+					final Rectangle bounds =
 							convertScreenBoundsToCanvas(((DummyRegion) entry.getKey()).getTouchableBounds());
-					g2d.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+					g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 				}
 			}
 		}
 	}
 
-	private Bounds convertScreenBoundsToCanvas(final Bounds screenBounds) {
-		final int canvasX = screenBounds.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasY = screenBounds.getY() * canvas.getHeight() / SCREEN_SIZE.height;
-		final int canvasWidth = screenBounds.getWidth() * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasHeight = screenBounds.getHeight() * canvas.getHeight() / SCREEN_SIZE.height;
+	private Rectangle convertScreenBoundsToCanvas(final Rectangle screenBounds) {
+		final int canvasX = screenBounds.x * canvas.getWidth() / SCREEN_SIZE.width;
+		final int canvasY = screenBounds.y * canvas.getHeight() / SCREEN_SIZE.height;
+		final int canvasWidth = screenBounds.width * canvas.getWidth() / SCREEN_SIZE.width;
+		final int canvasHeight = screenBounds.height * canvas.getHeight() / SCREEN_SIZE.height;
 
-		return new Bounds(screenBounds.getId(), canvasX, canvasY, canvasWidth, canvasHeight);
+		return new Rectangle(canvasX, canvasY, canvasWidth, canvasHeight);
 	}
 }

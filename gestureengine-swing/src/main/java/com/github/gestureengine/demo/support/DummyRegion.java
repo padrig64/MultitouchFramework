@@ -25,32 +25,34 @@
 
 package com.github.gestureengine.demo.support;
 
-import com.github.gestureengine.api.flow.Bounds;
 import com.github.gestureengine.api.flow.Cursor;
 import com.github.gestureengine.api.region.TouchableRegion;
+import java.awt.Rectangle;
 
 public class DummyRegion implements TouchableRegion {
 
-	private final Bounds bounds;
+	private final String id;
+	private final Rectangle bounds;
 
 	public DummyRegion(final String id, final int x, final int y, final int width, final int height) {
-		this(new Bounds(id, x, y, width, height));
+		this(id, new Rectangle(x, y, width, height));
 	}
 
-	public DummyRegion(final Bounds bounds) {
+	public DummyRegion(final String id, final Rectangle bounds) {
+		this.id = id;
 		this.bounds = bounds;
 	}
 
 	public String getId() {
-		return bounds.getId();
+		return id;
 	}
 
-	public Bounds getTouchableBounds() {
+	public Rectangle getTouchableBounds() {
 		return bounds;
 	}
 
 	@Override
 	public boolean isTouched(final Cursor cursor) {
-		return bounds.isIn(cursor.getX(), cursor.getY());
+		return bounds.contains(cursor.getX(), cursor.getY());
 	}
 }
