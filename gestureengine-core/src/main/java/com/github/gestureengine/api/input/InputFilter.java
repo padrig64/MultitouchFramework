@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.input.filter;
+package com.github.gestureengine.api.input;
 
 import com.github.gestureengine.api.flow.Block;
 import com.github.gestureengine.api.flow.CursorProcessor;

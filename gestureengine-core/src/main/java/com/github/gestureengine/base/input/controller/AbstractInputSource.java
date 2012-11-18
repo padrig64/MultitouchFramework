@@ -26,7 +26,7 @@
 package com.github.gestureengine.base.input.controller;
 
 import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.input.source.InputSource;
+import com.github.gestureengine.api.input.InputSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ import java.util.List;
  * processor to process the touch input, by calling their {@link com.github.gestureengine.api.flow.CursorProcessor#process(java.util.Collection)}
  * method.
  *
- * @see com.github.gestureengine.api.input.source.InputSource
+ * @see com.github.gestureengine.api.input.InputSource
  */
 public abstract class AbstractInputSource implements InputSource {
 
@@ -75,7 +75,7 @@ public abstract class AbstractInputSource implements InputSource {
 	}
 
 	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#isStarted()
+	 * @see com.github.gestureengine.api.input.InputSource#isStarted()
 	 */
 	@Override
 	public boolean isStarted() {
@@ -83,7 +83,7 @@ public abstract class AbstractInputSource implements InputSource {
 	}
 
 	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#start()
+	 * @see com.github.gestureengine.api.input.InputSource#start()
 	 */
 	@Override
 	public void start() {
@@ -93,7 +93,7 @@ public abstract class AbstractInputSource implements InputSource {
 	}
 
 	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#stop()
+	 * @see com.github.gestureengine.api.input.InputSource#stop()
 	 */
 	@Override
 	public void stop() {

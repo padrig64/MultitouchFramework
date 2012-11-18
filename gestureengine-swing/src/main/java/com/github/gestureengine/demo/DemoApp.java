@@ -27,7 +27,7 @@ package com.github.gestureengine.demo;
 
 import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
 import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.input.InputFilter;
 import com.github.gestureengine.base.gesture.drag.DragRecognizer;
 import com.github.gestureengine.base.input.controller.TuioSource;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;

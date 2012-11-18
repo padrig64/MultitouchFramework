@@ -28,8 +28,8 @@ package com.github.gestureengine.experimental;
 import com.github.gestureengine.api.flow.Region;
 import com.github.gestureengine.api.gesture.GestureEvent;
 import com.github.gestureengine.api.gesture.GestureRecognizer;
-import com.github.gestureengine.api.input.filter.InputFilter;
-import com.github.gestureengine.api.input.source.InputSource;
+import com.github.gestureengine.api.input.InputFilter;
+import com.github.gestureengine.api.input.InputSource;
 
 public interface GestureEngineProfile {
 
