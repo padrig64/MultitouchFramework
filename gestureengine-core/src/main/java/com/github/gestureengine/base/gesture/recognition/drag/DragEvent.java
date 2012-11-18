@@ -37,40 +37,47 @@ public class DragEvent implements GestureEvent {
 
 	private final State state;
 
-	private final int offsetX;
+	private final int dx;
 
-	private final int offsetY;
+	private final int dy;
 
-	private final int totalOffsetX;
+	private final int dxTotal;
 
-	private final int totalOffsetY;
+	private final int dyTotal;
 
-	public DragEvent(final State state, final int offsetX, final int offsetY, final int totalOffsetX,
-					 final int totalOffsetY) {
+	public DragEvent(final State state, final int dx, final int dy, final int dxTotal, final int dyTotal) {
 		this.state = state;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.totalOffsetX = totalOffsetX;
-		this.totalOffsetY = totalOffsetY;
+		this.dx = dx;
+		this.dy = dy;
+		this.dxTotal = dxTotal;
+		this.dyTotal = dyTotal;
 	}
 
 	public State getState() {
 		return state;
 	}
 
-	public int getOffsetX() {
-		return offsetX;
+	public int getDiffX() {
+		return dx;
 	}
 
-	public int getOffsetY() {
-		return offsetY;
+	public int getDiffY() {
+		return dy;
 	}
 
-	public int getTotalOffsetX() {
-		return totalOffsetX;
+	public int getTotalDiffX() {
+		return dxTotal;
 	}
 
-	public int getTotalOffsetY() {
-		return totalOffsetY;
+	public int getTotalDiffY() {
+		return dyTotal;
+	}
+
+	/**
+	 * @see Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "{state=" + state + "; dx=" + dx + "; dy=" + dy + "; dxTotal=" + dxTotal + "; dyTotal=" + dyTotal + "}";
 	}
 }

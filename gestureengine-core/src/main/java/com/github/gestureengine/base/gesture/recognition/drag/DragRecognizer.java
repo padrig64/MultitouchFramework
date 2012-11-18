@@ -31,37 +31,42 @@ import com.github.gestureengine.base.gesture.recognition.AbstractGestureRecogniz
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 
 	private class Context {
 
-		public DragEvent.State previousState = null;
+		public DragEvent.State previousState = DragEvent.State.UNARMED;
 
 		public int previousCursorCount = 0;
 
-		public int previousMeanX = -1;
+		public int referenceMeanX = -1;
+		public int referenceMeanY = -1;
 
+		public int previousMeanX = -1;
 		public int previousMeanY = -1;
 
 		public int previousTotalOffsetX = 0;
-
 		public int previousTotalOffsetY = 0;
 	}
 
-	private int minCursorCount;
+	private static final Logger LOGGER = LoggerFactory.getLogger(DragRecognizer.class);
 
-	private int maxCursorCount;
+	private int minCursorCount = 1;
+
+	private int maxCursorCount = -1;
 
 	private final Map<Region, Context> regionContexts = new HashMap<Region, Context>();
 
 	public DragRecognizer() {
-		this(1, -1);
+		// Nothing to be done
 	}
 
 	public DragRecognizer(final int minCursorCount, final int maxCursorCount) {
-		this.minCursorCount = minCursorCount;
-		this.maxCursorCount = maxCursorCount;
+		setMinCursorCount(minCursorCount);
+		setMaxCursorCount(maxCursorCount);
 	}
 
 	public int getMinCursorCount() {
@@ -88,99 +93,16 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		final int cursorCount = cursors.size();
 		final Context context = getContext(region);
 
-		if (isValid(context.previousCursorCount) && isValid(cursorCount)) {
-			// Drag performed
-
-			// TODO Check if it was already armed and only the number of fingers changed
-			// Determine change
-			final DragEvent.State state = DragEvent.State.PERFORMED;
-			final int offsetX = 0; // TODO
-			final int offsetY = 0; // TODO
-			final int totalOffsetX = 0; // TODO
-			final int totalOffsetY = 0; // TODO
-
-			// Trigger listeners
-			final DragEvent event = new DragEvent(state, offsetX, offsetY, totalOffsetX, totalOffsetY);
-			fireGestureEvent(event);
-
-			// Save context
-			context.previousState = DragEvent.State.ARMED;
-			context.previousMeanX = 0; // TODO
-			context.previousMeanY = 0; // TODO
-			context.previousTotalOffsetX = 0;
-			context.previousTotalOffsetY = 0;
-		} else if (!isValid(context.previousCursorCount) && isValid(cursorCount)) {
-			// Drag armed
-
-			// Trigger listeners
-			final DragEvent event = new DragEvent(DragEvent.State.ARMED, 0, 0, 0, 0);
-			fireGestureEvent(event);
-
-			// Save context
-			context.previousState = DragEvent.State.ARMED;
-			context.previousMeanX = 0; // TODO
-			context.previousMeanY = 0; // TODO
-			context.previousTotalOffsetX = 0;
-			context.previousTotalOffsetY = 0;
-		} else if (isValid(context.previousCursorCount) && !isValid(cursorCount)) {
-			// Drag ended
-
-			// Trigger listeners
-			final DragEvent event = new DragEvent(DragEvent.State.UNARMED, 0, 0, context.previousTotalOffsetX,
-					context.previousTotalOffsetY);
-			fireGestureEvent(event);
-
-			// Save context
-			context.previousState = DragEvent.State.UNARMED;
-			context.previousCursorCount = cursorCount;
-			context.previousMeanX = 0;
-			context.previousMeanY = 0;
+		if (isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
+			// Test this first because it is the most likely to happen
+			processDragPerformed(context, cursors);
+		} else if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
+			processDragArmed(context, cursors);
+		} else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
+			processDragUnarmed(context);
 		} else {
-			// Nothing special happened
-
-			// Save context
-			context.previousState = null;
-			context.previousCursorCount = cursorCount;
-			context.previousMeanX = 0;
-			context.previousMeanY = 0;
+			processNothingHappened(context);
 		}
-//		int dx = 0;
-//		int dy = 0;
-//
-//		// Check if number of fingers changed
-//		final int cursorCount = cursorPoints.size();
-//		if ((cursorCount == previousCursorCount) && (meanPoint != null) && (previousMeanPoint != null)) {
-//			// Same number of finger as the previous call, so pan detected
-//			dx = meanPoint.x - previousMeanPoint.x;
-//			dy = meanPoint.y - previousMeanPoint.y;
-//		}
-//
-//		// Fire start event if pan just started (if at least 1 finger)
-//		if ((previousCursorCount == 0) && (cursorCount > 0)) {
-//			for (final PanListener listener : gestureListeners) {
-//				listener.panStarted();
-//			}
-//		}
-//
-//		// Fire pan event (if at least 1 finger)
-//		for (final PanListener listener : gestureListeners) {
-//			listener.panPerformed(dx, dy, meanPoint);
-//		}
-//
-//		// Fire end event if pan just ended (if no more finger)
-//		if ((previousCursorCount >= 0) && (cursorCount == 0)) {
-//			for (final PanListener listener : gestureListeners) {
-//				listener.panEnded();
-//			}
-//		}
-//
-//		// Save cursor count and mean point for next call
-//		if (meanPoint == null) {
-//			previousMeanPoint = null;
-//		} else {
-//			previousMeanPoint = new Point(meanPoint);
-//		}
-//		previousCursorCount = cursorCount;
 	}
 
 	private Context getContext(final Region region) {
@@ -192,7 +114,110 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		return context;
 	}
 
-	private boolean isValid(final int cursorCount) {
-		return (minCursorCount <= cursorCount) && (cursorCount <= maxCursorCount);
+	private boolean isCursorCountValid(final int cursorCount) {
+		return ((minCursorCount < 1) || (minCursorCount <= cursorCount)) &&
+				((maxCursorCount < 1) || (cursorCount <= maxCursorCount));
+	}
+
+	private void processDragArmed(final Context context, final Collection<Cursor> cursors) {
+		// Trigger listeners
+		final DragEvent event = new DragEvent(DragEvent.State.ARMED, 0, 0, 0, 0);
+		fireGestureEvent(event);
+
+
+		// Calculate mean point
+		final int cursorCount = cursors.size();
+		int meanX = 0;
+		int meanY = 0;
+		for (final Cursor cursor : cursors) {
+			meanX += cursor.getX();
+			meanY += cursor.getY();
+		}
+		meanX /= cursorCount;
+		meanY /= cursorCount;
+
+		// Save context
+		context.previousState = DragEvent.State.ARMED;
+		context.previousCursorCount = cursorCount;
+		context.previousMeanX = meanX;
+		context.previousMeanY = meanY;
+		context.previousTotalOffsetX = 0;
+		context.previousTotalOffsetY = 0;
+	}
+
+	private void processDragPerformed(final Context context, final Collection<Cursor> cursors) {
+		final int cursorCount = cursors.size();
+
+		// Calculate mean point
+		int meanX = 0;
+		int meanY = 0;
+		for (final Cursor cursor : cursors) {
+			meanX += cursor.getX();
+			meanY += cursor.getY();
+		}
+		meanX /= cursorCount;
+		meanY /= cursorCount;
+
+		if (DragEvent.State.ARMED.equals(context.previousState) && (context.previousCursorCount != cursorCount)) {
+			// Still armed, just update context and no need to trigger listeners
+			context.previousState = DragEvent.State.ARMED;
+			context.previousCursorCount = cursorCount;
+			context.referenceMeanX = meanX;
+			context.referenceMeanY = meanY;
+			context.previousMeanX = meanX;
+			context.previousMeanY = meanY;
+			context.previousTotalOffsetX = 0;
+			context.previousTotalOffsetY = 0;
+		} else {
+			// TODO Track cursor count changes and recalculate reference point
+
+			// Determine change
+			final DragEvent.State state = DragEvent.State.PERFORMED;
+			final int offsetX = meanX - context.previousMeanX;
+			final int offsetY = meanY - context.previousMeanY;
+			final int totalOffsetX = 0; // TODO
+			final int totalOffsetY = 0; // TODO
+
+			// Trigger listeners
+			final DragEvent event = new DragEvent(state, offsetX, offsetY, totalOffsetX, totalOffsetY);
+			fireGestureEvent(event);
+
+			// Save context
+			context.previousState = DragEvent.State.PERFORMED;
+			context.previousCursorCount = cursorCount;
+			context.previousMeanX = meanX;
+			context.previousMeanY = meanY;
+			context.previousTotalOffsetX = totalOffsetX;
+			context.previousTotalOffsetY = totalOffsetY;
+		}
+	}
+
+	private void processDragUnarmed(final Context context) {
+		// Trigger listeners
+		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, 0, 0, context.previousTotalOffsetX,
+				context.previousTotalOffsetY);
+		fireGestureEvent(event);
+
+		// Clear context
+		context.previousState = DragEvent.State.UNARMED;
+		context.previousCursorCount = 0;
+		context.referenceMeanX = 0;
+		context.referenceMeanY = 0;
+		context.previousMeanX = 0;
+		context.previousMeanY = 0;
+		context.previousTotalOffsetX = 0;
+		context.previousTotalOffsetY = 0;
+	}
+
+	private void processNothingHappened(final Context context) {
+		// Clear context
+		context.previousState = DragEvent.State.UNARMED;
+		context.previousCursorCount = 0;
+		context.referenceMeanX = 0;
+		context.referenceMeanY = 0;
+		context.previousMeanX = 0;
+		context.previousMeanY = 0;
+		context.previousTotalOffsetX = 0;
+		context.previousTotalOffsetY = 0;
 	}
 }

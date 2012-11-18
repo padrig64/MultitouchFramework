@@ -33,15 +33,15 @@ import java.util.List;
 
 public abstract class AbstractGestureRecognizer<E extends GestureEvent> implements GestureRecognizer<E> {
 
-	protected List<GestureListener<E>> gestureListeners = new ArrayList<GestureListener<E>>();
+	private final List<GestureListener<E>> gestureListeners = new ArrayList<GestureListener<E>>();
 
 	@Override
-	public void dequeue(final GestureListener<E> gestureListener) {
+	public void queue(final GestureListener<E> gestureListener) {
 		gestureListeners.add(gestureListener);
 	}
 
 	@Override
-	public void queue(final GestureListener<E> gestureListener) {
+	public void dequeue(final GestureListener<E> gestureListener) {
 		gestureListeners.remove(gestureListener);
 	}
 

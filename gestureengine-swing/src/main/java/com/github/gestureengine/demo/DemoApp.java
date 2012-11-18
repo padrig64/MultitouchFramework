@@ -25,9 +25,11 @@
 
 package com.github.gestureengine.demo;
 
+import com.github.gestureengine.api.gesture.recognition.GestureListener;
 import com.github.gestureengine.api.input.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
+import com.github.gestureengine.base.gesture.recognition.drag.DragEvent;
 import com.github.gestureengine.base.gesture.recognition.drag.DragRecognizer;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
@@ -256,7 +258,17 @@ public class DemoApp extends JFrame {
 		edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
 
 		// Configure gestures
-		new DragRecognizer();
+		final DragRecognizer dragRecognizer = new DragRecognizer();
+		cursorToRegionDispatcher.queue(dragRecognizer);
+
+		// Configure gesture listeners
+		dragRecognizer.queue(new GestureListener<DragEvent>() {
+
+			@Override
+			public void processGestureEvent(final DragEvent event) {
+				System.out.println(event);
+			}
+		});
 
 		// Activate input controller
 		inputController.start();
