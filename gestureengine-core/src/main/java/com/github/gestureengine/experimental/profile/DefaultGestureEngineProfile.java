@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experimental;
+package com.github.gestureengine.experimental.profile;
 
 import com.github.gestureengine.api.gesture.recognition.GestureEvent;
 import com.github.gestureengine.api.gesture.recognition.GestureRecognizer;
@@ -31,6 +31,7 @@ import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.api.input.source.InputSource;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.api.region.dispatch.CursorToRegionDispatcher;
+import com.github.gestureengine.experimental.input.CompositeCursorProcessorBlock;
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
@@ -41,7 +42,7 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	private CursorToRegionDispatcher toc = null;
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#getInputController()
+	 * @see GestureEngineProfile#getInputController()
 	 */
 	@Override
 	public InputSource getInputController() {
@@ -49,7 +50,7 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	}
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
+	 * @see GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
 	 */
 	@Override
 	public void setInputController(final InputSource inputController) {
@@ -65,7 +66,7 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	}
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#addInputFilter(InputFilter)
+	 * @see GestureEngineProfile#addInputFilter(InputFilter)
 	 */
 	@Override
 	public void addInputFilter(final InputFilter inputFilter) {

@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experimental;
+package com.github.gestureengine.experimental.input;
 
 import com.github.gestureengine.api.flow.Chainable;
 import com.github.gestureengine.api.input.Cursor;

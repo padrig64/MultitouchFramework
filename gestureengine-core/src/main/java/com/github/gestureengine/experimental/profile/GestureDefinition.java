@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.experimental;
+package com.github.gestureengine.experimental.profile;
 
 import com.github.gestureengine.api.gesture.recognition.GestureEvent;
 
