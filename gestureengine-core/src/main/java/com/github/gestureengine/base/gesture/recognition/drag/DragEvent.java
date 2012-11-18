@@ -31,7 +31,46 @@ public class DragEvent implements GestureEvent {
 
 	public enum State {
 		ARMED,
-		STARTED,
-		ENDED
+		PERFORMED,
+		UNARMED
+	}
+
+	private final State state;
+
+	private final int offsetX;
+
+	private final int offsetY;
+
+	private final int totalOffsetX;
+
+	private final int totalOffsetY;
+
+	public DragEvent(final State state, final int offsetX, final int offsetY, final int totalOffsetX,
+					 final int totalOffsetY) {
+		this.state = state;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+		this.totalOffsetX = totalOffsetX;
+		this.totalOffsetY = totalOffsetY;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public int getOffsetX() {
+		return offsetX;
+	}
+
+	public int getOffsetY() {
+		return offsetY;
+	}
+
+	public int getTotalOffsetX() {
+		return totalOffsetX;
+	}
+
+	public int getTotalOffsetY() {
+		return totalOffsetY;
 	}
 }

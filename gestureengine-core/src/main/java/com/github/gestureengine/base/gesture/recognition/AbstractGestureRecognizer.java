@@ -44,4 +44,10 @@ public abstract class AbstractGestureRecognizer<E extends GestureEvent> implemen
 	public void queue(final GestureListener<E> gestureListener) {
 		gestureListeners.remove(gestureListener);
 	}
+
+	protected void fireGestureEvent(final E event) {
+		for (final GestureListener<E> listener : gestureListeners) {
+			listener.processGestureEvent(event);
+		}
+	}
 }
