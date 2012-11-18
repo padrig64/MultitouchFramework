@@ -23,12 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.swing.flow;
+package com.github.gestureengine.swing.input;
 
-import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.api.flow.Chainable;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.input.CursorProcessor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,18 +37,17 @@ import javax.swing.SwingUtilities;
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
-public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcessor, Block<CursorPerRegionProcessor> {
+public class EDTSchedulerCursorProcessor implements CursorProcessor, Chainable<CursorProcessor> {
 
 	/**
 	 * Blocks that are queued to this block.
 	 */
-	private final List<CursorPerRegionProcessor> nextBlocks =
-			Collections.synchronizedList(new ArrayList<CursorPerRegionProcessor>());
+	private final List<CursorProcessor> nextBlocks = Collections.synchronizedList(new ArrayList<CursorProcessor>());
 
 	/**
 	 * Default constructor.
 	 */
-	public EDTCursorPerRegionProcessorBlock() {
+	public EDTSchedulerCursorProcessor() {
 		// Nothing to be done
 	}
 
@@ -58,35 +56,35 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 	 *
 	 * @param firstNextBlock First block to be queued.
 	 *
-	 * @see #queue(CursorPerRegionProcessor)
+	 * @see #queue(CursorProcessor)
 	 */
-	public EDTCursorPerRegionProcessorBlock(final CursorPerRegionProcessor firstNextBlock) {
+	public EDTSchedulerCursorProcessor(final CursorProcessor firstNextBlock) {
 		nextBlocks.add(firstNextBlock);
 	}
 
 	/**
-	 * @see Block#queue(Object)
+	 * @see com.github.gestureengine.api.flow.Chainable#queue(Object)
 	 */
 	@Override
-	public void queue(final CursorPerRegionProcessor nextBlock) {
+	public void queue(final CursorProcessor nextBlock) {
 		nextBlocks.add(nextBlock);
 	}
 
 	/**
-	 * @see Block#dequeue(Object)
+	 * @see com.github.gestureengine.api.flow.Chainable#dequeue(Object)
 	 */
 	@Override
-	public void dequeue(final CursorPerRegionProcessor nextBlock) {
+	public void dequeue(final CursorProcessor nextBlock) {
 		nextBlocks.remove(nextBlock);
 	}
 
 	/**
 	 * Forwards the specified cursors to the next blocks on the EDT.
 	 *
-	 * @see CursorPerRegionProcessor#process(Region, Collection)
+	 * @see CursorProcessor#process(Collection)
 	 */
 	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
+	public void process(final Collection<Cursor> cursors) {
 		// Just put the cursors in a new list, no need to clone them
 		final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
 
@@ -94,8 +92,8 @@ public class EDTCursorPerRegionProcessorBlock implements CursorPerRegionProcesso
 			@Override
 			public void run() {
 				synchronized (nextBlocks) {
-					for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
-						nextBlock.process(region, copiedData);
+					for (final CursorProcessor nextBlock : nextBlocks) {
+						nextBlock.process(copiedData);
 					}
 				}
 			}

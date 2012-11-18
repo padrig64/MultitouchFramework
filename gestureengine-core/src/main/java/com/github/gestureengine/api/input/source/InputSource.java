@@ -23,20 +23,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.api.input.source;
+
+import com.github.gestureengine.api.flow.Chainable;
+import com.github.gestureengine.api.input.CursorProcessor;
 
 /**
- * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
- * shape, a GUI component, etc.
+ * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
+ * touch input processing. They provide cursors to one or several cursor processors, typically {@link
+ * com.github.gestureengine.api.input.filter.InputFilter}s or {@link com.github.gestureengine.api.region.dispatch.CursorToRegionDispatcher}s.
+ *
+ * @see com.github.gestureengine.api.flow.Chainable
+ * @see com.github.gestureengine.api.input.CursorProcessor
  */
-public interface Region {
+public interface InputSource extends Chainable<CursorProcessor> {
 
 	/**
-	 * States whether the touchable region is touched by the specified cursor.
+	 * States whether the input controller is started and is able to provide cursors or not.
 	 *
-	 * @param cursor Cursor to be checked.
-	 *
-	 * @return True if the region is touched by the cursor, false otherwise.
+	 * @return True if the controller is started, false otherwise.
 	 */
-	public boolean isTouched(Cursor cursor);
+	public boolean isStarted();
+
+	/**
+	 * Starts the input controller so that it can provide cursors.
+	 */
+	public void start();
+
+	/**
+	 * Stops the input controller so that it no longer provide cursors.
+	 */
+	public void stop();
 }

@@ -23,11 +23,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture;
+package com.github.gestureengine.api.region.dispatch;
 
-import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
+import com.github.gestureengine.api.flow.Chainable;
+import com.github.gestureengine.api.input.CursorProcessor;
+import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 
-public interface GestureRecognizer<E extends GestureEvent> extends CursorPerRegionProcessor, Block<GestureListener<E>> {
+public interface CursorToRegionDispatcher extends CursorProcessor, Chainable<CursorPerRegionProcessor> {
 	// Nothing to be done
 }

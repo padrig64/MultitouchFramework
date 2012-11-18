@@ -23,20 +23,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.swing.region;
+package com.github.gestureengine.api.region;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.base.region.AbstractCursorToRegionDispatcher;
+import com.github.gestureengine.api.input.Cursor;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+/**
+ * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
+ * shape, a GUI component, etc.
+ */
+public interface Region {
 
 	/**
-	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+	 * States whether the touchable region is touched by the specified cursor.
+	 *
+	 * @param cursor Cursor to be checked.
+	 *
+	 * @return True if the region is touched by the cursor, false otherwise.
 	 */
-	@Override
-	protected Region findTouchedRegion(final Cursor cursor) {
-		// TODO
-		return null;
-	}
+	public boolean isTouched(Cursor cursor);
 }

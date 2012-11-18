@@ -23,9 +23,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture;
+package com.github.gestureengine.api.input;
 
-public interface GestureListener<E extends GestureEvent> {
+import java.util.Collection;
 
-	public void processGestureEvent(E event);
+/**
+ * Interface to be implemented by entities processing cursors.<br>It is typically implemented by input filters.
+ */
+public interface CursorProcessor {
+
+	/**
+	 * Processes the specified cursors.
+	 *
+	 * @param cursors Cursors to be processed.
+	 */
+	public void process(Collection<Cursor> cursors);
 }

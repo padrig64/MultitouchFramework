@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.flow.Cursor;
+import com.github.gestureengine.api.input.Cursor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

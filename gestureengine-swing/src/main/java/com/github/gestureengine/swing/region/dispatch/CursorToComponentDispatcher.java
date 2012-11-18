@@ -23,21 +23,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.swing.region.dispatch;
 
-import java.util.Collection;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.base.region.AbstractCursorToRegionDispatcher;
 
-/**
- * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
- * implemented by gesture recognizers.
- */
-public interface CursorPerRegionProcessor {
+public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
 
 	/**
-	 * Processes the specified cursors for the specified touchable region.
-	 *
-	 * @param region Touchable region to which the cursors are associated.
-	 * @param cursors Cursors to be processed.
+	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
 	 */
-	public void process(Region region, Collection<Cursor> cursors);
+	@Override
+	protected Region findTouchedRegion(final Cursor cursor) {
+		// TODO
+		return null;
+	}
 }

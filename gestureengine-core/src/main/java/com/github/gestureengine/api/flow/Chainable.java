@@ -23,35 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.input;
-
-import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.CursorProcessor;
+package com.github.gestureengine.api.flow;
 
 /**
- * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
- * touch input processing. They provide cursors to one or several cursor processors, typically {@link
- * com.github.gestureengine.api.input.InputFilter}s or {@link com.github.gestureengine.api.region.CursorToRegionDispatcher}s.
+ * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
+ * blocks can be connected.
  *
- * @see Block
- * @see com.github.gestureengine.api.flow.CursorProcessor
+ * @param <N> Type of next block that can be connected.
  */
-public interface InputSource extends Block<CursorProcessor> {
+public interface Chainable<N> {
 
 	/**
-	 * States whether the input controller is started and is able to provide cursors or not.
+	 * Connects the specified block to process the output from this block.
 	 *
-	 * @return True if the controller is started, false otherwise.
+	 * @param nextBlock Block to be connected.
 	 */
-	public boolean isStarted();
+	public void queue(N nextBlock);
 
 	/**
-	 * Starts the input controller so that it can provide cursors.
+	 * Disconnects the specified block from this block.
+	 *
+	 * @param nextBlock Block to be disconnected.
 	 */
-	public void start();
-
-	/**
-	 * Stops the input controller so that it no longer provide cursors.
-	 */
-	public void stop();
+	public void dequeue(N nextBlock);
 }

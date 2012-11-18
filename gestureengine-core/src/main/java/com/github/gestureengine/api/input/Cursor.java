@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.api.input;
 
 /**
  * Entity representing a touch point.<br>This is a point of contact with the touch-enabled surface.<br>Typically, The

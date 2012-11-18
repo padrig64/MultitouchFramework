@@ -25,16 +25,16 @@
 
 package com.github.gestureengine.base.input.filter;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.input.InputFilter;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.input.CursorProcessor;
+import com.github.gestureengine.api.input.filter.InputFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link com.github.gestureengine.api.flow.CursorProcessor#process(java.util.Collection)}
+ * process the filtered touch input, by calling their {@link com.github.gestureengine.api.input.CursorProcessor#process(java.util.Collection)}
  * method.
  *
  * @see InputFilter

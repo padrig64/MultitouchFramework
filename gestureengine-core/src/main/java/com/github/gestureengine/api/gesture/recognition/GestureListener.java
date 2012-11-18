@@ -23,27 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.api.gesture.recognition;
 
-/**
- * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
- * blocks can be connected.
- *
- * @param <N> Type of next block that can be connected.
- */
-public interface Block<N> {
+public interface GestureListener<E extends GestureEvent> {
 
-	/**
-	 * Connects the specified block to process the output from this block.
-	 *
-	 * @param nextBlock Block to be connected.
-	 */
-	public void queue(N nextBlock);
-
-	/**
-	 * Disconnects the specified block from this block.
-	 *
-	 * @param nextBlock Block to be disconnected.
-	 */
-	public void dequeue(N nextBlock);
+	public void processGestureEvent(E event);
 }

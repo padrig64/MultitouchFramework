@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.demo.support;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.CursorPerRegionProcessor;
+import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.region.DefaultCursorToRegionDispatcher;
 import java.awt.Dimension;
 import java.awt.Graphics2D;

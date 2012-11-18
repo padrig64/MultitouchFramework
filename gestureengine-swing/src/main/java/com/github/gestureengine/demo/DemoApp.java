@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.demo;
 
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.CursorProcessor;
-import com.github.gestureengine.api.input.InputFilter;
+import com.github.gestureengine.api.input.CursorProcessor;
+import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 import com.github.gestureengine.base.gesture.drag.DragRecognizer;
 import com.github.gestureengine.base.input.controller.TuioSource;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
@@ -41,8 +41,8 @@ import com.github.gestureengine.demo.support.Layer;
 import com.github.gestureengine.demo.support.MeanCursorLayer;
 import com.github.gestureengine.demo.support.MeanLinesLayer;
 import com.github.gestureengine.demo.support.RegionsLayer;
-import com.github.gestureengine.swing.flow.EDTCursorPerRegionProcessorBlock;
-import com.github.gestureengine.swing.flow.EDTCursorProcessorBlock;
+import com.github.gestureengine.swing.input.EDTSchedulerCursorProcessor;
+import com.github.gestureengine.swing.region.EDTSchedulerCursorPerRegionProcessor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -225,7 +225,7 @@ public class DemoApp extends JFrame {
 		final TuioSource inputController = new TuioSource();
 
 		// Configure layers for raw cursors
-		final EDTCursorProcessorBlock edtRawCursorProcessorBlock = new EDTCursorProcessorBlock();
+		final EDTSchedulerCursorProcessor edtRawCursorProcessorBlock = new EDTSchedulerCursorProcessor();
 		inputController.queue(edtRawCursorProcessorBlock);
 		edtRawCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
 
@@ -236,7 +236,7 @@ public class DemoApp extends JFrame {
 		boundingBoxFilter.queue(noChangeFilter);
 
 		// Configure layers for filtered cursors
-		final EDTCursorProcessorBlock edtFilteredCursorProcessorBlock = new EDTCursorProcessorBlock();
+		final EDTSchedulerCursorProcessor edtFilteredCursorProcessorBlock = new EDTSchedulerCursorProcessor();
 		noChangeFilter.queue(edtFilteredCursorProcessorBlock);
 		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor());
 		edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
@@ -249,8 +249,8 @@ public class DemoApp extends JFrame {
 		noChangeFilter.queue(cursorToRegionDispatcher);
 
 		// Configure layer for regions
-		final EDTCursorPerRegionProcessorBlock edtCursorPerRegionProcessorBlock =
-				new EDTCursorPerRegionProcessorBlock();
+		final EDTSchedulerCursorPerRegionProcessor edtCursorPerRegionProcessorBlock =
+				new EDTSchedulerCursorPerRegionProcessor();
 		cursorToRegionDispatcher.queue(edtCursorPerRegionProcessorBlock);
 		((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
 		edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());

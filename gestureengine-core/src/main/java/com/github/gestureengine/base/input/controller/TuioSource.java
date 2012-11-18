@@ -25,8 +25,8 @@
 
 package com.github.gestureengine.base.input.controller;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.input.CursorProcessor;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
 import com.mlawrie.yajtl.TUIOReceiver;
@@ -124,7 +124,7 @@ public class TuioSource extends AbstractInputSource {
 	private TUIOReceiver tuioClient;
 
 	/**
-	 * Listener to the TUIO client, adapting the input events into {@link com.github.gestureengine.api.flow.Cursor}s.
+	 * Listener to the TUIO client, adapting the input events into {@link com.github.gestureengine.api.input.Cursor}s.
 	 */
 	private final TUIOEvent tuioClientAdapter = new TuioClientAdapter();
 

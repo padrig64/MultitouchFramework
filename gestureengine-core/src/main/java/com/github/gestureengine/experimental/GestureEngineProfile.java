@@ -25,11 +25,11 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.api.gesture.GestureEvent;
-import com.github.gestureengine.api.gesture.GestureRecognizer;
-import com.github.gestureengine.api.input.InputFilter;
-import com.github.gestureengine.api.input.InputSource;
+import com.github.gestureengine.api.gesture.recognition.GestureEvent;
+import com.github.gestureengine.api.gesture.recognition.GestureRecognizer;
+import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.input.source.InputSource;
+import com.github.gestureengine.api.region.Region;
 
 public interface GestureEngineProfile {
 

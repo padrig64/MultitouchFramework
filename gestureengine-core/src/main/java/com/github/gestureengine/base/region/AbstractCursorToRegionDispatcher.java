@@ -25,10 +25,10 @@
 
 package com.github.gestureengine.base.region;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorPerRegionProcessor;
-import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.api.region.CursorToRegionDispatcher;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.CursorPerRegionProcessor;
+import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.dispatch.CursorToRegionDispatcher;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

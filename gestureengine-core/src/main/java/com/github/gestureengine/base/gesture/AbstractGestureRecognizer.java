@@ -25,9 +25,9 @@
 
 package com.github.gestureengine.base.gesture;
 
-import com.github.gestureengine.api.gesture.GestureEvent;
-import com.github.gestureengine.api.gesture.GestureListener;
-import com.github.gestureengine.api.gesture.GestureRecognizer;
+import com.github.gestureengine.api.gesture.recognition.GestureEvent;
+import com.github.gestureengine.api.gesture.recognition.GestureListener;
+import com.github.gestureengine.api.gesture.recognition.GestureRecognizer;
 import java.util.ArrayList;
 import java.util.List;
 

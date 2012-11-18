@@ -23,8 +23,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture;
+package com.github.gestureengine.api.input.filter;
 
-public interface GestureEvent {
-	// TODO
+import com.github.gestureengine.api.flow.Chainable;
+import com.github.gestureengine.api.input.CursorProcessor;
+
+/**
+ * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors.
+ * They provide the filtered cursors to one or several other cursor processors, typically other {@link InputFilter}s or
+ * {@link com.github.gestureengine.api.region.dispatch.CursorToRegionDispatcher}s.
+ *
+ * @see CursorProcessor
+ * @see com.github.gestureengine.api.flow.Chainable
+ */
+public interface InputFilter extends CursorProcessor, Chainable<CursorProcessor> {
+	// Nothing more to be done
 }

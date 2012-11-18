@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.gesture.GestureEvent;
+import com.github.gestureengine.api.gesture.recognition.GestureEvent;
 
 public interface GestureDefinition<E extends GestureEvent> {
 

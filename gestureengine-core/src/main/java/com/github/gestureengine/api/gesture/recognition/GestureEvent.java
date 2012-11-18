@@ -23,19 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.flow;
+package com.github.gestureengine.api.gesture.recognition;
 
-import java.util.Collection;
-
-/**
- * Interface to be implemented by entities processing cursors.<br>It is typically implemented by input filters.
- */
-public interface CursorProcessor {
-
-	/**
-	 * Processes the specified cursors.
-	 *
-	 * @param cursors Cursors to be processed.
-	 */
-	public void process(Collection<Cursor> cursors);
+public interface GestureEvent {
+	// TODO
 }

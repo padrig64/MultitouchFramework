@@ -25,8 +25,8 @@
 
 package com.github.gestureengine.base.region;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.Region;
 import java.util.ArrayList;
 import java.util.List;
 

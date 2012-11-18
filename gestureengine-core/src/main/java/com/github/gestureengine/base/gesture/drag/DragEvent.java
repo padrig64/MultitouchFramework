@@ -25,7 +25,7 @@
 
 package com.github.gestureengine.base.gesture.drag;
 
-import com.github.gestureengine.api.gesture.GestureEvent;
+import com.github.gestureengine.api.gesture.recognition.GestureEvent;
 
 public class DragEvent implements GestureEvent {
 

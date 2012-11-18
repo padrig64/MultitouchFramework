@@ -25,8 +25,8 @@
 
 package com.github.gestureengine.demo.support;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.Region;
 import java.awt.Rectangle;
 
 public class DummyRegion implements Region {

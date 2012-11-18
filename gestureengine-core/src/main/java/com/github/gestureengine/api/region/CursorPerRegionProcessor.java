@@ -23,19 +23,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.input;
+package com.github.gestureengine.api.region;
 
-import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.input.Cursor;
+import java.util.Collection;
 
 /**
- * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors.
- * They provide the filtered cursors to one or several other cursor processors, typically other {@link InputFilter}s or
- * {@link com.github.gestureengine.api.region.CursorToRegionDispatcher}s.
- *
- * @see CursorProcessor
- * @see Block
+ * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
+ * implemented by gesture recognizers.
  */
-public interface InputFilter extends CursorProcessor, Block<CursorProcessor> {
-	// Nothing more to be done
+public interface CursorPerRegionProcessor {
+
+	/**
+	 * Processes the specified cursors for the specified touchable region.
+	 *
+	 * @param region Touchable region to which the cursors are associated.
+	 * @param cursors Cursors to be processed.
+	 */
+	public void process(Region region, Collection<Cursor> cursors);
 }

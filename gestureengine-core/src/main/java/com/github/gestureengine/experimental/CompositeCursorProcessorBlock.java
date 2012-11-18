@@ -25,12 +25,12 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.flow.Block;
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.CursorProcessor;
+import com.github.gestureengine.api.flow.Chainable;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.input.CursorProcessor;
 import java.util.Collection;
 
-public class CompositeCursorProcessorBlock implements CursorProcessor, Block<CursorProcessor> {
+public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable<CursorProcessor> {
 
 	@Override
 	public void queue(final CursorProcessor nextBlock) {

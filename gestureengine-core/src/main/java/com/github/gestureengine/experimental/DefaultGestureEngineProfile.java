@@ -25,12 +25,12 @@
 
 package com.github.gestureengine.experimental;
 
-import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.api.gesture.GestureEvent;
-import com.github.gestureengine.api.gesture.GestureRecognizer;
-import com.github.gestureengine.api.input.InputFilter;
-import com.github.gestureengine.api.input.InputSource;
-import com.github.gestureengine.api.region.CursorToRegionDispatcher;
+import com.github.gestureengine.api.gesture.recognition.GestureEvent;
+import com.github.gestureengine.api.gesture.recognition.GestureRecognizer;
+import com.github.gestureengine.api.input.filter.InputFilter;
+import com.github.gestureengine.api.input.source.InputSource;
+import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.api.region.dispatch.CursorToRegionDispatcher;
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
@@ -49,7 +49,7 @@ public class DefaultGestureEngineProfile implements GestureEngineProfile {
 	}
 
 	/**
-	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(com.github.gestureengine.api.input.InputSource)
+	 * @see com.github.gestureengine.experimental.GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
 	 */
 	@Override
 	public void setInputController(final InputSource inputController) {

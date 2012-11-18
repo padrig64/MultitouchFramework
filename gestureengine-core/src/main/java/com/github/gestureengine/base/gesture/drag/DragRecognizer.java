@@ -25,8 +25,8 @@
 
 package com.github.gestureengine.base.gesture.drag;
 
-import com.github.gestureengine.api.flow.Cursor;
-import com.github.gestureengine.api.flow.Region;
+import com.github.gestureengine.api.input.Cursor;
+import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.gesture.AbstractGestureRecognizer;
 import java.util.Collection;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	}
 
 	/**
-	 * @see AbstractGestureRecognizer#process(com.github.gestureengine.api.flow.Region, Collection)
+	 * @see AbstractGestureRecognizer#process(com.github.gestureengine.api.region.Region, Collection)
 	 */
 	@Override
 	public void process(final Region region, final Collection<Cursor> cursors) {
