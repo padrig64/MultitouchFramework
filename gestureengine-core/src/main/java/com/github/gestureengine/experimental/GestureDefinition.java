@@ -23,11 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.api.gesture;
+package com.github.gestureengine.experimental;
+
+import com.github.gestureengine.api.gesture.GestureEvent;
 
 public interface GestureDefinition<E extends GestureEvent> {
 
-	public Object getId();
+	public String getId();
 
 	public Class<E> getGestureEventClass();
 }

@@ -26,7 +26,6 @@
 package com.github.gestureengine.experimental;
 
 import com.github.gestureengine.api.flow.Region;
-import com.github.gestureengine.api.gesture.GestureDefinition;
 import com.github.gestureengine.api.gesture.GestureEvent;
 import com.github.gestureengine.api.gesture.GestureRecognizer;
 import com.github.gestureengine.api.input.filter.InputFilter;
