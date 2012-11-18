@@ -23,8 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.input.controller;
+package com.github.gestureengine.base.input.source;
 
-public class MacBookTrackPadSource extends AbstractInputSource {
+public class WindowsTouchSource extends AbstractInputSource {
 	// TODO
 }

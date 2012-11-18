@@ -23,25 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture;
+package com.github.gestureengine.base.gesture.recognition.drag;
 
 import com.github.gestureengine.api.gesture.recognition.GestureEvent;
-import com.github.gestureengine.api.gesture.recognition.GestureListener;
-import com.github.gestureengine.api.gesture.recognition.GestureRecognizer;
-import java.util.ArrayList;
-import java.util.List;
 
-public abstract class AbstractGestureRecognizer<E extends GestureEvent> implements GestureRecognizer<E> {
+public class DragEvent implements GestureEvent {
 
-	protected List<GestureListener<E>> gestureListeners = new ArrayList<GestureListener<E>>();
-
-	@Override
-	public void dequeue(final GestureListener<E> gestureListener) {
-		gestureListeners.add(gestureListener);
-	}
-
-	@Override
-	public void queue(final GestureListener<E> gestureListener) {
-		gestureListeners.remove(gestureListener);
+	public enum State {
+		ARMED,
+		STARTED,
+		ENDED
 	}
 }

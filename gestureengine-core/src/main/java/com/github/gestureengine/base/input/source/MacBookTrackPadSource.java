@@ -23,8 +23,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.input.controller;
+package com.github.gestureengine.base.input.source;
 
-public class MouseKeyboardSource extends AbstractInputSource {
+public class MacBookTrackPadSource extends AbstractInputSource {
 	// TODO
 }
