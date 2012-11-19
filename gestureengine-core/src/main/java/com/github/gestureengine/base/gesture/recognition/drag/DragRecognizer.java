@@ -29,75 +29,145 @@ import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.gesture.recognition.AbstractGestureRecognizer;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.WeakHashMap;
 
+/**
+ * Entity responsible for recognizing a drag/pan/etc. gesture.<br>The recognition is made on a per-region basis and is
+ * based on the location of the mean cursor (average of all the cursors).<br>Note that this recognizer works best after
+ * filtering the input and limiting the number of input touch events.
+ */
 public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 
-	private class Context {
+	/**
+	 * Context storing the state of recognition of the gesture for a single region.
+	 */
+	private class RegionContext {
 
+		/**
+		 * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This makes sure
+		 * that we will get the complete set of events.
+		 */
+		public Region activeRegion = null;
+
+		/**
+		 * Last state of the drag gesture for the region.
+		 */
 		public DragEvent.State previousState = DragEvent.State.UNARMED;
 
+		/**
+		 * Last number of cursors on the region.
+		 */
 		public int previousCursorCount = 0;
 
-		public int referenceMeanX = -1;
-		public int referenceMeanY = -1;
+		/**
+		 * Last X coordinate of the reference point used to calculate the total movement of the drag gesture on the region.
+		 */
+		public int referenceX = -1;
 
+		/**
+		 * Last Y coordinate of the reference point used to calculate the total movement of the drag gesture on the region.
+		 */
+		public int referenceY = -1;
+
+		/**
+		 * Last X coordinate of the mean cursor.
+		 */
 		public int previousMeanX = -1;
-		public int previousMeanY = -1;
 
-		public int previousTotalOffsetX = 0;
-		public int previousTotalOffsetY = 0;
+		/**
+		 * Last Y coordinate of the mean cursor.
+		 */
+		public int previousMeanY = -1;
 	}
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DragRecognizer.class);
-
+	/**
+	 * Minimum number of cursors required to perform the gesture.
+	 */
 	private int minCursorCount = 1;
 
-	private int maxCursorCount = -1;
+	/**
+	 * Maximum number of cursors required to perform the gesture.
+	 */
+	private int maxCursorCount = Integer.MAX_VALUE;
 
-	private final Map<Region, Context> regionContexts = new HashMap<Region, Context>();
+	/**
+	 * Saved recognition context for each region.
+	 */
+	private final Map<Region, RegionContext> regionContexts = new WeakHashMap<Region, RegionContext>();
 
+	/**
+	 * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
+	 * maximum.
+	 */
 	public DragRecognizer() {
 		// Nothing to be done
 	}
 
+	/**
+	 * Constructor specifying the minimum and maximum numbers of cursors required to perform the gesture.
+	 *
+	 * @param minCursorCount Minimum number of cursors required to perform the gesture.
+	 * @param maxCursorCount Maximum number of cursors required to perform the gesture.
+	 */
 	public DragRecognizer(final int minCursorCount, final int maxCursorCount) {
 		setMinCursorCount(minCursorCount);
 		setMaxCursorCount(maxCursorCount);
 	}
 
+	/**
+	 * Gets the minimum number of cursors required to perform the gesture.
+	 *
+	 * @return Minimum cursor count.
+	 */
 	public int getMinCursorCount() {
 		return minCursorCount;
 	}
 
+	/**
+	 * Sets the minimum number of cursors required to perform the gesture.
+	 *
+	 * @param count Minimum cursor count.
+	 */
 	public void setMinCursorCount(final int count) {
 		minCursorCount = count;
 	}
 
+	/**
+	 * Gets the maximum number of cursors required to perform the gesture.
+	 *
+	 * @return Maximum cursor count.
+	 */
 	public int getMaxCursorCount() {
 		return maxCursorCount;
 	}
 
+	/**
+	 * Sets the maximum number of cursors required to perform the gesture.
+	 *
+	 * @param count Maximum cursor count.
+	 */
 	public void setMaxCursorCount(final int count) {
 		maxCursorCount = count;
 	}
 
 	/**
-	 * @see AbstractGestureRecognizer#process(com.github.gestureengine.api.region.Region, Collection)
+	 * @see AbstractGestureRecognizer#process(Region, Collection)
 	 */
 	@Override
 	public void process(final Region region, final Collection<Cursor> cursors) {
 		final int cursorCount = cursors.size();
-		final Context context = getContext(region);
+		final RegionContext context = getContext(region);
 
+		// Test this first because it is the most likely to happen
 		if (isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-			// Test this first because it is the most likely to happen
-			processDragPerformed(context, cursors);
+			if (context.previousCursorCount == cursorCount) {
+				processDragPerformed(context, cursors);
+			} else {
+				processValidCursorCountChanged(context, cursors);
+			}
 		} else if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-			processDragArmed(context, cursors);
+			processDragArmed(region, context, cursors);
 		} else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
 			processDragUnarmed(context);
 		} else {
@@ -105,25 +175,37 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		}
 	}
 
-	private Context getContext(final Region region) {
-		Context context = regionContexts.get(region);
+	/**
+	 * Gets a context for the specified region.
+	 *
+	 * @param region Region to get or create a context for.
+	 *
+	 * @return Context for the region.
+	 */
+	private RegionContext getContext(final Region region) {
+		RegionContext context = regionContexts.get(region);
 		if (context == null) {
-			context = new Context();
+			context = new RegionContext();
 			regionContexts.put(region, context);
 		}
 		return context;
 	}
 
+	/**
+	 * States whether the number of input cursors matches the minimum and maximum required by the gesture.
+	 *
+	 * @param cursorCount Input cursor count.
+	 *
+	 * @return True if the minimum and maximum are honored, false otherwise.
+	 */
 	private boolean isCursorCountValid(final int cursorCount) {
-		return ((minCursorCount < 1) || (minCursorCount <= cursorCount)) &&
-				((maxCursorCount < 1) || (cursorCount <= maxCursorCount));
+		return (minCursorCount <= cursorCount) && (cursorCount <= maxCursorCount);
 	}
 
-	private void processDragArmed(final Context context, final Collection<Cursor> cursors) {
+	private void processDragArmed(final Region region, final RegionContext context, final Collection<Cursor> cursors) {
 		// Trigger listeners
 		final DragEvent event = new DragEvent(DragEvent.State.ARMED, 0, 0, 0, 0);
 		fireGestureEvent(event);
-
 
 		// Calculate mean point
 		final int cursorCount = cursors.size();
@@ -137,18 +219,24 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		meanY /= cursorCount;
 
 		// Save context
+		context.activeRegion = region; // Prevent garbage collection
 		context.previousState = DragEvent.State.ARMED;
 		context.previousCursorCount = cursorCount;
+		context.referenceX = meanX;
+		context.referenceY = meanY;
 		context.previousMeanX = meanX;
 		context.previousMeanY = meanY;
-		context.previousTotalOffsetX = 0;
-		context.previousTotalOffsetY = 0;
 	}
 
-	private void processDragPerformed(final Context context, final Collection<Cursor> cursors) {
-		final int cursorCount = cursors.size();
-
+	/**
+	 * Handles the fact that the change of input cursors corresponds to a drag movement.
+	 *
+	 * @param context Region context to be used and updated.
+	 * @param cursors New input cursors.
+	 */
+	private void processDragPerformed(final RegionContext context, final Collection<Cursor> cursors) {
 		// Calculate mean point
+		final int cursorCount = cursors.size();
 		int meanX = 0;
 		int meanY = 0;
 		for (final Cursor cursor : cursors) {
@@ -158,66 +246,90 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		meanX /= cursorCount;
 		meanY /= cursorCount;
 
-		if (DragEvent.State.ARMED.equals(context.previousState) && (context.previousCursorCount != cursorCount)) {
-			// Still armed, just update context and no need to trigger listeners
-			context.previousState = DragEvent.State.ARMED;
-			context.previousCursorCount = cursorCount;
-			context.referenceMeanX = meanX;
-			context.referenceMeanY = meanY;
-			context.previousMeanX = meanX;
-			context.previousMeanY = meanY;
-			context.previousTotalOffsetX = 0;
-			context.previousTotalOffsetY = 0;
-		} else {
-			// TODO Track cursor count changes and recalculate reference point
+		// Determine change
+		final DragEvent.State state = DragEvent.State.PERFORMED;
+		final int offsetX = meanX - context.previousMeanX;
+		final int offsetY = meanY - context.previousMeanY;
 
-			// Determine change
-			final DragEvent.State state = DragEvent.State.PERFORMED;
-			final int offsetX = meanX - context.previousMeanX;
-			final int offsetY = meanY - context.previousMeanY;
-			final int totalOffsetX = 0; // TODO
-			final int totalOffsetY = 0; // TODO
+		// Trigger listeners
+		final DragEvent event =
+				new DragEvent(state, offsetX, offsetY, meanX - context.referenceX, meanY - context.referenceY);
+		fireGestureEvent(event);
 
-			// Trigger listeners
-			final DragEvent event = new DragEvent(state, offsetX, offsetY, totalOffsetX, totalOffsetY);
-			fireGestureEvent(event);
-
-			// Save context
-			context.previousState = DragEvent.State.PERFORMED;
-			context.previousCursorCount = cursorCount;
-			context.previousMeanX = meanX;
-			context.previousMeanY = meanY;
-			context.previousTotalOffsetX = totalOffsetX;
-			context.previousTotalOffsetY = totalOffsetY;
-		}
+		// Save context (no change of reference point or active region)
+		context.previousState = DragEvent.State.PERFORMED;
+		context.previousCursorCount = cursorCount;
+		context.previousMeanX = meanX;
+		context.previousMeanY = meanY;
 	}
 
-	private void processDragUnarmed(final Context context) {
+	/**
+	 * Handles the fact that the number of cursors changed.<br>Note that it is expected here that the validity of the
+	 * cursor count has already been checked before.
+	 *
+	 * @param context Region context to be used and updated.
+	 * @param cursors New input cursors.
+	 */
+	private void processValidCursorCountChanged(final RegionContext context, final Collection<Cursor> cursors) {
+		// Calculate mean point
+		final int cursorCount = cursors.size();
+		int meanX = 0;
+		int meanY = 0;
+		for (final Cursor cursor : cursors) {
+			meanX += cursor.getX();
+			meanY += cursor.getY();
+		}
+		meanX /= cursorCount;
+		meanY /= cursorCount;
+
+		// No need to trigger any listener
+
+		// Calculate new reference point to have the same total difference
+		final int newReferenceX = meanX - context.previousMeanX + context.referenceX;
+		final int newReferenceY = meanY - context.previousMeanY + context.referenceY;
+
+		// Save context (no change of state or active region)
+		context.previousCursorCount = cursorCount;
+		context.referenceX = newReferenceX;
+		context.referenceY = newReferenceY;
+		context.previousMeanX = meanX;
+		context.previousMeanY = meanY;
+	}
+
+	/**
+	 * Handles the fact that the change of input cursors unarmed the gesture.
+	 *
+	 * @param context Region context to be updated.
+	 */
+	private void processDragUnarmed(final RegionContext context) {
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, 0, 0, context.previousTotalOffsetX,
-				context.previousTotalOffsetY);
+		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, 0, 0, context.previousMeanX - context.referenceX,
+				context.previousMeanY - context.referenceY);
 		fireGestureEvent(event);
 
 		// Clear context
+		context.activeRegion = null; // Allow garbage collection
 		context.previousState = DragEvent.State.UNARMED;
 		context.previousCursorCount = 0;
-		context.referenceMeanX = 0;
-		context.referenceMeanY = 0;
+		context.referenceX = 0;
+		context.referenceY = 0;
 		context.previousMeanX = 0;
 		context.previousMeanY = 0;
-		context.previousTotalOffsetX = 0;
-		context.previousTotalOffsetY = 0;
 	}
 
-	private void processNothingHappened(final Context context) {
+	/**
+	 * Handles the fact that the change of input cursors has no effect in the gesture.
+	 *
+	 * @param context Region context to be updated.
+	 */
+	private void processNothingHappened(final RegionContext context) {
 		// Clear context
+		context.activeRegion = null;
 		context.previousState = DragEvent.State.UNARMED;
 		context.previousCursorCount = 0;
-		context.referenceMeanX = 0;
-		context.referenceMeanY = 0;
+		context.referenceX = 0;
+		context.referenceY = 0;
 		context.previousMeanX = 0;
 		context.previousMeanY = 0;
-		context.previousTotalOffsetX = 0;
-		context.previousTotalOffsetY = 0;
 	}
 }
