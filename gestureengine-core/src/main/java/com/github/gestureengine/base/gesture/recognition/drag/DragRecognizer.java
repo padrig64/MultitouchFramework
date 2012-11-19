@@ -204,7 +204,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 
 	private void processDragArmed(final Region region, final RegionContext context, final Collection<Cursor> cursors) {
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.ARMED, 0, 0, 0, 0);
+		final DragEvent event = new DragEvent(DragEvent.State.ARMED, region, 0, 0, 0, 0);
 		fireGestureEvent(event);
 
 		// Calculate mean point
@@ -252,8 +252,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		final int offsetY = meanY - context.previousMeanY;
 
 		// Trigger listeners
-		final DragEvent event =
-				new DragEvent(state, offsetX, offsetY, meanX - context.referenceX, meanY - context.referenceY);
+		final DragEvent event = new DragEvent(state, context.activeRegion, offsetX, offsetY, meanX - context.referenceX,
+				meanY - context.referenceY);
 		fireGestureEvent(event);
 
 		// Save context (no change of reference point or active region)
@@ -303,8 +303,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	 */
 	private void processDragUnarmed(final RegionContext context) {
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, 0, 0, context.previousMeanX - context.referenceX,
-				context.previousMeanY - context.referenceY);
+		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, context.activeRegion, 0, 0,
+				context.previousMeanX - context.referenceX, context.previousMeanY - context.referenceY);
 		fireGestureEvent(event);
 
 		// Clear context

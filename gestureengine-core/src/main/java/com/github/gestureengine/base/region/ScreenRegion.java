@@ -30,10 +30,23 @@ import com.github.gestureengine.api.region.Region;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+/**
+ * Touchable region of the touch surface representing the whole screen.<br>Note that this is meaningful only in cases
+ * where the display matches the whole touch surface. In case of a non-clone dual screen (for instance, extension of the
+ * desktop), the behavior will not be as expected.
+ *
+ * @see Toolkit#getScreenSize()
+ */
 public class ScreenRegion implements Region {
 
+	/**
+	 * Screen size.<br>Note that
+	 */
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
+	/**
+	 * @see Region#isTouched(Cursor)
+	 */
 	@Override
 	public boolean isTouched(final Cursor cursor) {
 		return ((0 <= cursor.getX()) && (cursor.getX() < screenSize.width) && (0 <= cursor.getY()) &&

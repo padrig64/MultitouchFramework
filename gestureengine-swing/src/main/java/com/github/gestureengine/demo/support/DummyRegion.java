@@ -55,4 +55,9 @@ public class DummyRegion implements Region {
 	public boolean isTouched(final Cursor cursor) {
 		return bounds.contains(cursor.getX(), cursor.getY());
 	}
+
+	@Override
+	public String toString() {
+		return id;
+	}
 }
