@@ -69,43 +69,28 @@ public class PinchSpreadEvent implements GestureEvent {
 	private final Region region;
 
 	/**
-	 * Scale movement on the X axis relatively to the previous event.
+	 * Scale movement axis relatively to the previous event.
 	 */
-	private final int sx;
+	private final double ds;
 
 	/**
-	 * Scale movement on the Y axis relatively to the previous event.
+	 * Scale movement relatively to the very beginning of the gesture.
 	 */
-	private final int sy;
-
-	/**
-	 * Scale movement on the X axis relatively to the very beginning of the gesture.
-	 */
-	private final int sxTotal;
-
-	/**
-	 * Scale movement on the Y axis relatively to the very beginning of the gesture.
-	 */
-	private final int syTotal;
+	private final double dsTotal;
 
 	/**
 	 * Constructor specifying all the information on the gesture.
 	 *
 	 * @param state State of the recognized gesture.
 	 * @param region Region to which the gesture applies
-	 * @param sx Scale movement on the X axis relatively to the previous event.
-	 * @param sy Scale movement on the Y axis relatively to the previous event.
-	 * @param sxTotal Scale movement on the X axis relatively to the very beginning of the gesture.
-	 * @param syTotal Scale movement on the Y axis relatively to the very beginning of the gesture.
+	 * @param ds Scale movement relatively to the previous event.
+	 * @param dsTotal Scale movement relatively to the very beginning of the gesture.
 	 */
-	public PinchSpreadEvent(final State state, final Region region, final int sx, final int sy, final int sxTotal,
-							final int syTotal) {
+	public PinchSpreadEvent(final State state, final Region region, final double ds, final double dsTotal) {
 		this.state = state;
 		this.region = region;
-		this.sx = sx;
-		this.sy = sy;
-		this.sxTotal = sxTotal;
-		this.syTotal = syTotal;
+		this.ds = ds;
+		this.dsTotal = dsTotal;
 	}
 
 	/**
@@ -123,39 +108,21 @@ public class PinchSpreadEvent implements GestureEvent {
 	}
 
 	/**
-	 * Gets the scale movement on the X axis relatively to the previous event.
+	 * Gets the scale movement relatively to the previous event.
 	 *
-	 * @return New movement on the X axis.
+	 * @return New movement.
 	 */
-	public int getScaleX() {
-		return sx;
+	public double getDiffScale() {
+		return ds;
 	}
 
 	/**
-	 * Gets the scale movement on the Y axis relatively to the previous event.
+	 * Gets the scale movement axis relatively to the very beginning of the gesture.
 	 *
-	 * @return New movement on the Y axis.
+	 * @return Total movement.
 	 */
-	public int getScaleY() {
-		return sy;
-	}
-
-	/**
-	 * Gets the scale movement on the X axis relatively to the very beginning of the gesture.
-	 *
-	 * @return Total movement on the X axis.
-	 */
-	public int getTotalScaleX() {
-		return sxTotal;
-	}
-
-	/**
-	 * Gets the scale movement on the Y axis relatively to the very beginning of the gesture.
-	 *
-	 * @return Total movement on the Y axis.
-	 */
-	public int getTotalScaleY() {
-		return syTotal;
+	public double getTotalDiffScale() {
+		return dsTotal;
 	}
 
 	/**
@@ -163,8 +130,6 @@ public class PinchSpreadEvent implements GestureEvent {
 	 */
 	@Override
 	public String toString() {
-		return "PINCHSPREAD{state=" + state + "; sx=" + sx + "; sy=" + sy + "; sxTotal=" + sxTotal + "; syTotal=" +
-				syTotal +
-				"} on " + region;
+		return "PINCHSPREAD{state=" + state + "; ds=" + ds + "; dsTotal=" + dsTotal + "} on " + region;
 	}
 }

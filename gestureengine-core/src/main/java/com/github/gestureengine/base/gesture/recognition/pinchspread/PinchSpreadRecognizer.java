@@ -23,21 +23,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.gesture.recognition.drag;
+package com.github.gestureengine.base.gesture.recognition.pinchspread;
 
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.gesture.recognition.AbstractGestureRecognizer;
+import com.github.gestureengine.base.gesture.recognition.drag.DragEvent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Entity responsible for recognizing a drag/pan/etc. gesture.<br>The recognition is made on a per-region basis and is
- * based on the location of the mean cursor (average of all the cursors).<br>Note that this recognizer works best after
- * filtering the input and limiting the number of input touch events.
+ * Entity responsible for recognizing a pinch/spread/zoom/etc. gesture.<br>The recognition is made on a per-region basis
+ * and is based on the mean distance of all the cursors to the mean cursor (average of all the cursors).<br>Note that
+ * this recognizer works best after filtering the input and limiting the number of input touch events.
  */
-public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
+public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpreadEvent> {
 
 	/**
 	 * Context storing the state of recognition of the gesture for a single region.
@@ -60,31 +61,15 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		 */
 		public int previousCursorCount = 0;
 
-		/**
-		 * Last X coordinate of the reference point used to calculate the total movement of the gesture on the region.
-		 */
-		public int referenceX = -1;
+		public double referenceDistance = 1.0;
 
-		/**
-		 * Last Y coordinate of the reference point used to calculate the total movement of the gesture on the region.
-		 */
-		public int referenceY = -1;
-
-		/**
-		 * Last X coordinate of the mean cursor.
-		 */
-		public int previousMeanX = -1;
-
-		/**
-		 * Last Y coordinate of the mean cursor.
-		 */
-		public int previousMeanY = -1;
+		public double previousMeanDistance = 1.0;
 	}
 
 	/**
 	 * Minimum number of cursors required to perform the gesture.
 	 */
-	private int minCursorCount = 1;
+	private int minCursorCount = 2;
 
 	/**
 	 * Maximum number of cursors required to perform the gesture.
@@ -97,10 +82,10 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	private final Map<Region, RegionContext> regionContexts = new WeakHashMap<Region, RegionContext>();
 
 	/**
-	 * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
+	 * Default constructor.<br>By default, 2 cursors is the minimum required to perform the gesture, and there is no
 	 * maximum.
 	 */
-	public DragRecognizer() {
+	public PinchSpreadRecognizer() {
 		// Nothing to be done
 	}
 
@@ -110,7 +95,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	 * @param minCursorCount Minimum number of cursors required to perform the gesture.
 	 * @param maxCursorCount Maximum number of cursors required to perform the gesture.
 	 */
-	public DragRecognizer(final int minCursorCount, final int maxCursorCount) {
+	public PinchSpreadRecognizer(final int minCursorCount, final int maxCursorCount) {
 		setMinCursorCount(minCursorCount);
 		setMaxCursorCount(maxCursorCount);
 	}
@@ -162,14 +147,14 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		// Test this first because it is the most likely to happen
 		if (isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
 			if (context.previousCursorCount == cursorCount) {
-				processDragPerformed(context, cursors);
+				processPinchOrSpreadPerformed(context, cursors);
 			} else {
 				processValidCursorCountChanged(context, cursors);
 			}
 		} else if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-			processDragArmed(region, context, cursors);
+			processPinchOrSpreadArmed(region, context, cursors);
 		} else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
-			processDragUnarmed(context);
+			processPinchOrSpreadUnarmed(context);
 		} else {
 			processNothingHappened(context);
 		}
@@ -202,9 +187,10 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		return (minCursorCount <= cursorCount) && (cursorCount <= maxCursorCount);
 	}
 
-	private void processDragArmed(final Region region, final RegionContext context, final Collection<Cursor> cursors) {
+	private void processPinchOrSpreadArmed(final Region region, final RegionContext context,
+										   final Collection<Cursor> cursors) {
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.ARMED, region, 0, 0, 0, 0);
+		final PinchSpreadEvent event = new PinchSpreadEvent(PinchSpreadEvent.State.ARMED, region, 1.0, 1.0);
 		fireGestureEvent(event);
 
 		// Calculate mean point
@@ -218,14 +204,20 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		meanX /= cursorCount;
 		meanY /= cursorCount;
 
+		// Calculate mean distance to mean point
+		double meanDistance = 0.0;
+		for (final Cursor cursor : cursors) {
+			meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
+					(meanY - cursor.getY()) * (meanY - cursor.getY()));
+		}
+		meanDistance /= cursorCount;
+
 		// Save context
 		context.activeRegion = region; // Prevent garbage collection
 		context.previousState = DragEvent.State.ARMED;
 		context.previousCursorCount = cursorCount;
-		context.referenceX = meanX;
-		context.referenceY = meanY;
-		context.previousMeanX = meanX;
-		context.previousMeanY = meanY;
+		context.referenceDistance = meanDistance;
+		context.previousMeanDistance = meanDistance;
 	}
 
 	/**
@@ -234,7 +226,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	 * @param context Region context to be used and updated.
 	 * @param cursors New input cursors.
 	 */
-	private void processDragPerformed(final RegionContext context, final Collection<Cursor> cursors) {
+	private void processPinchOrSpreadPerformed(final RegionContext context, final Collection<Cursor> cursors) {
 		// Calculate mean point
 		final int cursorCount = cursors.size();
 		int meanX = 0;
@@ -246,20 +238,23 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		meanX /= cursorCount;
 		meanY /= cursorCount;
 
-		// Determine change
-		final int offsetX = meanX - context.previousMeanX;
-		final int offsetY = meanY - context.previousMeanY;
+		// Calculate mean distance to mean point
+		double meanDistance = 0.0;
+		for (final Cursor cursor : cursors) {
+			meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
+					(meanY - cursor.getY()) * (meanY - cursor.getY()));
+		}
+		meanDistance /= cursorCount;
 
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.PERFORMED, context.activeRegion, offsetX, offsetY,
-				meanX - context.referenceX, meanY - context.referenceY);
+		final PinchSpreadEvent event = new PinchSpreadEvent(PinchSpreadEvent.State.PERFORMED, context.activeRegion,
+				meanDistance / context.previousMeanDistance, meanDistance / context.referenceDistance);
 		fireGestureEvent(event);
 
 		// Save context (no change of reference point or active region)
 		context.previousState = DragEvent.State.PERFORMED;
 		context.previousCursorCount = cursorCount;
-		context.previousMeanX = meanX;
-		context.previousMeanY = meanY;
+		context.previousMeanDistance = meanDistance;
 	}
 
 	/**
@@ -281,18 +276,23 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		meanX /= cursorCount;
 		meanY /= cursorCount;
 
+		// Calculate mean distance to mean point
+		double meanDistance = 0.0;
+		for (final Cursor cursor : cursors) {
+			meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
+					(meanY - cursor.getY()) * (meanY - cursor.getY()));
+		}
+		meanDistance /= cursorCount;
+
 		// No need to trigger any listener
 
 		// Calculate new reference point to have the same total difference
-		final int newReferenceX = meanX - context.previousMeanX + context.referenceX;
-		final int newReferenceY = meanY - context.previousMeanY + context.referenceY;
+		final double newReferenceDistance = meanDistance * context.referenceDistance / context.previousMeanDistance;
 
 		// Save context (no change of state or active region)
 		context.previousCursorCount = cursorCount;
-		context.referenceX = newReferenceX;
-		context.referenceY = newReferenceY;
-		context.previousMeanX = meanX;
-		context.previousMeanY = meanY;
+		context.referenceDistance = newReferenceDistance;
+		context.previousMeanDistance = meanDistance;
 	}
 
 	/**
@@ -300,20 +300,18 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 	 *
 	 * @param context Region context to be updated.
 	 */
-	private void processDragUnarmed(final RegionContext context) {
+	private void processPinchOrSpreadUnarmed(final RegionContext context) {
 		// Trigger listeners
-		final DragEvent event = new DragEvent(DragEvent.State.UNARMED, context.activeRegion, 0, 0,
-				context.previousMeanX - context.referenceX, context.previousMeanY - context.referenceY);
+		final PinchSpreadEvent event = new PinchSpreadEvent(PinchSpreadEvent.State.UNARMED, context.activeRegion, 0,
+				context.previousMeanDistance / context.referenceDistance);
 		fireGestureEvent(event);
 
 		// Clear context
 		context.activeRegion = null; // Allow garbage collection
 		context.previousState = DragEvent.State.UNARMED;
 		context.previousCursorCount = 0;
-		context.referenceX = 0;
-		context.referenceY = 0;
-		context.previousMeanX = 0;
-		context.previousMeanY = 0;
+		context.referenceDistance = 1.0;
+		context.previousMeanDistance = 1.0;
 	}
 
 	/**
@@ -326,9 +324,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragEvent> {
 		context.activeRegion = null;
 		context.previousState = DragEvent.State.UNARMED;
 		context.previousCursorCount = 0;
-		context.referenceX = 0;
-		context.referenceY = 0;
-		context.previousMeanX = 0;
-		context.previousMeanY = 0;
+		context.referenceDistance = 1.0;
+		context.previousMeanDistance = 1.0;
 	}
 }

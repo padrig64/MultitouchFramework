@@ -29,8 +29,9 @@ import com.github.gestureengine.api.gesture.recognition.GestureListener;
 import com.github.gestureengine.api.input.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
-import com.github.gestureengine.base.gesture.recognition.drag.DragEvent;
 import com.github.gestureengine.base.gesture.recognition.drag.DragRecognizer;
+import com.github.gestureengine.base.gesture.recognition.pinchspread.PinchSpreadEvent;
+import com.github.gestureengine.base.gesture.recognition.pinchspread.PinchSpreadRecognizer;
 import com.github.gestureengine.base.input.filter.BoundingBoxFilter;
 import com.github.gestureengine.base.input.filter.NoChangeFilter;
 import com.github.gestureengine.base.input.source.TuioSource;
@@ -260,12 +261,21 @@ public class DemoApp extends JFrame {
 		// Configure gestures
 		final DragRecognizer dragRecognizer = new DragRecognizer();
 		cursorToRegionDispatcher.queue(dragRecognizer);
+		final PinchSpreadRecognizer pinchSpreadRecognizer = new PinchSpreadRecognizer();
+		cursorToRegionDispatcher.queue(pinchSpreadRecognizer);
 
 		// Configure gesture listeners
-		dragRecognizer.queue(new GestureListener<DragEvent>() {
+//		dragRecognizer.queue(new GestureListener<DragEvent>() {
+//
+//			@Override
+//			public void processGestureEvent(final DragEvent event) {
+//				System.out.println(event);
+//			}
+//		});
+		pinchSpreadRecognizer.queue(new GestureListener<PinchSpreadEvent>() {
 
 			@Override
-			public void processGestureEvent(final DragEvent event) {
+			public void processGestureEvent(final PinchSpreadEvent event) {
 				System.out.println(event);
 			}
 		});
@@ -276,6 +286,7 @@ public class DemoApp extends JFrame {
 
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
+
 			@Override
 			public void run() {
 				for (final UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
