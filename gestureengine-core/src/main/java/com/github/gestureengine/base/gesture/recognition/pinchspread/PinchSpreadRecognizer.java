@@ -28,7 +28,6 @@ package com.github.gestureengine.base.gesture.recognition.pinchspread;
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.gesture.recognition.AbstractGestureRecognizer;
-import com.github.gestureengine.base.gesture.recognition.drag.DragEvent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -54,7 +53,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 		/**
 		 * Last state of the gesture for the region.
 		 */
-		public DragEvent.State previousState = DragEvent.State.UNARMED;
+		public PinchSpreadEvent.State previousState = PinchSpreadEvent.State.UNARMED;
 
 		/**
 		 * Last number of cursors on the region.
@@ -214,14 +213,14 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 
 		// Save context
 		context.activeRegion = region; // Prevent garbage collection
-		context.previousState = DragEvent.State.ARMED;
+		context.previousState = PinchSpreadEvent.State.ARMED;
 		context.previousCursorCount = cursorCount;
 		context.referenceDistance = meanDistance;
 		context.previousMeanDistance = meanDistance;
 	}
 
 	/**
-	 * Handles the fact that the change of input cursors corresponds to a drag movement.
+	 * Handles the fact that the change of input cursors corresponds to a pinch or spread.
 	 *
 	 * @param context Region context to be used and updated.
 	 * @param cursors New input cursors.
@@ -252,7 +251,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 		fireGestureEvent(event);
 
 		// Save context (no change of reference point or active region)
-		context.previousState = DragEvent.State.PERFORMED;
+		context.previousState = PinchSpreadEvent.State.PERFORMED;
 		context.previousCursorCount = cursorCount;
 		context.previousMeanDistance = meanDistance;
 	}
@@ -308,7 +307,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 
 		// Clear context
 		context.activeRegion = null; // Allow garbage collection
-		context.previousState = DragEvent.State.UNARMED;
+		context.previousState = PinchSpreadEvent.State.UNARMED;
 		context.previousCursorCount = 0;
 		context.referenceDistance = 1.0;
 		context.previousMeanDistance = 1.0;
@@ -322,7 +321,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 	private void processNothingHappened(final RegionContext context) {
 		// Clear context
 		context.activeRegion = null;
-		context.previousState = DragEvent.State.UNARMED;
+		context.previousState = PinchSpreadEvent.State.UNARMED;
 		context.previousCursorCount = 0;
 		context.referenceDistance = 1.0;
 		context.previousMeanDistance = 1.0;
