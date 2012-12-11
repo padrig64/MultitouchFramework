@@ -27,37 +27,38 @@ package com.github.gestureengine.demo.support;
 
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
+
 import java.awt.Rectangle;
 
 public class DummyRegion implements Region {
 
-	private final String id;
-	private final Rectangle bounds;
+    private final String id;
+    private final Rectangle bounds;
 
-	public DummyRegion(final String id, final int x, final int y, final int width, final int height) {
-		this(id, new Rectangle(x, y, width, height));
-	}
+    public DummyRegion(final String id, final int x, final int y, final int width, final int height) {
+        this(id, new Rectangle(x, y, width, height));
+    }
 
-	public DummyRegion(final String id, final Rectangle bounds) {
-		this.id = id;
-		this.bounds = bounds;
-	}
+    public DummyRegion(final String id, final Rectangle bounds) {
+        this.id = id;
+        this.bounds = bounds;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public Rectangle getTouchableBounds() {
-		return bounds;
-	}
+    public Rectangle getTouchableBounds() {
+        return bounds;
+    }
 
-	@Override
-	public boolean isTouched(final Cursor cursor) {
-		return bounds.contains(cursor.getX(), cursor.getY());
-	}
+    @Override
+    public boolean isTouched(final Cursor cursor) {
+        return bounds.contains(cursor.getX(), cursor.getY());
+    }
 
-	@Override
-	public String toString() {
-		return id;
-	}
+    @Override
+    public String toString() {
+        return id;
+    }
 }

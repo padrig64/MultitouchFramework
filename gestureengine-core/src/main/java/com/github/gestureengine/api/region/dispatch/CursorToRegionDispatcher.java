@@ -30,5 +30,5 @@ import com.github.gestureengine.api.input.CursorProcessor;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 
 public interface CursorToRegionDispatcher extends CursorProcessor, Chainable<CursorPerRegionProcessor> {
-	// Nothing to be done
+    // Nothing to be done
 }

@@ -28,25 +28,26 @@ package com.github.gestureengine.experimental.input;
 import com.github.gestureengine.api.flow.Chainable;
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.input.CursorProcessor;
+
 import java.util.Collection;
 
 public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable<CursorProcessor> {
 
-	@Override
-	public void queue(final CursorProcessor nextBlock) {
-		// TODO
-	}
+    @Override
+    public void queue(final CursorProcessor nextBlock) {
+        // TODO
+    }
 
-	@Override
-	public void dequeue(final CursorProcessor nextBlock) {
-		// TODO
-	}
+    @Override
+    public void dequeue(final CursorProcessor nextBlock) {
+        // TODO
+    }
 
-	@Override
-	public void process(final Collection<Cursor> cursors) {
-		// TODO
-	}
-	//	/**
+    @Override
+    public void process(final Collection<Cursor> cursors) {
+        // TODO
+    }
+    //	/**
 //	 * List of sub-blocks composing this composite block.<br>The first sub-block is the entry point when processing the
 //	 * data. All sub-blocks will be chained to each other in the order of addition.
 //	 *

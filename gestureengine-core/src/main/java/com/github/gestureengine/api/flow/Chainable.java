@@ -33,17 +33,17 @@ package com.github.gestureengine.api.flow;
  */
 public interface Chainable<N> {
 
-	/**
-	 * Connects the specified block to process the output from this block.
-	 *
-	 * @param nextBlock Block to be connected.
-	 */
-	public void queue(N nextBlock);
+    /**
+     * Connects the specified block to process the output from this block.
+     *
+     * @param nextBlock Block to be connected.
+     */
+    public void queue(N nextBlock);
 
-	/**
-	 * Disconnects the specified block from this block.
-	 *
-	 * @param nextBlock Block to be disconnected.
-	 */
-	public void dequeue(N nextBlock);
+    /**
+     * Disconnects the specified block from this block.
+     *
+     * @param nextBlock Block to be disconnected.
+     */
+    public void dequeue(N nextBlock);
 }

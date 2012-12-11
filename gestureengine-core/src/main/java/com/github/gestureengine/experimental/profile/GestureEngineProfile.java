@@ -33,27 +33,27 @@ import com.github.gestureengine.api.region.Region;
 
 public interface GestureEngineProfile {
 
-	public InputSource getInputController();
+    public InputSource getInputController();
 
-	public void setInputController(InputSource inputController);
+    public void setInputController(InputSource inputController);
 
-	public void addInputFilter(InputFilter inputFilter);
+    public void addInputFilter(InputFilter inputFilter);
 
-	public void removeInputFilter(InputFilter inputFilter);
+    public void removeInputFilter(InputFilter inputFilter);
 
-	// TODO
+    // TODO
 
-	public <E extends GestureEvent> void addGestureRecognizer(GestureDefinition<E> gestureDefinition,
-															  GestureRecognizer<E> gestureRecognizer);
+    public <E extends GestureEvent> void addGestureRecognizer(GestureDefinition<E> gestureDefinition,
+                                                              GestureRecognizer<E> gestureRecognizer);
 
-	public <E extends GestureEvent> void removeGestureRecognizer(GestureRecognizer<E> gestureRecognizer);
+    public <E extends GestureEvent> void removeGestureRecognizer(GestureRecognizer<E> gestureRecognizer);
 
-	public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener);
+    public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener);
 
-	public <E extends GestureEvent> void removeGestureListener(E gestureListener);
+    public <E extends GestureEvent> void removeGestureListener(E gestureListener);
 
-	public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener,
-															Region touchableObject);
+    public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener,
+                                                            Region touchableObject);
 
-	public <E extends GestureEvent> void removeGestureListener(E gestureListener, Region touchableObject);
+    public <E extends GestureEvent> void removeGestureListener(E gestureListener, Region touchableObject);
 }

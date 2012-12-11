@@ -29,5 +29,5 @@ import java.awt.Graphics2D;
 
 public interface Layer {
 
-	public void paint(Graphics2D g2d);
+    public void paint(Graphics2D g2d);
 }

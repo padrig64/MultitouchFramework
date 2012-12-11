@@ -27,66 +27,67 @@ package com.github.gestureengine.demo.support;
 
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.input.CursorProcessor;
+
+import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Collection;
-import javax.swing.UIManager;
 
 public class MeanCursorLayer implements Layer, CursorProcessor {
 
-	private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
+    private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
-	private static final int MEAN_CURSOR_SIZE = 6;
+    private static final int MEAN_CURSOR_SIZE = 6;
 
-	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
-	private final Canvas canvas;
+    private final Canvas canvas;
 
-	private Cursor meanCursor = null;
+    private Cursor meanCursor = null;
 
-	public MeanCursorLayer(final Canvas canvas) {
-		this.canvas = canvas;
-	}
+    public MeanCursorLayer(final Canvas canvas) {
+        this.canvas = canvas;
+    }
 
-	@Override
-	public void process(final Collection<Cursor> cursors) {
-		if (cursors.isEmpty()) {
-			meanCursor = null;
-		} else {
-			// Calculate mean cursor
-			int meanX = 0;
-			int meanY = 0;
-			for (final Cursor cursor : cursors) {
-				meanX += cursor.getX();
-				meanY += cursor.getY();
-			}
-			meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
-		}
+    @Override
+    public void process(final Collection<Cursor> cursors) {
+        if (cursors.isEmpty()) {
+            meanCursor = null;
+        } else {
+            // Calculate mean cursor
+            int meanX = 0;
+            int meanY = 0;
+            for (final Cursor cursor : cursors) {
+                meanX += cursor.getX();
+                meanY += cursor.getY();
+            }
+            meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
+        }
 
-		// Trigger repaint
-		canvas.repaint();
-	}
+        // Trigger repaint
+        canvas.repaint();
+    }
 
-	@Override
-	public void paint(final Graphics2D g2d) {
-		if (meanCursor != null) {
-			// Prepare for painting
-			final Point canvasMeanPoint = convertCursorToCanvas(meanCursor);
+    @Override
+    public void paint(final Graphics2D g2d) {
+        if (meanCursor != null) {
+            // Prepare for painting
+            final Point canvasMeanPoint = convertCursorToCanvas(meanCursor);
 
-			// Paint mean cursor
-			g2d.setColor(MEAN_CURSOR_COLOR);
-			g2d.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
-					MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
-		}
-	}
+            // Paint mean cursor
+            g2d.setColor(MEAN_CURSOR_COLOR);
+            g2d.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
+                    MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
+        }
+    }
 
-	private Point convertCursorToCanvas(final Cursor screenCursor) {
-		final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
+    private Point convertCursorToCanvas(final Cursor screenCursor) {
+        final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
+        final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
 
-		return new Point(canvasX, canvasY);
-	}
+        return new Point(canvasX, canvasY);
+    }
 }

@@ -29,6 +29,6 @@ import com.github.gestureengine.api.flow.Chainable;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 
 public interface GestureRecognizer<E extends GestureEvent>
-		extends CursorPerRegionProcessor, Chainable<GestureListener<E>> {
-	// Nothing to be done
+        extends CursorPerRegionProcessor, Chainable<GestureListener<E>> {
+    // Nothing to be done
 }

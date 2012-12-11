@@ -33,103 +33,103 @@ import com.github.gestureengine.api.region.Region;
  */
 public class PinchSpreadEvent implements GestureEvent {
 
-	/**
-	 * Possible states of the gesture.
-	 */
-	public enum State {
+    /**
+     * Possible states of the gesture.
+     */
+    public enum State {
 
-		/**
-		 * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be two
-		 * consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
-		 */
-		ARMED,
+        /**
+         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be two
+         * consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         */
+        ARMED,
 
-		/**
-		 * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the next
-		 * event will be either PERFORMED again or UNARMED.
-		 */
-		PERFORMED,
+        /**
+         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the next
+         * event will be either PERFORMED again or UNARMED.
+         */
+        PERFORMED,
 
-		/**
-		 * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the previous
-		 * event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not be two consecutive
-		 * events of this state. The state of the next event will be ARMED.
-		 */
-		UNARMED
-	}
+        /**
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the previous
+         * event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not be two consecutive
+         * events of this state. The state of the next event will be ARMED.
+         */
+        UNARMED
+    }
 
-	/**
-	 * State of the recognized gesture.
-	 */
-	private final State state;
+    /**
+     * State of the recognized gesture.
+     */
+    private final State state;
 
-	/**
-	 * Region to which the gesture applies.
-	 */
-	private final Region region;
+    /**
+     * Region to which the gesture applies.
+     */
+    private final Region region;
 
-	/**
-	 * Scale movement axis relatively to the previous event.
-	 */
-	private final double ds;
+    /**
+     * Scale movement axis relatively to the previous event.
+     */
+    private final double ds;
 
-	/**
-	 * Scale movement relatively to the very beginning of the gesture.
-	 */
-	private final double dsTotal;
+    /**
+     * Scale movement relatively to the very beginning of the gesture.
+     */
+    private final double dsTotal;
 
-	/**
-	 * Constructor specifying all the information on the gesture.
-	 *
-	 * @param state State of the recognized gesture.
-	 * @param region Region to which the gesture applies
-	 * @param ds Scale movement relatively to the previous event.
-	 * @param dsTotal Scale movement relatively to the very beginning of the gesture.
-	 */
-	public PinchSpreadEvent(final State state, final Region region, final double ds, final double dsTotal) {
-		this.state = state;
-		this.region = region;
-		this.ds = ds;
-		this.dsTotal = dsTotal;
-	}
+    /**
+     * Constructor specifying all the information on the gesture.
+     *
+     * @param state   State of the recognized gesture.
+     * @param region  Region to which the gesture applies
+     * @param ds      Scale movement relatively to the previous event.
+     * @param dsTotal Scale movement relatively to the very beginning of the gesture.
+     */
+    public PinchSpreadEvent(final State state, final Region region, final double ds, final double dsTotal) {
+        this.state = state;
+        this.region = region;
+        this.ds = ds;
+        this.dsTotal = dsTotal;
+    }
 
-	/**
-	 * Gets the state of the recognized gesture.
-	 */
-	public State getState() {
-		return state;
-	}
+    /**
+     * Gets the state of the recognized gesture.
+     */
+    public State getState() {
+        return state;
+    }
 
-	/**
-	 * Gets the region to which the gesture applies.
-	 */
-	public Region getRegion() {
-		return region;
-	}
+    /**
+     * Gets the region to which the gesture applies.
+     */
+    public Region getRegion() {
+        return region;
+    }
 
-	/**
-	 * Gets the scale movement relatively to the previous event.
-	 *
-	 * @return New movement.
-	 */
-	public double getDiffScale() {
-		return ds;
-	}
+    /**
+     * Gets the scale movement relatively to the previous event.
+     *
+     * @return New movement.
+     */
+    public double getDiffScale() {
+        return ds;
+    }
 
-	/**
-	 * Gets the scale movement axis relatively to the very beginning of the gesture.
-	 *
-	 * @return Total movement.
-	 */
-	public double getTotalDiffScale() {
-		return dsTotal;
-	}
+    /**
+     * Gets the scale movement axis relatively to the very beginning of the gesture.
+     *
+     * @return Total movement.
+     */
+    public double getTotalDiffScale() {
+        return dsTotal;
+    }
 
-	/**
-	 * @see Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "PINCHSPREAD{state=" + state + "; ds=" + ds + "; dsTotal=" + dsTotal + "} on " + region;
-	}
+    /**
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PINCHSPREAD{state=" + state + "; ds=" + ds + "; dsTotal=" + dsTotal + "} on " + region;
+    }
 }

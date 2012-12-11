@@ -27,58 +27,59 @@ package com.github.gestureengine.base.region.dispatch;
 
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispatcher {
 
-	private final List<Region> regions = new ArrayList<Region>();
+    private final List<Region> regions = new ArrayList<Region>();
 
-	public List<Region> getRegions() {
-		return regions;
-	}
+    public List<Region> getRegions() {
+        return regions;
+    }
 
-	public void addRegionOnTop(final Region region) {
-		regions.add(region);
-	}
+    public void addRegionOnTop(final Region region) {
+        regions.add(region);
+    }
 
-	public void insertRegionAt(final int i, final Region region) {
-		regions.add(i, region);
-	}
+    public void insertRegionAt(final int i, final Region region) {
+        regions.add(i, region);
+    }
 
-	public void setRegionAt(final int i, final Region region) {
-		regions.set(i, region);
-	}
+    public void setRegionAt(final int i, final Region region) {
+        regions.set(i, region);
+    }
 
-	public void insertRegionAbove(final Region lowerRegion, final Region region) {
-		final int i = regions.lastIndexOf(lowerRegion);
-		if (i < 0) {
-			// Add region on top of everything
-			regions.add(region);
-		} else {
-			regions.add(i + 1, region);
-		}
-	}
+    public void insertRegionAbove(final Region lowerRegion, final Region region) {
+        final int i = regions.lastIndexOf(lowerRegion);
+        if (i < 0) {
+            // Add region on top of everything
+            regions.add(region);
+        } else {
+            regions.add(i + 1, region);
+        }
+    }
 
-	public void removeRegion(final Region region) {
-		regions.remove(region);
-	}
+    public void removeRegion(final Region region) {
+        regions.remove(region);
+    }
 
-	/**
-	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion
-	 */
-	@Override
-	protected Region findTouchedRegion(final Cursor cursor) {
-		Region foundRegion = SCREEN_REGION;
+    /**
+     * @see AbstractCursorToRegionDispatcher#findTouchedRegion
+     */
+    @Override
+    protected Region findTouchedRegion(final Cursor cursor) {
+        Region foundRegion = SCREEN_REGION;
 
-		for (int i = regions.size() - 1; i >= 0; i--) {
-			final Region region = regions.get(i);
-			if (region.isTouched(cursor)) {
-				foundRegion = region;
-				break;
-			}
-		}
+        for (int i = regions.size() - 1; i >= 0; i--) {
+            final Region region = regions.get(i);
+            if (region.isTouched(cursor)) {
+                foundRegion = region;
+                break;
+            }
+        }
 
-		return foundRegion;
-	}
+        return foundRegion;
+    }
 }

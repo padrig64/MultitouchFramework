@@ -28,6 +28,7 @@ package com.github.gestureengine.base.input.filter;
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.input.CursorProcessor;
 import com.github.gestureengine.api.input.filter.InputFilter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,36 +42,36 @@ import java.util.List;
  */
 public abstract class AbstractInputFilter implements InputFilter {
 
-	/**
-	 * Cursor processors connected and processing the output cursors from this input controller.
-	 */
-	private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    /**
+     * Cursor processors connected and processing the output cursors from this input controller.
+     */
+    private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
-	/**
-	 * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-	 * input filters or cursor-to-region dispatchers.
-	 *
-	 * @param cursorProcessor Cursor processor to be connected.
-	 */
-	@Override
-	public void queue(final CursorProcessor cursorProcessor) {
-		nextBlocks.add(cursorProcessor);
-	}
+    /**
+     * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
+     * input filters or cursor-to-region dispatchers.
+     *
+     * @param cursorProcessor Cursor processor to be connected.
+     */
+    @Override
+    public void queue(final CursorProcessor cursorProcessor) {
+        nextBlocks.add(cursorProcessor);
+    }
 
-	/**
-	 * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-	 * instance, input filters or cursor-to-region dispatchers.
-	 *
-	 * @param cursorProcessor Cursor processor to be disconnected.
-	 */
-	@Override
-	public void dequeue(final CursorProcessor cursorProcessor) {
-		nextBlocks.remove(cursorProcessor);
-	}
+    /**
+     * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
+     * instance, input filters or cursor-to-region dispatchers.
+     *
+     * @param cursorProcessor Cursor processor to be disconnected.
+     */
+    @Override
+    public void dequeue(final CursorProcessor cursorProcessor) {
+        nextBlocks.remove(cursorProcessor);
+    }
 
-	protected void forwardToNextBlocks(final Collection<Cursor> cursors) {
-		for (final CursorProcessor nextBlock : nextBlocks) {
-			nextBlock.process(cursors);
-		}
-	}
+    protected void forwardToNextBlocks(final Collection<Cursor> cursors) {
+        for (final CursorProcessor nextBlock : nextBlocks) {
+            nextBlock.process(cursors);
+        }
+    }
 }

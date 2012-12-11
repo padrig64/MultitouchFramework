@@ -27,6 +27,7 @@ package com.github.gestureengine.base.input.source;
 
 import com.github.gestureengine.api.input.CursorProcessor;
 import com.github.gestureengine.api.input.source.InputSource;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,64 +40,64 @@ import java.util.List;
  */
 public abstract class AbstractInputSource implements InputSource {
 
-	/**
-	 * Flag indicating whether the input controller is started or not.
-	 *
-	 * @see #start()
-	 * @see #stop()
-	 */
-	protected boolean started = false;
+    /**
+     * Flag indicating whether the input controller is started or not.
+     *
+     * @see #start()
+     * @see #stop()
+     */
+    protected boolean started = false;
 
-	/**
-	 * Cursor processors connected and processing the output cursors from this input controller.
-	 */
-	protected final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    /**
+     * Cursor processors connected and processing the output cursors from this input controller.
+     */
+    protected final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
-	/**
-	 * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-	 * input filters or region controllers.
-	 *
-	 * @param cursorProcessor Cursor processor to be connected.
-	 */
-	@Override
-	public void queue(final CursorProcessor cursorProcessor) {
-		nextBlocks.add(cursorProcessor);
-	}
+    /**
+     * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
+     * input filters or region controllers.
+     *
+     * @param cursorProcessor Cursor processor to be connected.
+     */
+    @Override
+    public void queue(final CursorProcessor cursorProcessor) {
+        nextBlocks.add(cursorProcessor);
+    }
 
-	/**
-	 * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-	 * instance, input filters or region controllers.
-	 *
-	 * @param cursorProcessor Cursor processor to be disconnected.
-	 */
-	@Override
-	public void dequeue(final CursorProcessor cursorProcessor) {
-		nextBlocks.remove(cursorProcessor);
-	}
+    /**
+     * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
+     * instance, input filters or region controllers.
+     *
+     * @param cursorProcessor Cursor processor to be disconnected.
+     */
+    @Override
+    public void dequeue(final CursorProcessor cursorProcessor) {
+        nextBlocks.remove(cursorProcessor);
+    }
 
-	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#isStarted()
-	 */
-	@Override
-	public boolean isStarted() {
-		return started;
-	}
+    /**
+     * @see com.github.gestureengine.api.input.source.InputSource#isStarted()
+     */
+    @Override
+    public boolean isStarted() {
+        return started;
+    }
 
-	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#start()
-	 */
-	@Override
-	public void start() {
-		if (!started) {
-			started = true;
-		}
-	}
+    /**
+     * @see com.github.gestureengine.api.input.source.InputSource#start()
+     */
+    @Override
+    public void start() {
+        if (!started) {
+            started = true;
+        }
+    }
 
-	/**
-	 * @see com.github.gestureengine.api.input.source.InputSource#stop()
-	 */
-	@Override
-	public void stop() {
-		started = false;
-	}
+    /**
+     * @see com.github.gestureengine.api.input.source.InputSource#stop()
+     */
+    @Override
+    public void stop() {
+        started = false;
+    }
 }

@@ -26,5 +26,5 @@
 package com.github.gestureengine.base.input.source;
 
 public class MacBookTrackPadSource extends AbstractInputSource {
-	// TODO
+    // TODO
 }

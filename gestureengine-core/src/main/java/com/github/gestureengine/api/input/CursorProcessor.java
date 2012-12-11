@@ -32,10 +32,10 @@ import java.util.Collection;
  */
 public interface CursorProcessor {
 
-	/**
-	 * Processes the specified cursors.
-	 *
-	 * @param cursors Cursors to be processed.
-	 */
-	public void process(Collection<Cursor> cursors);
+    /**
+     * Processes the specified cursors.
+     *
+     * @param cursors Cursors to be processed.
+     */
+    public void process(Collection<Cursor> cursors);
 }

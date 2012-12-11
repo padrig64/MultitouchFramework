@@ -30,11 +30,11 @@ import com.github.gestureengine.api.region.Region;
 
 public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
-	/**
-	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
-	 */
-	@Override
-	protected Region findTouchedRegion(final Cursor cursor) {
-		return SCREEN_REGION;
-	}
+    /**
+     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     */
+    @Override
+    protected Region findTouchedRegion(final Cursor cursor) {
+        return SCREEN_REGION;
+    }
 }

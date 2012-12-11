@@ -29,7 +29,7 @@ import com.github.gestureengine.api.gesture.recognition.GestureEvent;
 
 public interface GestureDefinition<E extends GestureEvent> {
 
-	public String getId();
+    public String getId();
 
-	public Class<E> getGestureEventClass();
+    public Class<E> getGestureEventClass();
 }

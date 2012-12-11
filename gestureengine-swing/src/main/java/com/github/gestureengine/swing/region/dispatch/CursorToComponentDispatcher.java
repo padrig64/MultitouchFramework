@@ -31,12 +31,12 @@ import com.github.gestureengine.base.region.dispatch.AbstractCursorToRegionDispa
 
 public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
 
-	/**
-	 * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
-	 */
-	@Override
-	protected Region findTouchedRegion(final Cursor cursor) {
-		// TODO
-		return null;
-	}
+    /**
+     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     */
+    @Override
+    protected Region findTouchedRegion(final Cursor cursor) {
+        // TODO
+        return null;
+    }
 }

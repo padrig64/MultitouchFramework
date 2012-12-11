@@ -33,12 +33,11 @@ import com.github.gestureengine.api.input.Cursor;
  */
 public interface Region {
 
-	/**
-	 * States whether the touchable region is touched by the specified cursor.
-	 *
-	 * @param cursor Cursor to be checked.
-	 *
-	 * @return True if the region is touched by the cursor, false otherwise.
-	 */
-	public boolean isTouched(Cursor cursor);
+    /**
+     * States whether the touchable region is touched by the specified cursor.
+     *
+     * @param cursor Cursor to be checked.
+     * @return True if the region is touched by the cursor, false otherwise.
+     */
+    public boolean isTouched(Cursor cursor);
 }

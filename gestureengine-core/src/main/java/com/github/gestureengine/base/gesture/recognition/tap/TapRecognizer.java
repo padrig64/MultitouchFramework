@@ -23,34 +23,55 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.gestureengine.base.region;
+package com.github.gestureengine.base.gesture.recognition.tap;
 
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.Region;
+import com.github.gestureengine.base.gesture.recognition.AbstractGestureRecognizer;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.util.Collection;
 
 /**
- * Touchable region of the touch surface representing the whole screen.<br>Note that this is meaningful only in cases
- * where the display matches the whole touch surface. In case of a non-clone dual screen (for instance, extension of the
- * desktop), the behavior will not be as expected.
- *
- * @see Toolkit#getScreenSize()
+ * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-region basis.<br>Note that
+ * this recognizer works best after filtering the input and limiting the number of input touch events.
  */
-public class ScreenRegion implements Region {
+public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.RegionContext, TapEvent> {
 
     /**
-     * Screen size.<br>Note that
+     * Context storing the state of recognition of the gesture for a single region.
      */
-    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    protected static class RegionContext {
+        // Nothing to be done yet
+    }
 
     /**
-     * @see Region#isTouched(Cursor)
+     * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
+     * maximum.
+     */
+    public TapRecognizer() {
+        this(1, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @see AbstractGestureRecognizer#AbstractGestureRecognizer(int, int)
+     */
+    public TapRecognizer(final int minCursorCount, final int maxCursorCount) {
+        super(minCursorCount, maxCursorCount);
+    }
+
+    /**
+     * @see AbstractGestureRecognizer#createContext(Region)
      */
     @Override
-    public boolean isTouched(final Cursor cursor) {
-        return ((0 <= cursor.getX()) && (cursor.getX() < screenSize.width) && (0 <= cursor.getY()) &&
-                (cursor.getY() < screenSize.height));
+    protected RegionContext createContext(final Region region) {
+        return new RegionContext();
+    }
+
+    /**
+     * @see AbstractGestureRecognizer#process(Region, Collection)
+     */
+    @Override
+    protected void process(final RegionContext context, final Region region, final Collection<Cursor> cursors) {
+        // TODO
     }
 }

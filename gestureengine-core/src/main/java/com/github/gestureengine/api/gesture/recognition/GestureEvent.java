@@ -26,5 +26,5 @@
 package com.github.gestureengine.api.gesture.recognition;
 
 public interface GestureEvent {
-	// TODO
+    // TODO
 }

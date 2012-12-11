@@ -29,6 +29,8 @@ import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.Region;
 import com.github.gestureengine.base.region.dispatch.DefaultCursorToRegionDispatcher;
+
+import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -36,66 +38,65 @@ import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.UIManager;
 
 public class RegionsLayer implements Layer, CursorPerRegionProcessor {
 
-	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
-	private final Canvas canvas;
+    private final Canvas canvas;
 
-	private DefaultCursorToRegionDispatcher cursorToRegionDispatcher = null;
+    private DefaultCursorToRegionDispatcher cursorToRegionDispatcher = null;
 
-	private final Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
+    private final Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
 
-	public RegionsLayer(final Canvas canvas) {
-		this.canvas = canvas;
-	}
+    public RegionsLayer(final Canvas canvas) {
+        this.canvas = canvas;
+    }
 
-	public DefaultCursorToRegionDispatcher getRegionProvider() {
-		return cursorToRegionDispatcher;
-	}
+    public DefaultCursorToRegionDispatcher getRegionProvider() {
+        return cursorToRegionDispatcher;
+    }
 
-	public void setRegionProvider(final DefaultCursorToRegionDispatcher cursorToRegionDispatcher) {
-		this.cursorToRegionDispatcher = cursorToRegionDispatcher;
-	}
+    public void setRegionProvider(final DefaultCursorToRegionDispatcher cursorToRegionDispatcher) {
+        this.cursorToRegionDispatcher = cursorToRegionDispatcher;
+    }
 
-	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
-		cursorsForRegions.put(region, cursors);
-		canvas.repaint();
-	}
+    @Override
+    public void process(final Region region, final Collection<Cursor> cursors) {
+        cursorsForRegions.put(region, cursors);
+        canvas.repaint();
+    }
 
-	@Override
-	public void paint(final Graphics2D g2d) {
-		g2d.setColor(UIManager.getColor("nimbusGreen"));
+    @Override
+    public void paint(final Graphics2D g2d) {
+        g2d.setColor(UIManager.getColor("nimbusGreen"));
 
-		// Draw all regions
-		if (cursorToRegionDispatcher != null) {
-			for (final Region region : cursorToRegionDispatcher.getRegions()) {
-				final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
-				g2d.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
-			}
-		}
+        // Draw all regions
+        if (cursorToRegionDispatcher != null) {
+            for (final Region region : cursorToRegionDispatcher.getRegions()) {
+                final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
+                g2d.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+            }
+        }
 
-		// Fill all touched regions
-		for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
-			if (!entry.getValue().isEmpty()) {
-				if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
-					final Rectangle bounds =
-							convertScreenBoundsToCanvas(((DummyRegion) entry.getKey()).getTouchableBounds());
-					g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-				}
-			}
-		}
-	}
+        // Fill all touched regions
+        for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
+            if (!entry.getValue().isEmpty()) {
+                if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
+                    final Rectangle bounds =
+                            convertScreenBoundsToCanvas(((DummyRegion) entry.getKey()).getTouchableBounds());
+                    g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                }
+            }
+        }
+    }
 
-	private Rectangle convertScreenBoundsToCanvas(final Rectangle screenBounds) {
-		final int canvasX = screenBounds.x * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasY = screenBounds.y * canvas.getHeight() / SCREEN_SIZE.height;
-		final int canvasWidth = screenBounds.width * canvas.getWidth() / SCREEN_SIZE.width;
-		final int canvasHeight = screenBounds.height * canvas.getHeight() / SCREEN_SIZE.height;
+    private Rectangle convertScreenBoundsToCanvas(final Rectangle screenBounds) {
+        final int canvasX = screenBounds.x * canvas.getWidth() / SCREEN_SIZE.width;
+        final int canvasY = screenBounds.y * canvas.getHeight() / SCREEN_SIZE.height;
+        final int canvasWidth = screenBounds.width * canvas.getWidth() / SCREEN_SIZE.width;
+        final int canvasHeight = screenBounds.height * canvas.getHeight() / SCREEN_SIZE.height;
 
-		return new Rectangle(canvasX, canvasY, canvasWidth, canvasHeight);
-	}
+        return new Rectangle(canvasX, canvasY, canvasWidth, canvasHeight);
+    }
 }

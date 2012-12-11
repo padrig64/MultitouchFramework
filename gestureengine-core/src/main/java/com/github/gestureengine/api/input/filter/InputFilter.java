@@ -37,5 +37,5 @@ import com.github.gestureengine.api.input.CursorProcessor;
  * @see com.github.gestureengine.api.flow.Chainable
  */
 public interface InputFilter extends CursorProcessor, Chainable<CursorProcessor> {
-	// Nothing more to be done
+    // Nothing more to be done
 }

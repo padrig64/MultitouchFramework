@@ -27,5 +27,5 @@ package com.github.gestureengine.api.gesture.recognition;
 
 public interface GestureListener<E extends GestureEvent> {
 
-	public void processGestureEvent(E event);
+    public void processGestureEvent(E event);
 }

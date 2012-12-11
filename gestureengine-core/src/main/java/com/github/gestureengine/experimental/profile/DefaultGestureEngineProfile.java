@@ -35,94 +35,94 @@ import com.github.gestureengine.experimental.input.CompositeCursorProcessorBlock
 
 public class DefaultGestureEngineProfile implements GestureEngineProfile {
 
-	private InputSource inputController = null;
+    private InputSource inputController = null;
 
-	private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
+    private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
 
-	private CursorToRegionDispatcher toc = null;
+    private CursorToRegionDispatcher toc = null;
 
-	/**
-	 * @see GestureEngineProfile#getInputController()
-	 */
-	@Override
-	public InputSource getInputController() {
-		return inputController;
-	}
+    /**
+     * @see GestureEngineProfile#getInputController()
+     */
+    @Override
+    public InputSource getInputController() {
+        return inputController;
+    }
 
-	/**
-	 * @see GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
-	 */
-	@Override
-	public void setInputController(final InputSource inputController) {
-		if (this.inputController != null) {
-			this.inputController.dequeue(filterComposition);
-		}
+    /**
+     * @see GestureEngineProfile#setInputController(com.github.gestureengine.api.input.source.InputSource)
+     */
+    @Override
+    public void setInputController(final InputSource inputController) {
+        if (this.inputController != null) {
+            this.inputController.dequeue(filterComposition);
+        }
 
-		this.inputController = inputController;
+        this.inputController = inputController;
 
-		if (this.inputController != null) {
-			this.inputController.queue(filterComposition);
-		}
-	}
+        if (this.inputController != null) {
+            this.inputController.queue(filterComposition);
+        }
+    }
 
-	/**
-	 * @see GestureEngineProfile#addInputFilter(InputFilter)
-	 */
-	@Override
-	public void addInputFilter(final InputFilter inputFilter) {
+    /**
+     * @see GestureEngineProfile#addInputFilter(InputFilter)
+     */
+    @Override
+    public void addInputFilter(final InputFilter inputFilter) {
 //		filterComposition.addSubBlock(inputFilter);
-	}
+    }
 
-	/**
-	 * @see GestureEngineProfile#removeInputFilter(InputFilter)
-	 */
-	@Override
-	public void removeInputFilter(final InputFilter inputFilter) {
+    /**
+     * @see GestureEngineProfile#removeInputFilter(InputFilter)
+     */
+    @Override
+    public void removeInputFilter(final InputFilter inputFilter) {
 //		filterComposition.removeSubBlock(inputFilter);
-	}
+    }
 
-	public CursorToRegionDispatcher getTouchableObjectController() {
-		return toc;
-	}
+    public CursorToRegionDispatcher getTouchableObjectController() {
+        return toc;
+    }
 
-	public void setTouchableObjectController(final CursorToRegionDispatcher toc) {
-		if (this.toc != null) {
-			filterComposition.dequeue(this.toc);
-		}
+    public void setTouchableObjectController(final CursorToRegionDispatcher toc) {
+        if (this.toc != null) {
+            filterComposition.dequeue(this.toc);
+        }
 
-		this.toc = toc;
+        this.toc = toc;
 
-		if (toc != null) {
-			filterComposition.queue(toc);
-		}
-	}
+        if (toc != null) {
+            filterComposition.queue(toc);
+        }
+    }
 
-	@Override
-	public <E extends GestureEvent> void addGestureRecognizer(final GestureDefinition<E> gestureDefinition,
-															  final GestureRecognizer<E> gestureRecognizer) {
-		toc.queue(gestureRecognizer);
-	}
+    @Override
+    public <E extends GestureEvent> void addGestureRecognizer(final GestureDefinition<E> gestureDefinition,
+                                                              final GestureRecognizer<E> gestureRecognizer) {
+        toc.queue(gestureRecognizer);
+    }
 
-	@Override
-	public <E extends GestureEvent> void removeGestureRecognizer(final GestureRecognizer<E> gestureRecognizer) {
-		toc.dequeue(gestureRecognizer);
-	}
+    @Override
+    public <E extends GestureEvent> void removeGestureRecognizer(final GestureRecognizer<E> gestureRecognizer) {
+        toc.dequeue(gestureRecognizer);
+    }
 
-	@Override
-	public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
-															final E gestureListener) {
-	}
+    @Override
+    public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
+                                                            final E gestureListener) {
+    }
 
-	@Override
-	public <E extends GestureEvent> void removeGestureListener(final E gestureListener) {
-	}
+    @Override
+    public <E extends GestureEvent> void removeGestureListener(final E gestureListener) {
+    }
 
-	@Override
-	public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
-															final E gestureListener, final Region touchableObject) {
-	}
+    @Override
+    public <E extends GestureEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
+                                                            final E gestureListener, final Region touchableObject) {
+    }
 
-	@Override
-	public <E extends GestureEvent> void removeGestureListener(final E gestureListener, final Region touchableObject) {
-	}
+    @Override
+    public <E extends GestureEvent> void removeGestureListener(final E gestureListener, final Region touchableObject) {
+    }
 }

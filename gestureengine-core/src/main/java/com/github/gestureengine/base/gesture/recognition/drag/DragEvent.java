@@ -33,137 +33,137 @@ import com.github.gestureengine.api.region.Region;
  */
 public class DragEvent implements GestureEvent {
 
-	/**
-	 * Possible states of the gesture.
-	 */
-	public enum State {
+    /**
+     * Possible states of the gesture.
+     */
+    public enum State {
 
-		/**
-		 * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be two
-		 * consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
-		 */
-		ARMED,
+        /**
+         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be two
+         * consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         */
+        ARMED,
 
-		/**
-		 * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the next
-		 * event will be either PERFORMED again or UNARMED.
-		 */
-		PERFORMED,
+        /**
+         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the next
+         * event will be either PERFORMED again or UNARMED.
+         */
+        PERFORMED,
 
-		/**
-		 * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the previous
-		 * event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not be two consecutive
-		 * events of this state. The state of the next event will be ARMED.
-		 */
-		UNARMED
-	}
+        /**
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the previous
+         * event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not be two consecutive
+         * events of this state. The state of the next event will be ARMED.
+         */
+        UNARMED
+    }
 
-	/**
-	 * State of the recognized gesture.
-	 */
-	private final State state;
+    /**
+     * State of the recognized gesture.
+     */
+    private final State state;
 
-	/**
-	 * Region to which the gesture applies.
-	 */
-	private final Region region;
+    /**
+     * Region to which the gesture applies.
+     */
+    private final Region region;
 
-	/**
-	 * Drag movement on the X axis relatively to the previous event.
-	 */
-	private final int dx;
+    /**
+     * Drag movement on the X axis relatively to the previous event.
+     */
+    private final int dx;
 
-	/**
-	 * Drag movement on the Y axis relatively to the previous event.
-	 */
-	private final int dy;
+    /**
+     * Drag movement on the Y axis relatively to the previous event.
+     */
+    private final int dy;
 
-	/**
-	 * Drag movement on the X axis relatively to the very beginning of the gesture.
-	 */
-	private final int dxTotal;
+    /**
+     * Drag movement on the X axis relatively to the very beginning of the gesture.
+     */
+    private final int dxTotal;
 
-	/**
-	 * Drag movement on the Y axis relatively to the very beginning of the gesture.
-	 */
-	private final int dyTotal;
+    /**
+     * Drag movement on the Y axis relatively to the very beginning of the gesture.
+     */
+    private final int dyTotal;
 
-	/**
-	 * Constructor specifying all the information on the gesture.
-	 *
-	 * @param state State of the recognized gesture.
-	 * @param region Region to which the gesture applies
-	 * @param dx Drag movement on the X axis relatively to the previous event.
-	 * @param dy Drag movement on the Y axis relatively to the previous event.
-	 * @param dxTotal Drag movement on the X axis relatively to the very beginning of the gesture.
-	 * @param dyTotal Drag movement on the Y axis relatively to the very beginning of the gesture.
-	 */
-	public DragEvent(final State state, final Region region, final int dx, final int dy, final int dxTotal,
-					 final int dyTotal) {
-		this.state = state;
-		this.region = region;
-		this.dx = dx;
-		this.dy = dy;
-		this.dxTotal = dxTotal;
-		this.dyTotal = dyTotal;
-	}
+    /**
+     * Constructor specifying all the information on the gesture.
+     *
+     * @param state   State of the recognized gesture.
+     * @param region  Region to which the gesture applies
+     * @param dx      Drag movement on the X axis relatively to the previous event.
+     * @param dy      Drag movement on the Y axis relatively to the previous event.
+     * @param dxTotal Drag movement on the X axis relatively to the very beginning of the gesture.
+     * @param dyTotal Drag movement on the Y axis relatively to the very beginning of the gesture.
+     */
+    public DragEvent(final State state, final Region region, final int dx, final int dy, final int dxTotal,
+                     final int dyTotal) {
+        this.state = state;
+        this.region = region;
+        this.dx = dx;
+        this.dy = dy;
+        this.dxTotal = dxTotal;
+        this.dyTotal = dyTotal;
+    }
 
-	/**
-	 * Gets the state of the recognized gesture.
-	 */
-	public State getState() {
-		return state;
-	}
+    /**
+     * Gets the state of the recognized gesture.
+     */
+    public State getState() {
+        return state;
+    }
 
-	/**
-	 * Gets the region to which the gesture applies.
-	 */
-	public Region getRegion() {
-		return region;
-	}
+    /**
+     * Gets the region to which the gesture applies.
+     */
+    public Region getRegion() {
+        return region;
+    }
 
-	/**
-	 * Gets the drag movement on the X axis relatively to the previous event.
-	 *
-	 * @return New movement on the X axis.
-	 */
-	public int getDiffX() {
-		return dx;
-	}
+    /**
+     * Gets the drag movement on the X axis relatively to the previous event.
+     *
+     * @return New movement on the X axis.
+     */
+    public int getDiffX() {
+        return dx;
+    }
 
-	/**
-	 * Gets the drag movement on the Y axis relatively to the previous event.
-	 *
-	 * @return New movement on the Y axis.
-	 */
-	public int getDiffY() {
-		return dy;
-	}
+    /**
+     * Gets the drag movement on the Y axis relatively to the previous event.
+     *
+     * @return New movement on the Y axis.
+     */
+    public int getDiffY() {
+        return dy;
+    }
 
-	/**
-	 * Gets the drag movement on the X axis relatively to the very beginning of the gesture.
-	 *
-	 * @return Total movement on the X axis.
-	 */
-	public int getTotalDiffX() {
-		return dxTotal;
-	}
+    /**
+     * Gets the drag movement on the X axis relatively to the very beginning of the gesture.
+     *
+     * @return Total movement on the X axis.
+     */
+    public int getTotalDiffX() {
+        return dxTotal;
+    }
 
-	/**
-	 * Gets the drag movement on the Y axis relatively to the very beginning of the gesture.
-	 *
-	 * @return Total movement on the Y axis.
-	 */
-	public int getTotalDiffY() {
-		return dyTotal;
-	}
+    /**
+     * Gets the drag movement on the Y axis relatively to the very beginning of the gesture.
+     *
+     * @return Total movement on the Y axis.
+     */
+    public int getTotalDiffY() {
+        return dyTotal;
+    }
 
-	/**
-	 * @see Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "DRAG{state=" + state + "; dx=" + dx + "; dy=" + dy + "; dxTotal=" + dxTotal + "; dyTotal=" + dyTotal +
-				"} on " + region;
-	}
+    /**
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DRAG{state=" + state + "; dx=" + dx + "; dy=" + dy + "; dxTotal=" + dxTotal + "; dyTotal=" + dyTotal +
+                "} on " + region;
+    }
 }

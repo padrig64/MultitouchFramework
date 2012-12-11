@@ -26,34 +26,35 @@
 package com.github.gestureengine.base.input.filter;
 
 import com.github.gestureengine.api.input.Cursor;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class NoChangeFilter extends AbstractInputFilter {
 
-	private Set<Cursor> lastCursors = new HashSet<Cursor>();
+    private Set<Cursor> lastCursors = new HashSet<Cursor>();
 
-	@Override
-	public void process(final Collection<Cursor> cursors) {
-		boolean changed = false;
+    @Override
+    public void process(final Collection<Cursor> cursors) {
+        boolean changed = false;
 
-		if (cursors.size() == lastCursors.size()) {
-			// Same number of cursors as last event, so check if all cursors are the same
-			for (final Cursor cursor : cursors) {
-				if (!lastCursors.contains(cursor)) {
-					changed = true;
-					break;
-				}
-			}
-		} else {
-			// Not the same number of cursors as last event, so process them
-			changed = true;
-		}
+        if (cursors.size() == lastCursors.size()) {
+            // Same number of cursors as last event, so check if all cursors are the same
+            for (final Cursor cursor : cursors) {
+                if (!lastCursors.contains(cursor)) {
+                    changed = true;
+                    break;
+                }
+            }
+        } else {
+            // Not the same number of cursors as last event, so process them
+            changed = true;
+        }
 
-		if (changed) {
-			lastCursors = new HashSet<Cursor>(cursors);
-			forwardToNextBlocks(cursors);
-		}
-	}
+        if (changed) {
+            lastCursors = new HashSet<Cursor>(cursors);
+            forwardToNextBlocks(cursors);
+        }
+    }
 }

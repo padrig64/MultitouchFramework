@@ -26,6 +26,7 @@
 package com.github.gestureengine.api.region;
 
 import com.github.gestureengine.api.input.Cursor;
+
 import java.util.Collection;
 
 /**
@@ -34,11 +35,11 @@ import java.util.Collection;
  */
 public interface CursorPerRegionProcessor {
 
-	/**
-	 * Processes the specified cursors for the specified touchable region.
-	 *
-	 * @param region Touchable region to which the cursors are associated.
-	 * @param cursors Cursors to be processed.
-	 */
-	public void process(Region region, Collection<Cursor> cursors);
+    /**
+     * Processes the specified cursors for the specified touchable region.
+     *
+     * @param region  Touchable region to which the cursors are associated.
+     * @param cursors Cursors to be processed.
+     */
+    public void process(Region region, Collection<Cursor> cursors);
 }

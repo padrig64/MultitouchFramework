@@ -29,82 +29,82 @@ import com.github.gestureengine.api.flow.Chainable;
 import com.github.gestureengine.api.input.Cursor;
 import com.github.gestureengine.api.region.CursorPerRegionProcessor;
 import com.github.gestureengine.api.region.Region;
+
+import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.SwingUtilities;
 
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
 public class EDTSchedulerCursorPerRegionProcessor
-		implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+        implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
 
-	/**
-	 * Blocks that are queued to this block.
-	 */
-	private final List<CursorPerRegionProcessor> nextBlocks =
-			Collections.synchronizedList(new ArrayList<CursorPerRegionProcessor>());
+    /**
+     * Blocks that are queued to this block.
+     */
+    private final List<CursorPerRegionProcessor> nextBlocks =
+            Collections.synchronizedList(new ArrayList<CursorPerRegionProcessor>());
 
-	/**
-	 * Default constructor.
-	 */
-	public EDTSchedulerCursorPerRegionProcessor() {
-		// Nothing to be done
-	}
+    /**
+     * Default constructor.
+     */
+    public EDTSchedulerCursorPerRegionProcessor() {
+        // Nothing to be done
+    }
 
-	/**
-	 * Constructor specifying the first black to be queued to this block.
-	 *
-	 * @param firstNextBlock First block to be queued.
-	 *
-	 * @see #queue(CursorPerRegionProcessor)
-	 */
-	public EDTSchedulerCursorPerRegionProcessor(final CursorPerRegionProcessor firstNextBlock) {
-		nextBlocks.add(firstNextBlock);
-	}
+    /**
+     * Constructor specifying the first black to be queued to this block.
+     *
+     * @param firstNextBlock First block to be queued.
+     * @see #queue(CursorPerRegionProcessor)
+     */
+    public EDTSchedulerCursorPerRegionProcessor(final CursorPerRegionProcessor firstNextBlock) {
+        nextBlocks.add(firstNextBlock);
+    }
 
-	/**
-	 * @see com.github.gestureengine.api.flow.Chainable#queue(Object)
-	 */
-	@Override
-	public void queue(final CursorPerRegionProcessor nextBlock) {
-		nextBlocks.add(nextBlock);
-	}
+    /**
+     * @see com.github.gestureengine.api.flow.Chainable#queue(Object)
+     */
+    @Override
+    public void queue(final CursorPerRegionProcessor nextBlock) {
+        nextBlocks.add(nextBlock);
+    }
 
-	/**
-	 * @see com.github.gestureengine.api.flow.Chainable#dequeue(Object)
-	 */
-	@Override
-	public void dequeue(final CursorPerRegionProcessor nextBlock) {
-		nextBlocks.remove(nextBlock);
-	}
+    /**
+     * @see com.github.gestureengine.api.flow.Chainable#dequeue(Object)
+     */
+    @Override
+    public void dequeue(final CursorPerRegionProcessor nextBlock) {
+        nextBlocks.remove(nextBlock);
+    }
 
-	/**
-	 * Forwards the specified cursors to the next blocks on the EDT.
-	 *
-	 * @see CursorPerRegionProcessor#process(Region, Collection)
-	 */
-	@Override
-	public void process(final Region region, final Collection<Cursor> cursors) {
-		// Just put the cursors in a new list, no need to clone them
-		final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
+    /**
+     * Forwards the specified cursors to the next blocks on the EDT.
+     *
+     * @see CursorPerRegionProcessor#process(Region, Collection)
+     */
+    @Override
+    public void process(final Region region, final Collection<Cursor> cursors) {
+        // Just put the cursors in a new list, no need to clone them
+        final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
 
-		final Runnable edtRunnable = new Runnable() {
-			@Override
-			public void run() {
-				synchronized (nextBlocks) {
-					for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
-						nextBlock.process(region, copiedData);
-					}
-				}
-			}
-		};
-		if (SwingUtilities.isEventDispatchThread()) {
-			edtRunnable.run();
-		} else {
-			SwingUtilities.invokeLater(edtRunnable);
-		}
-	}
+        final Runnable edtRunnable = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (nextBlocks) {
+                    for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+                        nextBlock.process(region, copiedData);
+                    }
+                }
+            }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            edtRunnable.run();
+        } else {
+            SwingUtilities.invokeLater(edtRunnable);
+        }
+    }
 }

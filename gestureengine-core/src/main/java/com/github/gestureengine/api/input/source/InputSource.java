@@ -38,20 +38,20 @@ import com.github.gestureengine.api.input.CursorProcessor;
  */
 public interface InputSource extends Chainable<CursorProcessor> {
 
-	/**
-	 * States whether the input controller is started and is able to provide cursors or not.
-	 *
-	 * @return True if the controller is started, false otherwise.
-	 */
-	public boolean isStarted();
+    /**
+     * States whether the input controller is started and is able to provide cursors or not.
+     *
+     * @return True if the controller is started, false otherwise.
+     */
+    public boolean isStarted();
 
-	/**
-	 * Starts the input controller so that it can provide cursors.
-	 */
-	public void start();
+    /**
+     * Starts the input controller so that it can provide cursors.
+     */
+    public void start();
 
-	/**
-	 * Stops the input controller so that it no longer provide cursors.
-	 */
-	public void stop();
+    /**
+     * Stops the input controller so that it no longer provide cursors.
+     */
+    public void stop();
 }

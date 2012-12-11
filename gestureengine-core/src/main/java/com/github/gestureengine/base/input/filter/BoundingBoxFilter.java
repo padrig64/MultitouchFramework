@@ -26,65 +26,66 @@
 package com.github.gestureengine.base.input.filter;
 
 import com.github.gestureengine.api.input.Cursor;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BoundingBoxFilter extends AbstractInputFilter {
 
-	private static final int MAX_DIFF = 10;
+    private static final int MAX_DIFF = 10;
 
-	private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
+    private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
-	@Override
-	public void process(final Collection<Cursor> cursors) {
-		// Quick way to remove the cursors that are no longer there
-		final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
-		filteredCursors = new HashMap<Long, Cursor>();
+    @Override
+    public void process(final Collection<Cursor> cursors) {
+        // Quick way to remove the cursors that are no longer there
+        final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
+        filteredCursors = new HashMap<Long, Cursor>();
 
-		for (final Cursor rawCursor : cursors) {
-			final Cursor oldFilteredCursor = oldFilteredCursors.get(rawCursor.getId());
-			if (oldFilteredCursor == null) {
-				// Cursor was not yet filtered, so just added it now to the list
-				filteredCursors.put(rawCursor.getId(), rawCursor);
-			} else {
-				// Cursor was already filtered
-				final Cursor newFilteredCursor = filterCursor(rawCursor, oldFilteredCursor);
-				filteredCursors.put(rawCursor.getId(), newFilteredCursor);
-			}
-		}
+        for (final Cursor rawCursor : cursors) {
+            final Cursor oldFilteredCursor = oldFilteredCursors.get(rawCursor.getId());
+            if (oldFilteredCursor == null) {
+                // Cursor was not yet filtered, so just added it now to the list
+                filteredCursors.put(rawCursor.getId(), rawCursor);
+            } else {
+                // Cursor was already filtered
+                final Cursor newFilteredCursor = filterCursor(rawCursor, oldFilteredCursor);
+                filteredCursors.put(rawCursor.getId(), newFilteredCursor);
+            }
+        }
 
-		forwardToNextBlocks(filteredCursors.values());
-	}
+        forwardToNextBlocks(filteredCursors.values());
+    }
 
-	private Cursor filterCursor(final Cursor rawCursor, final Cursor oldFilteredCursor) {
-		final int filteredX;
-		final int filteredY;
+    private Cursor filterCursor(final Cursor rawCursor, final Cursor oldFilteredCursor) {
+        final int filteredX;
+        final int filteredY;
 
-		// Filter on the X axis
-		if (rawCursor.getX() < (oldFilteredCursor.getX() - MAX_DIFF)) {
-			// New position is out of the box, so move the box
-			filteredX = rawCursor.getX() + MAX_DIFF;
-		} else if (rawCursor.getX() > (oldFilteredCursor.getX() + MAX_DIFF)) {
-			// New position is out of the box, so move the box
-			filteredX = rawCursor.getX() - MAX_DIFF;
-		} else {
-			// Just reuse the old position
-			filteredX = oldFilteredCursor.getX();
-		}
+        // Filter on the X axis
+        if (rawCursor.getX() < (oldFilteredCursor.getX() - MAX_DIFF)) {
+            // New position is out of the box, so move the box
+            filteredX = rawCursor.getX() + MAX_DIFF;
+        } else if (rawCursor.getX() > (oldFilteredCursor.getX() + MAX_DIFF)) {
+            // New position is out of the box, so move the box
+            filteredX = rawCursor.getX() - MAX_DIFF;
+        } else {
+            // Just reuse the old position
+            filteredX = oldFilteredCursor.getX();
+        }
 
-		// Filter on the Y axis
-		if (rawCursor.getY() < (oldFilteredCursor.getY() - MAX_DIFF)) {
-			// New position is out of the box, so move the box
-			filteredY = rawCursor.getY() + MAX_DIFF;
-		} else if (rawCursor.getY() > (oldFilteredCursor.getY() + MAX_DIFF)) {
-			// New position is out of the box, so move the box
-			filteredY = rawCursor.getY() - MAX_DIFF;
-		} else {
-			// Just reuse the old position
-			filteredY = oldFilteredCursor.getY();
-		}
+        // Filter on the Y axis
+        if (rawCursor.getY() < (oldFilteredCursor.getY() - MAX_DIFF)) {
+            // New position is out of the box, so move the box
+            filteredY = rawCursor.getY() + MAX_DIFF;
+        } else if (rawCursor.getY() > (oldFilteredCursor.getY() + MAX_DIFF)) {
+            // New position is out of the box, so move the box
+            filteredY = rawCursor.getY() - MAX_DIFF;
+        } else {
+            // Just reuse the old position
+            filteredY = oldFilteredCursor.getY();
+        }
 
-		return new Cursor(rawCursor.getId(), filteredX, filteredY);
-	}
+        return new Cursor(rawCursor.getId(), filteredX, filteredY);
+    }
 }

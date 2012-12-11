@@ -32,109 +32,109 @@ package com.github.gestureengine.api.input;
  */
 public class Cursor {
 
-	/**
-	 * Cursor ID.<br>All cursors that are simultaneously in contact with the touch-enabled surface have unique IDs.<br>
-	 * However, a same ID may be re-used by sub-sequent cursors.
-	 */
-	private final long id;
+    /**
+     * Cursor ID.<br>All cursors that are simultaneously in contact with the touch-enabled surface have unique IDs.<br>
+     * However, a same ID may be re-used by sub-sequent cursors.
+     */
+    private final long id;
 
-	/**
-	 * X coordinate of the cursor on the touch-enabled surface.
-	 */
-	private final int x;
+    /**
+     * X coordinate of the cursor on the touch-enabled surface.
+     */
+    private final int x;
 
-	/**
-	 * Y coordinate of the cursor on the touch-enabled surface.
-	 */
-	private final int y;
+    /**
+     * Y coordinate of the cursor on the touch-enabled surface.
+     */
+    private final int y;
 
-	/**
-	 * Constructor specifying a cursor to copy from.
-	 *
-	 * @param cursor Cursor to be duplicated.
-	 */
-	public Cursor(final Cursor cursor) {
-		this(cursor.id, cursor.x, cursor.y);
-	}
+    /**
+     * Constructor specifying a cursor to copy from.
+     *
+     * @param cursor Cursor to be duplicated.
+     */
+    public Cursor(final Cursor cursor) {
+        this(cursor.id, cursor.x, cursor.y);
+    }
 
-	/**
-	 * Constructor specifying all the ID and the coordinates of the cursor.
-	 *
-	 * @param id Cursor ID.
-	 * @param x X coordinate of the cursor.
-	 * @param y Y coordinate of the cursor.
-	 */
-	public Cursor(final long id, final int x, final int y) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-	}
+    /**
+     * Constructor specifying all the ID and the coordinates of the cursor.
+     *
+     * @param id Cursor ID.
+     * @param x  X coordinate of the cursor.
+     * @param y  Y coordinate of the cursor.
+     */
+    public Cursor(final long id, final int x, final int y) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+    }
 
-	/**
-	 * Gets the ID.
-	 *
-	 * @return Cursor ID.
-	 */
-	public long getId() {
-		return id;
-	}
+    /**
+     * Gets the ID.
+     *
+     * @return Cursor ID.
+     */
+    public long getId() {
+        return id;
+    }
 
-	/**
-	 * Gets the X coordinate.
-	 *
-	 * @return X coordinate of the cursor.
-	 */
-	public int getX() {
-		return x;
-	}
+    /**
+     * Gets the X coordinate.
+     *
+     * @return X coordinate of the cursor.
+     */
+    public int getX() {
+        return x;
+    }
 
-	/**
-	 * Gets the Y coordinate.
-	 *
-	 * @return Y coordinate of the cursor.
-	 */
-	public int getY() {
-		return y;
-	}
+    /**
+     * Gets the Y coordinate.
+     *
+     * @return Y coordinate of the cursor.
+     */
+    public int getY() {
+        return y;
+    }
 
-	/**
-	 * @see Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		int hash = (int) (id ^ (id >>> 32));
-		hash = 31 * hash + x;
-		hash = 31 * hash + y;
-		return hash;
-	}
+    /**
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int hash = (int) (id ^ (id >>> 32));
+        hash = 31 * hash + x;
+        hash = 31 * hash + y;
+        return hash;
+    }
 
-	/**
-	 * @see Object#equals(Object)
-	 */
-	@Override
-	public boolean equals(final Object o) {
-		final boolean equal;
+    /**
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(final Object o) {
+        final boolean equal;
 
-		if (this == o) {
-			// Same instance
-			equal = true;
-		} else if ((o == null) || (getClass() != o.getClass())) {
-			// Different class
-			equal = false;
-		} else {
-			// Same class, so check attributes
-			final Cursor that = (Cursor) o;
-			equal = (id == that.id) && (x == that.x) && (y == that.y);
-		}
+        if (this == o) {
+            // Same instance
+            equal = true;
+        } else if ((o == null) || (getClass() != o.getClass())) {
+            // Different class
+            equal = false;
+        } else {
+            // Same class, so check attributes
+            final Cursor that = (Cursor) o;
+            equal = (id == that.id) && (x == that.x) && (y == that.y);
+        }
 
-		return equal;
-	}
+        return equal;
+    }
 
-	/**
-	 * @see Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "{id=" + id + "; x=" + x + "; y=" + y + "}";
-	}
+    /**
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "{id=" + id + "; x=" + x + "; y=" + y + "}";
+    }
 }

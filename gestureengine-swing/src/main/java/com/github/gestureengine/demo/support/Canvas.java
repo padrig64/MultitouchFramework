@@ -25,6 +25,7 @@
 
 package com.github.gestureengine.demo.support;
 
+import javax.swing.JComponent;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,69 +35,68 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JComponent;
 
 public class Canvas extends JComponent {
 
-	/**
-	 * Generated serial UID.
-	 */
-	private static final long serialVersionUID = -7342433026335755329L;
+    /**
+     * Generated serial UID.
+     */
+    private static final long serialVersionUID = -7342433026335755329L;
 
-	private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
 
-	private final List<Layer> layers = new ArrayList<Layer>();
+    private final List<Layer> layers = new ArrayList<Layer>();
 
-	private final Set<Layer> visibleLayers = new HashSet<Layer>();
+    private final Set<Layer> visibleLayers = new HashSet<Layer>();
 
-	public void addLayer(final Layer layer) {
-		layers.add(layer);
-		visibleLayers.add(layer);
-		repaint();
-	}
+    public void addLayer(final Layer layer) {
+        layers.add(layer);
+        visibleLayers.add(layer);
+        repaint();
+    }
 
-	public void removeLayer(final Layer layer) {
-		visibleLayers.remove(layer);
-		layers.remove(layer);
-		repaint();
-	}
+    public void removeLayer(final Layer layer) {
+        visibleLayers.remove(layer);
+        layers.remove(layer);
+        repaint();
+    }
 
-	public boolean isLayerVisible(final Layer layer) {
-		return visibleLayers.contains(layer);
-	}
+    public boolean isLayerVisible(final Layer layer) {
+        return visibleLayers.contains(layer);
+    }
 
-	public void setLayerVisible(final Layer layer, final boolean visible) {
-		if (visible) {
-			visibleLayers.add(layer);
-		} else {
-			visibleLayers.remove(layer);
-		}
-		repaint();
-	}
+    public void setLayerVisible(final Layer layer, final boolean visible) {
+        if (visible) {
+            visibleLayers.add(layer);
+        } else {
+            visibleLayers.remove(layer);
+        }
+        repaint();
+    }
 
-	@Override
-	protected void paintComponent(final Graphics graphics) {
-		final Insets insets = getInsets();
-		final int contentWidth = getWidth() - insets.left - insets.right;
-		final int contentHeight = getHeight() - insets.top - insets.bottom;
+    @Override
+    protected void paintComponent(final Graphics graphics) {
+        final Insets insets = getInsets();
+        final int contentWidth = getWidth() - insets.left - insets.right;
+        final int contentHeight = getHeight() - insets.top - insets.bottom;
 
-		// Clear background
-		graphics.setColor(BACKGROUND_COLOR);
-		graphics.fillRect(insets.left, insets.top, contentWidth, contentHeight);
+        // Clear background
+        graphics.setColor(BACKGROUND_COLOR);
+        graphics.fillRect(insets.left, insets.top, contentWidth, contentHeight);
 
-		// Set anti-aliasing
-		if (graphics instanceof Graphics2D) {
-			final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Set anti-aliasing
+        if (graphics instanceof Graphics2D) {
+            final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			// Draw all visible layers
-			for (final Layer layer : layers) {
-				if (visibleLayers.contains(layer)) {
-					layer.paint(g2d);
-				}
-			}
+            // Draw all visible layers
+            for (final Layer layer : layers) {
+                if (visibleLayers.contains(layer)) {
+                    layer.paint(g2d);
+                }
+            }
 
-			g2d.dispose();
-		}
-	}
+            g2d.dispose();
+        }
+    }
 }
