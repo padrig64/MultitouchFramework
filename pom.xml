@@ -9,8 +9,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Touch Framework</name>
-    <description>Parent POM of Touch Framework components</description>
+    <name>TouchFramework</name>
+    <description>Parent POM of TouchFramework components</description>
     <url>http://padrig64.github.com/TouchFramework/</url>
 
     <licenses>
@@ -42,18 +42,18 @@
         <log4j.version>1.2.17</log4j.version>
         <miglayout.version>4.1</miglayout.version>
         <slf4j.version>1.6.6</slf4j.version>
-
     </properties>
 
     <modules>
         <module>touchframework-core</module>
         <module>touchframework-swing</module>
+        <module>touchframework-worldwind</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- Touch Framework -->
+            <!-- TouchFramework -->
 
             <dependency>
                 <groupId>touchframework</groupId>
@@ -63,6 +63,11 @@
             <dependency>
                 <groupId>touchframework</groupId>
                 <artifactId>touchframework-swing</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>touchframework</groupId>
+                <artifactId>touchframework-worldwind</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

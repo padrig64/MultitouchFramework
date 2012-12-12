@@ -10,8 +10,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>touchframework-swing</artifactId>
-    <name>TouchFramework Swing Support</name>
+    <artifactId>touchframework-worldwind</artifactId>
+    <name>TouchFramework NASA World Wind Support</name>
 
     <dependencies>
 
@@ -21,12 +21,9 @@
             <groupId>touchframework</groupId>
             <artifactId>touchframework-core</artifactId>
         </dependency>
-
-        <!-- Layout -->
-
         <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout-swing</artifactId>
+            <groupId>touchframework</groupId>
+            <artifactId>touchframework-swing</artifactId>
         </dependency>
 
         <!-- Logging -->
