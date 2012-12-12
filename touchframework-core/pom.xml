@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>gestureengine</groupId>
-        <artifactId>gestureengine</artifactId>
+        <groupId>touchframework</groupId>
+        <artifactId>touchframework</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>gestureengine-core</artifactId>
-    <name>Gesture Engine Core</name>
+    <artifactId>touchframework-core</artifactId>
+    <name>Touch Framework Core</name>
 
     <dependencies>
 
