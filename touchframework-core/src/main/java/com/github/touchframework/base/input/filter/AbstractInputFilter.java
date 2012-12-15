@@ -35,8 +35,7 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link com.github.touchframework.api.input.CursorProcessor#process(java.util.Collection)}
- * method.
+ * process the filtered touch input, by calling their {@link CursorProcessor#process(java.util.Collection)} method.
  *
  * @see InputFilter
  */
@@ -69,7 +68,12 @@ public abstract class AbstractInputFilter implements InputFilter {
         nextBlocks.remove(cursorProcessor);
     }
 
-    protected void forwardToNextBlocks(final Collection<Cursor> cursors) {
+    /**
+     * Processes the specified cursors using the blocks/listeners that are queued/added to this input filter.
+     *
+     * @param cursors Cursors to be processed by the next blocks.
+     */
+    protected void processWithNextBlocks(final Collection<Cursor> cursors) {
         for (final CursorProcessor nextBlock : nextBlocks) {
             nextBlock.process(cursors);
         }

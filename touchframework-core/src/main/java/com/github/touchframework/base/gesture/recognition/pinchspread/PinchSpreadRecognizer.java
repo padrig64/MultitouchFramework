@@ -35,8 +35,12 @@ import java.util.Collection;
  * Entity responsible for recognizing a pinch/spread/zoom/etc. gesture.<br>The recognition is made on a per-region basis
  * and is based on the mean distance of all the cursors to the mean cursor (average of all the cursors).<br>Note that
  * this recognizer works best after filtering the input and limiting the number of input touch events.
+ *
+ * @see AbstractGestureRecognizer
+ * @see PinchSpreadEvent
  */
-public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpreadRecognizer.RegionContext, PinchSpreadEvent> {
+public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpreadRecognizer.RegionContext,
+        PinchSpreadEvent> {
 
     /**
      * Context storing the state of recognition of the gesture for a single region.
@@ -44,7 +48,8 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     protected static class RegionContext {
 
         /**
-         * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This makes sure
+         * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This
+         * makes sure
          * that we will get the complete set of events.
          */
         public Region activeRegion = null;
@@ -137,8 +142,8 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         // Calculate mean distance to mean point
         double meanDistance = 0.0;
         for (final Cursor cursor : cursors) {
-            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
-                    (meanY - cursor.getY()) * (meanY - cursor.getY()));
+            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) + (meanY - cursor.getY()) *
+                    (meanY - cursor.getY()));
         }
         meanDistance /= cursorCount;
 
@@ -171,8 +176,8 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         // Calculate mean distance to mean point
         double meanDistance = 0.0;
         for (final Cursor cursor : cursors) {
-            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
-                    (meanY - cursor.getY()) * (meanY - cursor.getY()));
+            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) + (meanY - cursor.getY()) *
+                    (meanY - cursor.getY()));
         }
         meanDistance /= cursorCount;
 
@@ -209,8 +214,8 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         // Calculate mean distance to mean point
         double meanDistance = 0.0;
         for (final Cursor cursor : cursors) {
-            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) +
-                    (meanY - cursor.getY()) * (meanY - cursor.getY()));
+            meanDistance += Math.sqrt((meanX - cursor.getX()) * (meanX - cursor.getX()) + (meanY - cursor.getY()) *
+                    (meanY - cursor.getY()));
         }
         meanDistance /= cursorCount;
 

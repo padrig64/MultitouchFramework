@@ -31,12 +31,28 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Simple input filter meant to reduce the small variations of cursor positions while the user holds still the point of
+ * contacts with the touch surface.<br>This is achieved by virtually moving a square bounding boxes by pushing their
+ * borders from the inside. The output cursors are the positions of the center of the boxes.<br>Coupled to a {@link
+ * NoChangeFilter}, this is a very cheap alternative to low-pass filters, even though high frequencies are not
+ * filtered out.
+ */
 public class BoundingBoxFilter extends AbstractInputFilter {
 
+    /**
+     * Half the size of the boxes.
+     */
     private static final int MAX_DIFF = 10;
 
+    /**
+     * Cursors corresponding to the boxes' center points.
+     */
     private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
+    /**
+     * @see AbstractInputFilter#process(Collection)
+     */
     @Override
     public void process(final Collection<Cursor> cursors) {
         // Quick way to remove the cursors that are no longer there
@@ -55,9 +71,17 @@ public class BoundingBoxFilter extends AbstractInputFilter {
             }
         }
 
-        forwardToNextBlocks(filteredCursors.values());
+        processWithNextBlocks(filteredCursors.values());
     }
 
+    /**
+     * Filters the specified raw cursor by calculating the new center of the bounding box.
+     *
+     * @param rawCursor         Raw input cursor.
+     * @param oldFilteredCursor Previous result from the filtering of a cursor of the same ID.
+     *
+     * @return Filtered cursor.
+     */
     private Cursor filterCursor(final Cursor rawCursor, final Cursor oldFilteredCursor) {
         final int filteredX;
         final int filteredY;

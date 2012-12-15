@@ -67,7 +67,8 @@ public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable
 //	private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 //
 //	/**
-//	 * Adds the specified sub-block to the block composition.<br>It will be appended to the last added sub-block, if any.
+//	 * Adds the specified sub-block to the block composition.<br>It will be appended to the last added sub-block,
+// if any.
 //	 *
 //	 * @param subBlock Block to be added as the last sub-block.
 //	 */

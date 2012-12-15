@@ -35,6 +35,9 @@ import java.util.Collection;
  * Entity responsible for recognizing a drag/pan/etc. gesture.<br>The recognition is made on a per-region basis and is
  * based on the location of the mean cursor (average of all the cursors).<br>Note that this recognizer works best after
  * filtering the input and limiting the number of input touch events.
+ *
+ * @see AbstractGestureRecognizer
+ * @see DragEvent
  */
 public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.RegionContext, DragEvent> {
 
@@ -44,8 +47,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
     protected static class RegionContext {
 
         /**
-         * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This makes sure
-         * that we will get the complete set of events.
+         * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This
+         * makes sure that we will get the complete set of events.
          */
         public Region activeRegion = null;
 

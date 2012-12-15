@@ -28,6 +28,12 @@ package com.github.touchframework.base.gesture.recognition.tap;
 import com.github.touchframework.api.gesture.recognition.GestureEvent;
 import com.github.touchframework.api.region.Region;
 
+/**
+ * Event fired when the tap gesture is recognized.
+ *
+ * @see GestureEvent
+ * @see TapRecognizer
+ */
 public class TapEvent implements GestureEvent {
 
     /**
@@ -36,21 +42,21 @@ public class TapEvent implements GestureEvent {
     public enum State {
 
         /**
-         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be two
-         * consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
+         * two consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
          */
         ARMED,
 
         /**
-         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the next
-         * event will be either PERFORMED again or UNARMED.
+         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the
+         * next event will be either PERFORMED again or UNARMED.
          */
         PERFORMED,
 
         /**
-         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the previous
-         * event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not be two consecutive
-         * events of this state. The state of the next event will be ARMED.
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the
+         * previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not
+         * be two consecutive events of this state. The state of the next event will be ARMED.
          */
         UNARMED
     }

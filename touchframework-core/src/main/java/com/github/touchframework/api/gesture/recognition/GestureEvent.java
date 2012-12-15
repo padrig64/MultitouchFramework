@@ -25,6 +25,13 @@
 
 package com.github.touchframework.api.gesture.recognition;
 
+/**
+ * Marker interface to be implemented by gesture events that are typically fired by gesture recognizers and handled by
+ * gesture listeners.
+ *
+ * @see GestureRecognizer
+ * @see GestureListener
+ */
 public interface GestureEvent {
-    // TODO
+    // Nothing to be done yet
 }

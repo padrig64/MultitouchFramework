@@ -144,6 +144,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
      * Finds the region that is touched by the specified cursor.
      *
      * @param cursor Cursor pointing to the region to be found.
+     *
      * @return Touched region if found, null otherwise.
      */
     protected abstract Region findTouchedRegion(final Cursor cursor);

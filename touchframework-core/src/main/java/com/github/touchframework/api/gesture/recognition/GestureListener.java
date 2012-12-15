@@ -25,7 +25,21 @@
 
 package com.github.touchframework.api.gesture.recognition;
 
+/**
+ * Interfaces to be implemented by gesture listeners to handle gesture events.<br>Gesture listeners are typically
+ * added/queued to gesture recognizers.
+ *
+ * @param <E> Type of gesture events to be handled.
+ *
+ * @see GestureRecognizer
+ * @see GestureEvent
+ */
 public interface GestureListener<E extends GestureEvent> {
 
+    /**
+     * Handles the specified gesture event.
+     *
+     * @param event Gesture event to be processed.
+     */
     public void processGestureEvent(E event);
 }

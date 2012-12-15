@@ -52,8 +52,8 @@ public interface TouchFrameworkProfile {
 
     public <E extends GestureEvent> void removeGestureListener(E gestureListener);
 
-    public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener,
-                                                            Region touchableObject);
+    public <E extends GestureEvent> void addGestureListener(GestureDefinition<E> gestureDefinition,
+                                                            E gestureListener, Region touchableObject);
 
     public <E extends GestureEvent> void removeGestureListener(E gestureListener, Region touchableObject);
 }

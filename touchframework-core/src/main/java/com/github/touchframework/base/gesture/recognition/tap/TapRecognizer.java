@@ -32,8 +32,12 @@ import com.github.touchframework.base.gesture.recognition.AbstractGestureRecogni
 import java.util.Collection;
 
 /**
- * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-region basis.<br>Note that
- * this recognizer works best after filtering the input and limiting the number of input touch events.
+ * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-region
+ * basis.<br>Note that this recognizer works best after filtering the input and limiting the number of input touch
+ * events.
+ *
+ * @see AbstractGestureRecognizer
+ * @see TapEvent
  */
 public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.RegionContext, TapEvent> {
 

@@ -37,6 +37,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+/**
+ * Abstract implementation of a gesture recognizer.<br>It provides basic support for a per-region gesture recognition
+ * and for notifying gesture listeners.<br>Implementing sub-classes are meant to create context objects that will hold
+ * all the metadata associated to the recognition of the gesture for a specific region, and to process the cursors for
+ * this context and region.
+ *
+ * @param <C> Type of context holding the recognition metadata associated to a region.
+ * @param <E> Type of gesture events fired by the gesture recognizer.
+ *
+ * @see GestureRecognizer
+ * @see GestureEvent
+ * @see GestureListener
+ */
 public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> implements GestureRecognizer<E> {
 
     /**
@@ -117,6 +130,7 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * States whether the number of input cursors matches the minimum and maximum required by the gesture.
      *
      * @param cursorCount Input cursor count.
+     *
      * @return True if the minimum and maximum are honored, false otherwise.
      */
     protected boolean isCursorCountValid(final int cursorCount) {
@@ -164,7 +178,9 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * exist.
      *
      * @param region Region to get a context for.
+     *
      * @return Context for the region.
+     *
      * @see #createContext(Region)
      */
     protected C getContext(final Region region) {
@@ -180,6 +196,7 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * Creates a new context for the specified region.<br>This method is to be implemented by sub-classes.
      *
      * @param region Region to create a context for.
+     *
      * @return Newly created context for the region.
      */
     protected abstract C createContext(Region region);

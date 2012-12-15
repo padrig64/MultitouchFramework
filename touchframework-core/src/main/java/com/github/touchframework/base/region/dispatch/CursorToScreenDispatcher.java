@@ -28,6 +28,12 @@ package com.github.touchframework.base.region.dispatch;
 import com.github.touchframework.api.input.Cursor;
 import com.github.touchframework.api.region.Region;
 
+/**
+ * Simple cursor-to-region dispatcher associating all cursors to the region representing the whole screen.
+ *
+ * @see AbstractCursorToRegionDispatcher
+ * @see com.github.touchframework.base.region.ScreenRegion
+ */
 public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
     /**

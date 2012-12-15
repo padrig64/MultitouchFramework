@@ -33,10 +33,9 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected cursor
- * processor to process the touch input, by calling their {@link com.github.touchframework.api.input.CursorProcessor#process(java.util.Collection)}
- * method.
+ * processor to process the touch input, by calling their {@link CursorProcessor#process(java.util.Collection)} method.
  *
- * @see com.github.touchframework.api.input.source.InputSource
+ * @see InputSource
  */
 public abstract class AbstractInputSource implements InputSource {
 
@@ -76,7 +75,7 @@ public abstract class AbstractInputSource implements InputSource {
     }
 
     /**
-     * @see com.github.touchframework.api.input.source.InputSource#isStarted()
+     * @see InputSource#isStarted()
      */
     @Override
     public boolean isStarted() {
@@ -84,7 +83,7 @@ public abstract class AbstractInputSource implements InputSource {
     }
 
     /**
-     * @see com.github.touchframework.api.input.source.InputSource#start()
+     * @see InputSource#start()
      */
     @Override
     public void start() {
@@ -94,7 +93,7 @@ public abstract class AbstractInputSource implements InputSource {
     }
 
     /**
-     * @see com.github.touchframework.api.input.source.InputSource#stop()
+     * @see InputSource#stop()
      */
     @Override
     public void stop() {

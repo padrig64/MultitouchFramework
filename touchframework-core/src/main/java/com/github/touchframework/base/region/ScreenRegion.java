@@ -41,16 +41,16 @@ import java.awt.Toolkit;
 public class ScreenRegion implements Region {
 
     /**
-     * Screen size.<br>Note that
+     * Detected screen size.<br>Note that screen resolution changes will not be taken into account.
      */
-    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
     /**
      * @see Region#isTouched(Cursor)
      */
     @Override
     public boolean isTouched(final Cursor cursor) {
-        return ((0 <= cursor.getX()) && (cursor.getX() < screenSize.width) && (0 <= cursor.getY()) &&
-                (cursor.getY() < screenSize.height));
+        return ((0 <= cursor.getX()) && (cursor.getX() < SCREEN_SIZE.width) && (0 <= cursor.getY()) &&
+                (cursor.getY() < SCREEN_SIZE.height));
     }
 }

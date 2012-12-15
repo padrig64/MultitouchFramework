@@ -28,7 +28,18 @@ package com.github.touchframework.api.gesture.recognition;
 import com.github.touchframework.api.flow.Chainable;
 import com.github.touchframework.api.region.CursorPerRegionProcessor;
 
-public interface GestureRecognizer<E extends GestureEvent>
-        extends CursorPerRegionProcessor, Chainable<GestureListener<E>> {
-    // Nothing to be done
+/**
+ * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-region
+ * dispatchers in order to recognize gestures on a specific region of the touch surface.
+ *
+ * @param <E> Type of gesture events fired by the gesture recognizer.
+ *
+ * @see GestureListener
+ * @see GestureEvent
+ * @see CursorPerRegionProcessor
+ * @see Chainable
+ */
+public interface GestureRecognizer<E extends GestureEvent> extends CursorPerRegionProcessor,
+        Chainable<GestureListener<E>> {
+    // Nothing more to be done
 }

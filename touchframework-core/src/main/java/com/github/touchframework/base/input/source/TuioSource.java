@@ -50,6 +50,9 @@ public class TuioSource extends AbstractInputSource {
 
     private class TuioClientAdapter implements TUIOEvent {
 
+        /**
+         * Cursors currently detected by the touch surface.
+         */
         private final Map<Long, Cursor> currentCursors = new HashMap<Long, Cursor>();
 
         /**
@@ -57,10 +60,12 @@ public class TuioSource extends AbstractInputSource {
          */
         @Override
         public void newCursorEvent(final TUIOCursor tuioCursor) {
+            // Sanity check
             if (currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("+++ Cursor " + tuioCursor.id() + " was already tracked");
             }
 
+            // Process cursor addition
             final Cursor cursor = new Cursor(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
                     Float.valueOf(tuioCursor.y()).intValue());
             currentCursors.put(tuioCursor.id(), cursor);
@@ -72,10 +77,12 @@ public class TuioSource extends AbstractInputSource {
          */
         @Override
         public void removeCursorEvent(final TUIOCursor tuioCursor) {
+            // Sanity check
             if (!currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("--- Cursor " + tuioCursor.id() + " was not tracked");
             }
 
+            // Process cursor removal
             currentCursors.remove(tuioCursor.id());
             processWithNextBlocks();
         }
@@ -85,6 +92,7 @@ public class TuioSource extends AbstractInputSource {
          */
         @Override
         public void moveCursorEvent(final TUIOCursor tuioCursor) {
+            // Sanity check
             if (!currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("~~~ Cursor " + tuioCursor.id() + " was not tracked (it will now be tracked)");
             }
@@ -96,6 +104,9 @@ public class TuioSource extends AbstractInputSource {
             processWithNextBlocks();
         }
 
+        /**
+         * Processes the current cursors using the blocks/listeners that are queued/added to this input source.
+         */
         private void processWithNextBlocks() {
             final Collection<Cursor> cursorList = currentCursors.values();
             for (final CursorProcessor nextBlock : nextBlocks) {

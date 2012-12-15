@@ -29,12 +29,17 @@ import com.github.touchframework.api.flow.Chainable;
 import com.github.touchframework.api.input.CursorProcessor;
 
 /**
- * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors.
- * They provide the filtered cursors to one or several other cursor processors, typically other {@link InputFilter}s or
- * {@link com.github.touchframework.api.region.dispatch.CursorToRegionDispatcher}s.
+ * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors
+ * from {@link com.github.touchframework.api.input.source.InputSource}s. They provide the filtered cursors to one or
+ * several other cursor processors, typically other {@link InputFilter}s or
+ * {@link com.github.touchframework.api.region.dispatch.CursorToRegionDispatcher}s.<br>Input filters can be used, for
+ * instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to another thread,
+ * to generate more events for inertia, etc.
  *
  * @see CursorProcessor
- * @see com.github.touchframework.api.flow.Chainable
+ * @see Chainable
+ * @see com.github.touchframework.api.input.source.InputSource
+ * @see com.github.touchframework.api.region.dispatch.CursorToRegionDispatcher
  */
 public interface InputFilter extends CursorProcessor, Chainable<CursorProcessor> {
     // Nothing more to be done
