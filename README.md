@@ -1,3 +1,3 @@
-Simple and flexible Java framework facilitating the handling of multi-touch input and the gesture recognition.
+Simple and flexible Java framework facilitating the handling of multitouch input and the gesture recognition.
 
-This project is not yet ready for use. More info will come soon...
+Please refer to the [WIKI](https://github.com/padrig64/TouchFramework/wiki) for more information.
