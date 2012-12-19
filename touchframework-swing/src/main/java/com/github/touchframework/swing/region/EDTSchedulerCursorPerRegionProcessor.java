@@ -39,14 +39,14 @@ import java.util.List;
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
-public class EDTSchedulerCursorPerRegionProcessor
-        implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+public class EDTSchedulerCursorPerRegionProcessor implements CursorPerRegionProcessor,
+        Chainable<CursorPerRegionProcessor> {
 
     /**
      * Blocks that are queued to this block.
      */
-    private final List<CursorPerRegionProcessor> nextBlocks =
-            Collections.synchronizedList(new ArrayList<CursorPerRegionProcessor>());
+    private final List<CursorPerRegionProcessor> nextBlocks = Collections.synchronizedList(new
+            ArrayList<CursorPerRegionProcessor>());
 
     /**
      * Default constructor.
@@ -59,6 +59,7 @@ public class EDTSchedulerCursorPerRegionProcessor
      * Constructor specifying the first black to be queued to this block.
      *
      * @param firstNextBlock First block to be queued.
+     *
      * @see #queue(CursorPerRegionProcessor)
      */
     public EDTSchedulerCursorPerRegionProcessor(final CursorPerRegionProcessor firstNextBlock) {
@@ -84,10 +85,10 @@ public class EDTSchedulerCursorPerRegionProcessor
     /**
      * Forwards the specified cursors to the next blocks on the EDT.
      *
-     * @see CursorPerRegionProcessor#process(Region, Collection)
+     * @see CursorPerRegionProcessor#processCursors(Region, Collection)
      */
     @Override
-    public void process(final Region region, final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         // Just put the cursors in a new list, no need to clone them
         final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
 
@@ -96,7 +97,7 @@ public class EDTSchedulerCursorPerRegionProcessor
             public void run() {
                 synchronized (nextBlocks) {
                     for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
-                        nextBlock.process(region, copiedData);
+                        nextBlock.processCursors(region, copiedData);
                     }
                 }
             }

@@ -42,7 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Input controller making use of a TUIO client to provide cursors received from a TUIO server.
+ * Input controller making use of a TUIO client to provide cursors received from a TUIO server.<br>This implementation
+ * is based on the YAJTL library (MIT license) instead of the official TUIO client implementation (GPL license).
  *
  * @see AbstractInputSource
  */
@@ -110,7 +111,7 @@ public class TuioSource extends AbstractInputSource {
         private void processWithNextBlocks() {
             final Collection<Cursor> cursorList = currentCursors.values();
             for (final CursorProcessor nextBlock : nextBlocks) {
-                nextBlock.process(cursorList);
+                nextBlock.processCursors(cursorList);
             }
         }
     }

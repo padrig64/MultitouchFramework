@@ -41,5 +41,5 @@ public interface CursorPerRegionProcessor {
      * @param region  Touchable region to which the cursors are associated.
      * @param cursors Cursors to be processed.
      */
-    public void process(Region region, Collection<Cursor> cursors);
+    public void processCursors(Region region, Collection<Cursor> cursors);
 }

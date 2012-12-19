@@ -37,5 +37,5 @@ public interface CursorProcessor {
      *
      * @param cursors Cursors to be processed.
      */
-    public void process(Collection<Cursor> cursors);
+    public void processCursors(Collection<Cursor> cursors);
 }

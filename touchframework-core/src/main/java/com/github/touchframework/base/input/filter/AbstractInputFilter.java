@@ -75,7 +75,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      */
     protected void processWithNextBlocks(final Collection<Cursor> cursors) {
         for (final CursorProcessor nextBlock : nextBlocks) {
-            nextBlock.process(cursors);
+            nextBlock.processCursors(cursors);
         }
     }
 }

@@ -54,7 +54,7 @@ public class MeanLinesLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         this.cursors = cursors;
         canvas.repaint();
     }

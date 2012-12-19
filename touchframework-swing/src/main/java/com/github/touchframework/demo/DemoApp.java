@@ -100,7 +100,8 @@ public class DemoApp extends JFrame {
 
     private enum GestureProcessor {
 
-        PAN("Navigation - Pan");
+        PAN("Drag"),
+        PINCH_SPREAD("Pinch/Spread");
 
         private final String presentationName;
 
@@ -172,9 +173,8 @@ public class DemoApp extends JFrame {
         controlPanel.add(createLayerListPanel());
 
         // Configure canvas
-        final CompoundBorder canvasBorder =
-                new CompoundBorder(new MatteBorder(2, 1, 2, 2, UIManager.getColor("background")),
-                        new LineBorder(UIManager.getColor("nimbusBorder")));
+        final CompoundBorder canvasBorder = new CompoundBorder(new MatteBorder(2, 1, 2, 2,
+                UIManager.getColor("background")), new LineBorder(UIManager.getColor("nimbusBorder")));
         canvas.setBorder(canvasBorder);
         contentPane.add(canvas, BorderLayout.CENTER);
         setContentPane(contentPane);
@@ -253,8 +253,8 @@ public class DemoApp extends JFrame {
         noChangeFilter.queue(cursorToRegionDispatcher);
 
         // Configure layer for regions
-        final EDTSchedulerCursorPerRegionProcessor edtCursorPerRegionProcessorBlock =
-                new EDTSchedulerCursorPerRegionProcessor();
+        final EDTSchedulerCursorPerRegionProcessor edtCursorPerRegionProcessorBlock = new
+                EDTSchedulerCursorPerRegionProcessor();
         cursorToRegionDispatcher.queue(edtCursorPerRegionProcessorBlock);
         ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
         edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());

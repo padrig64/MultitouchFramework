@@ -51,10 +51,10 @@ public class BoundingBoxFilter extends AbstractInputFilter {
     private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
     /**
-     * @see AbstractInputFilter#process(Collection)
+     * @see AbstractInputFilter#processCursors(Collection)
      */
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         // Quick way to remove the cursors that are no longer there
         final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
         filteredCursors = new HashMap<Long, Cursor>();

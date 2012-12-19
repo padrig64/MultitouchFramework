@@ -166,10 +166,10 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
     }
 
     /**
-     * @see GestureRecognizer#process(Region, Collection)
+     * @see GestureRecognizer#processCursors(Region, Collection)
      */
     @Override
-    public void process(final Region region, final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         process(getContext(region), region, cursors);
     }
 

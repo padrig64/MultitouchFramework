@@ -62,7 +62,7 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
     }
 
     @Override
-    public void process(final Region region, final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         cursorsForRegions.put(region, cursors);
         canvas.repaint();
     }
@@ -83,8 +83,8 @@ public class RegionsLayer implements Layer, CursorPerRegionProcessor {
         for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
-                    final Rectangle bounds =
-                            convertScreenBoundsToCanvas(((DummyRegion) entry.getKey()).getTouchableBounds());
+                    final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) entry.getKey())
+                            .getTouchableBounds());
                     g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
                 }
             }

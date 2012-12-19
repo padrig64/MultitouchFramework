@@ -43,10 +43,10 @@ public class NoChangeFilter extends AbstractInputFilter {
     private Set<Cursor> lastCursors = new HashSet<Cursor>();
 
     /**
-     * @see AbstractInputFilter#process(Collection)
+     * @see AbstractInputFilter#processCursors(Collection)
      */
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         boolean changed = false;
 
         // Check if at least one cursor changed since the last event

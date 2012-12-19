@@ -23,78 +23,53 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.touchframework.swing.input;
+package com.github.touchframework.swing.gesture.recognition;
 
 import com.github.touchframework.api.flow.Chainable;
-import com.github.touchframework.api.input.Cursor;
-import com.github.touchframework.api.input.CursorProcessor;
+import com.github.touchframework.api.gesture.recognition.GestureEvent;
+import com.github.touchframework.api.gesture.recognition.GestureListener;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
- */
-public class EDTSchedulerCursorProcessor implements CursorProcessor, Chainable<CursorProcessor> {
+public class EDTSchedulerGestureListener<E extends GestureEvent> implements GestureListener<E>,
+        Chainable<GestureListener<E>> {
 
     /**
-     * Blocks that are queued to this block.
+     * Listeners to events of the gesture.
+     *
+     * @see #queue(GestureListener)
+     * @see #dequeue(GestureListener)
+     * @see #processGestureEvent(GestureEvent)
      */
-    private final List<CursorProcessor> nextBlocks = Collections.synchronizedList(new ArrayList<CursorProcessor>());
+    private final List<GestureListener<E>> gestureListeners = Collections.synchronizedList(new
+            ArrayList<GestureListener<E>>());
 
-    /**
-     * Default constructor.
-     */
-    public EDTSchedulerCursorProcessor() {
-        // Nothing to be done
+    @Override
+    public void queue(final GestureListener<E> gestureListener) {
+        gestureListeners.add(gestureListener);
+    }
+
+    @Override
+    public void dequeue(final GestureListener<E> gestureListener) {
+        gestureListeners.remove(gestureListener);
     }
 
     /**
-     * Constructor specifying the first black to be queued to this block.
+     * Forwards the specified gesture event to the next blocks on the EDT.
      *
-     * @param firstNextBlock First block to be queued.
-     *
-     * @see #queue(CursorProcessor)
-     */
-    public EDTSchedulerCursorProcessor(final CursorProcessor firstNextBlock) {
-        nextBlocks.add(firstNextBlock);
-    }
-
-    /**
-     * @see com.github.touchframework.api.flow.Chainable#queue(Object)
+     * @see GestureListener#processGestureEvent(GestureEvent)
      */
     @Override
-    public void queue(final CursorProcessor nextBlock) {
-        nextBlocks.add(nextBlock);
-    }
-
-    /**
-     * @see com.github.touchframework.api.flow.Chainable#dequeue(Object)
-     */
-    @Override
-    public void dequeue(final CursorProcessor nextBlock) {
-        nextBlocks.remove(nextBlock);
-    }
-
-    /**
-     * Forwards the specified cursors to the next blocks on the EDT.
-     *
-     * @see CursorProcessor#processCursors(Collection)
-     */
-    @Override
-    public void processCursors(final Collection<Cursor> cursors) {
-        // Just put the cursors in a new list, no need to clone them
-        final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
-
+    public void processGestureEvent(final E event) {
         final Runnable edtRunnable = new Runnable() {
             @Override
             public void run() {
-                synchronized (nextBlocks) {
-                    for (final CursorProcessor nextBlock : nextBlocks) {
-                        nextBlock.processCursors(copiedData);
+                synchronized (gestureListeners) {
+                    for (final GestureListener<E> nextBlock : gestureListeners) {
+                        nextBlock.processGestureEvent(event);
                     }
                 }
             }

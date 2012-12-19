@@ -91,10 +91,10 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#process(Collection)
+     * @see AbstractCursorToRegionDispatcher#processCursors(Collection)
      */
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
         final Map<Region, Collection<Cursor>> updatesToBeForwarded = new HashMap<Region, Collection<Cursor>>();
 
@@ -151,14 +151,14 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 
     /**
      * Forwards the specified region with its cursors to the next blocks.<br>Typically, this method is called for each
-     * region touch by the cursors processed in {@link #process(Collection)}.
+     * region touch by the cursors processed in {@link #processCursors(Collection)}.
      *
      * @param region  Region holding the specified cursors.
      * @param cursors Cursors for the specified region.
      */
     private void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
         for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
-            nextBlock.process(region, cursors);
+            nextBlock.processCursors(region, cursors);
         }
     }
 }

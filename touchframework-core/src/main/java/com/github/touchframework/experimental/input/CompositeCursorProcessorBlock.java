@@ -44,7 +44,7 @@ public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable
     }
 
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         // TODO
     }
     //	/**

@@ -53,7 +53,7 @@ public class MeanCursorLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void process(final Collection<Cursor> cursors) {
+    public void processCursors(final Collection<Cursor> cursors) {
         if (cursors.isEmpty()) {
             meanCursor = null;
         } else {
