@@ -4,26 +4,26 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>touchframework</groupId>
-    <artifactId>touchframework</artifactId>
+    <groupId>multitouchframework</groupId>
+    <artifactId>multitouchframework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>TouchFramework</name>
-    <description>Parent POM of TouchFramework components</description>
-    <url>http://padrig64.github.com/TouchFramework/</url>
+    <name>MultitouchFramework</name>
+    <description>Parent POM of MultitouchFramework components</description>
+    <url>http://padrig64.github.com/MultitouchFramework/</url>
 
     <licenses>
         <license>
             <name>Simplified BSD License</name>
-            <url>https://raw.github.com/padrig64/TouchFramework/master/LICENSE.txt</url>
+            <url>https://raw.github.com/padrig64/MultitouchFramework/master/LICENSE.txt</url>
         </license>
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:padrig64/TouchFramework.git</connection>
-        <url>scm:git:git@github.com:padrig64/TouchFramework.git</url>
-        <developerConnection>scm:git:git@github.com:padrig64/TouchFramework.git</developerConnection>
+        <connection>scm:git:git@github.com:padrig64/MultitouchFramework.git</connection>
+        <url>scm:git:git@github.com:padrig64/MultitouchFramework.git</url>
+        <developerConnection>scm:git:git@github.com:padrig64/MultitouchFramework.git</developerConnection>
     </scm>
 
     <properties>
@@ -45,29 +45,29 @@
     </properties>
 
     <modules>
-        <module>touchframework-core</module>
-        <module>touchframework-swing</module>
-        <module>touchframework-worldwind</module>
+        <module>multitouchframework-core</module>
+        <module>multitouchframework-swing</module>
+        <module>multitouchframework-worldwind</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- TouchFramework -->
+            <!-- MultitouchFramework -->
 
             <dependency>
-                <groupId>touchframework</groupId>
-                <artifactId>touchframework-core</artifactId>
+                <groupId>multitouchframework</groupId>
+                <artifactId>multitouchframework-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>touchframework</groupId>
-                <artifactId>touchframework-swing</artifactId>
+                <groupId>multitouchframework</groupId>
+                <artifactId>multitouchframework-swing</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>touchframework</groupId>
-                <artifactId>touchframework-worldwind</artifactId>
+                <groupId>multitouchframework</groupId>
+                <artifactId>multitouchframework-worldwind</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
