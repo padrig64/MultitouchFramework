@@ -58,8 +58,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -167,15 +165,15 @@ public class DemoApp extends JFrame {
 
         // Create layer list
         final JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
-        contentPane.add(new JScrollPane(controlPanel), BorderLayout.WEST);
+        controlPanel.setBorder(new MatteBorder(0, 0, 0, 1, UIManager.getColor("nimbusBorder")));
+        final JScrollPane controlScrollPane = new JScrollPane(controlPanel);
+        controlScrollPane.setBorder(null);
+        contentPane.add(controlScrollPane, BorderLayout.WEST);
 
         controlPanel.add(createGestureListPanel());
         controlPanel.add(createLayerListPanel());
 
         // Configure canvas
-        final CompoundBorder canvasBorder = new CompoundBorder(new MatteBorder(2, 1, 2, 2,
-                UIManager.getColor("background")), new LineBorder(UIManager.getColor("nimbusBorder")));
-        canvas.setBorder(canvasBorder);
         contentPane.add(canvas, BorderLayout.CENTER);
         setContentPane(contentPane);
 
