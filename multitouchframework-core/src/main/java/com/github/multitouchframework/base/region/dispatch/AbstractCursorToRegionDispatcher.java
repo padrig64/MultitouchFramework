@@ -30,8 +30,6 @@ import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
 import com.github.multitouchframework.api.region.Region;
 import com.github.multitouchframework.api.region.dispatch.CursorToRegionDispatcher;
 import com.github.multitouchframework.base.region.ScreenRegion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,11 +51,6 @@ import java.util.Map;
  * @see #findTouchedRegion(Cursor)
  */
 public abstract class AbstractCursorToRegionDispatcher implements CursorToRegionDispatcher {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCursorToRegionDispatcher.class);
 
     /**
      * Default region that would hold the cursors if no other region on top of it would hold those cursors.
@@ -109,9 +102,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
                 oldCursorToRegion.remove(cursor.getId());
             }
 
-            if (region == null) {
-                LOGGER.info("No region found for cursor: " + cursor);
-            } else {
+            if (region != null) {
                 // Update cursor for this region
                 newCursorToRegion.put(cursor.getId(), region);
 

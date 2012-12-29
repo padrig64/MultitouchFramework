@@ -127,7 +127,8 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
     }
 
     /**
-     * States whether the number of input cursors matches the minimum and maximum required by the gesture.
+     * States whether the number of input cursors matches the minimum and maximum required by the gesture.<br>This is a
+     * convenience that may be used by sub-classes.
      *
      * @param cursorCount Input cursor count.
      *

@@ -137,32 +137,56 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
         final int cursorCount = cursors.size();
         final long tapTimestamp = System.currentTimeMillis();
 
-        // TODO Check if all the cursors are now out of the region: if so, then just unarm the gesture
+        // Check if at least 1 cursor is still on the region
+        if (isGestureStillArmed(region, cursors)) {
+            if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
+                // Just starting a new tap (e.g. some fingers down)
+                if ((tapTimestamp - context.previousTapTimestamp) > consecutiveTapTimeout) {
+                    // The tap is the beginning of a new series
+                    context.previousTapCount = 1;
+                } else {
+                    // The tap is consecutive to a previous tap
+                    context.previousTapCount++;
+                }
+                context.previousTapTimestamp = tapTimestamp;
+                context.previousCursorCount = cursorCount;
 
-        if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-            // Just starting a new tap (e.g. some fingers down)
-            if ((tapTimestamp - context.previousTapTimestamp) > consecutiveTapTimeout) {
-                // The tap is the beginning of a new series
-                context.previousTapCount = 1;
-            } else {
-                // The tap is consecutive to a previous tap
-                context.previousTapCount++;
+                // Notify listeners
+                fireGestureEvent(new TapEvent(TapEvent.State.ARMED, region, context.previousTapCount,
+                        context.previousCursorCount));
+            } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
+                // Just finishing to tap (e.g. all fingers up)
+                context.previousTapTimestamp = System.currentTimeMillis();
+                context.previousCursorCount = cursorCount;
+
+                // Notify listeners
+                fireGestureEvent(new TapEvent(TapEvent.State.PERFORMED, region, context.previousTapCount,
+                        context.previousCursorCount));
+                fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.previousTapCount,
+                        context.previousCursorCount));
             }
-            context.previousTapTimestamp = tapTimestamp;
-            context.previousCursorCount = cursorCount;
+        } else {
+            // All cursors are now out of the region, gesture should be unarmed
+            context.previousCursorCount = 0;
 
-            // Notify listeners
-            fireGestureEvent(new TapEvent(TapEvent.State.ARMED, region, context.previousTapCount,
+            // TODO Do not fire all the time
+            fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.previousTapCount,
                     context.previousCursorCount));
-        } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
-            // Just finishing to tap (e.g. all fingers up)
-            context.previousTapTimestamp = System.currentTimeMillis();
-            context.previousCursorCount = cursorCount;
-
-            // Notify listeners
-            fireGestureEvent(new TapEvent(TapEvent.State.PERFORMED, region, context.previousTapCount,
-                    context.previousCursorCount));
-            fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.previousTapCount, context.previousCursorCount));
         }
+    }
+
+    private boolean isGestureStillArmed(final Region region, final Collection<Cursor> cursors) {
+        boolean stillArmed = false;
+
+        if (cursors.isEmpty()) {
+            stillArmed = true;
+        } else for (final Cursor cursor : cursors) {
+            if (region.isTouched(cursor)) {
+                stillArmed = true;
+                break;
+            }
+        }
+
+        return stillArmed;
     }
 }
