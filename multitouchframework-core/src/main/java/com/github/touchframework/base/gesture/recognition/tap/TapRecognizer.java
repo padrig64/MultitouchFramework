@@ -42,25 +42,83 @@ import java.util.Collection;
 public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.RegionContext, TapEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single region.
+     * Context storing the state of recognition of the gesture for a single region.<br>The recognition is based on the
+     * variation of touch points.
      */
     protected static class RegionContext {
-        // Nothing to be done yet
+
+        public int previousCursorCount = 0;
+
+        public int previousTapCount = 0;
+
+        public long previousTapTimestamp = 0;
     }
+
+    /**
+     * Default minimum number of cursors needed to perform the gesture.
+     */
+    public static final int DEFAULT_MIN_CURSOR_COUNT = 1;
+
+    /**
+     * Default maximum number of cursors allowed to perform the gesture.
+     */
+    public static final int DEFAULT_MAX_CURSOR_COUNT = Integer.MAX_VALUE;
+
+    /**
+     * Default maximum duration in milliseconds between two taps to consider them consecutive and being part of a
+     * same series.
+     */
+    public static final int DEFAULT_CONSECUTIVE_TAP_TIMEOUT = 750; // ms
+
+    private long consecutiveTapTimeout = 0;
 
     /**
      * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
-     * maximum.
+     * maximum. Also, the default timeout for consecutive taps is 750 ms.
      */
     public TapRecognizer() {
-        this(1, Integer.MAX_VALUE);
+        this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT, DEFAULT_CONSECUTIVE_TAP_TIMEOUT);
     }
 
     /**
-     * @see AbstractGestureRecognizer#AbstractGestureRecognizer(int, int)
+     * Constructor specifying the minimum and maximum number of cursors needed to perform the gesture.<br>The default
+     * timeout for consecutive taps is 750 ms.
+     *
+     * @param minCursorCount Minimum number of cursors needed for the gesture.
+     * @param maxCursorCount Maximum number of cursors allowed for the gesture.
      */
     public TapRecognizer(final int minCursorCount, final int maxCursorCount) {
+        this(minCursorCount, maxCursorCount, DEFAULT_CONSECUTIVE_TAP_TIMEOUT);
+    }
+
+    /**
+     * Constructor specifying the minimum and maximum number of cursors needed to perform the gesture, as well as the
+     * timeout for consecutive taps.
+     *
+     * @param minCursorCount        Minimum number of cursors needed for the gesture.
+     * @param maxCursorCount        Maximum number of cursors allowed for the gesture.
+     * @param consecutiveTapTimeout Consecutive tap timeout in milliseconds.
+     */
+    public TapRecognizer(final int minCursorCount, final int maxCursorCount, final long consecutiveTapTimeout) {
         super(minCursorCount, maxCursorCount);
+    }
+
+    /**
+     * Gets the consecutive tap timeout.
+     *
+     * @return Consecutive tap timeout in milliseconds.
+     */
+    public long getConsecutiveTapTimeout() {
+        return consecutiveTapTimeout;
+    }
+
+    /**
+     * Sets the consecutive tap timeout.
+     *
+     * @param consecutiveTapTimeout Consecutive tap timeout in milliseconds.
+     */
+    public void setConsecutiveTapTimeout(final long consecutiveTapTimeout) {
+        this.consecutiveTapTimeout = consecutiveTapTimeout;
     }
 
     /**
@@ -72,10 +130,39 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Region, Collection)
+     * @see AbstractGestureRecognizer#process(Object, Region, Collection)
      */
     @Override
     protected void process(final RegionContext context, final Region region, final Collection<Cursor> cursors) {
-        // TODO
+        final int cursorCount = cursors.size();
+        final long tapTimestamp = System.currentTimeMillis();
+
+        // TODO Check if all the cursors are now out of the region: if so, then just unarm the gesture
+
+        if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
+            // Just starting a new tap (e.g. some fingers down)
+            if ((tapTimestamp - context.previousTapTimestamp) > consecutiveTapTimeout) {
+                // The tap is the beginning of a new series
+                context.previousTapCount = 1;
+            } else {
+                // The tap is consecutive to a previous tap
+                context.previousTapCount++;
+            }
+            context.previousTapTimestamp = tapTimestamp;
+            context.previousCursorCount = cursorCount;
+
+            // Notify listeners
+            fireGestureEvent(new TapEvent(TapEvent.State.ARMED, region, context.previousTapCount,
+                    context.previousCursorCount));
+        } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
+            // Just finishing to tap (e.g. all fingers up)
+            context.previousTapTimestamp = System.currentTimeMillis();
+            context.previousCursorCount = cursorCount;
+
+            // Notify listeners
+            fireGestureEvent(new TapEvent(TapEvent.State.PERFORMED, region, context.previousTapCount,
+                    context.previousCursorCount));
+            fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.previousTapCount, context.previousCursorCount));
+        }
     }
 }

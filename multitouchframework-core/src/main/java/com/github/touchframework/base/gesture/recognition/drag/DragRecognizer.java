@@ -42,7 +42,9 @@ import java.util.Collection;
 public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.RegionContext, DragEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single region.
+     * Context storing the state of recognition of the gesture for a single region.<br>The recognition is based on the
+     * movement of the mean point of all cursors on the touched surface, but making sure that changing the number of
+     * cursors has no influence on the gesture.
      */
     protected static class RegionContext {
 
@@ -84,11 +86,21 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
     }
 
     /**
+     * Default minimum number of cursors needed to perform the gesture.
+     */
+    public static final int DEFAULT_MIN_CURSOR_COUNT = 1;
+
+    /**
+     * Default maximum number of cursors allowed to performed the gesture.
+     */
+    public static final int DEFAULT_MAX_CURSOR_COUNT = Integer.MAX_VALUE; // No maximum
+
+    /**
      * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
      * maximum.
      */
     public DragRecognizer() {
-        this(1, Integer.MAX_VALUE);
+        this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT);
     }
 
     /**

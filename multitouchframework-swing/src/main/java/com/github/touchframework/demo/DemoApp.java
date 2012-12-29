@@ -30,8 +30,9 @@ import com.github.touchframework.api.input.CursorProcessor;
 import com.github.touchframework.api.input.filter.InputFilter;
 import com.github.touchframework.api.region.CursorPerRegionProcessor;
 import com.github.touchframework.base.gesture.recognition.drag.DragRecognizer;
-import com.github.touchframework.base.gesture.recognition.pinchspread.PinchSpreadEvent;
 import com.github.touchframework.base.gesture.recognition.pinchspread.PinchSpreadRecognizer;
+import com.github.touchframework.base.gesture.recognition.tap.TapEvent;
+import com.github.touchframework.base.gesture.recognition.tap.TapRecognizer;
 import com.github.touchframework.base.input.filter.BoundingBoxFilter;
 import com.github.touchframework.base.input.filter.NoChangeFilter;
 import com.github.touchframework.base.input.source.TuioSource;
@@ -262,6 +263,8 @@ public class DemoApp extends JFrame {
         cursorToRegionDispatcher.queue(dragRecognizer);
         final PinchSpreadRecognizer pinchSpreadRecognizer = new PinchSpreadRecognizer();
         cursorToRegionDispatcher.queue(pinchSpreadRecognizer);
+        final TapRecognizer tapRecognizer = new TapRecognizer();
+        cursorToRegionDispatcher.queue(tapRecognizer);
 
         // Configure gesture listeners
 //		dragRecognizer.queue(new GestureListener<DragEvent>() {
@@ -271,10 +274,16 @@ public class DemoApp extends JFrame {
 //				System.out.println(event);
 //			}
 //		});
-        pinchSpreadRecognizer.queue(new GestureListener<PinchSpreadEvent>() {
-
+//        pinchSpreadRecognizer.queue(new GestureListener<PinchSpreadEvent>() {
+//
+//            @Override
+//            public void processGestureEvent(final PinchSpreadEvent event) {
+//                System.out.println(event);
+//            }
+//        });
+        tapRecognizer.queue(new GestureListener<TapEvent>() {
             @Override
-            public void processGestureEvent(final PinchSpreadEvent event) {
+            public void processGestureEvent(TapEvent event) {
                 System.out.println(event);
             }
         });

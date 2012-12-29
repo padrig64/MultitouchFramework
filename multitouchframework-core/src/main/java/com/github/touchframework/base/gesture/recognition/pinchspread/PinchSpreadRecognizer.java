@@ -43,14 +43,15 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         PinchSpreadEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single region.
+     * Context storing the state of recognition of the gesture for a single region.<br>The recognition is based on the
+     * mean distance of all distances between the cursors and their mean point, but making sure that changing the number
+     * of cursors has no influence on the gesture.
      */
     protected static class RegionContext {
 
         /**
          * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This
-         * makes sure
-         * that we will get the complete set of events.
+         * makes sure that we will get the complete set of events.
          */
         public Region activeRegion = null;
 
@@ -64,17 +65,34 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
          */
         public int previousCursorCount = 0;
 
+        /**
+         * Last reference distance between the mean point and the cursors used to calculate the total movement of the
+         * gesture on the region.
+         */
         public double referenceDistance = 1.0;
 
+        /**
+         * Last mean distance between the mean point and the cursors.
+         */
         public double previousMeanDistance = 1.0;
     }
+
+    /**
+     * Default minimum number of cursors needed to perform the gesture.
+     */
+    public static final int DEFAULT_MIN_CURSOR_COUNT = 2;
+
+    /**
+     * Default maximum number of cursors allowed to perform the gesture.
+     */
+    public static final int DEFAULT_MAX_CURSOR_COUNT = Integer.MAX_VALUE; // No maximum
 
     /**
      * Default constructor.<br>By default, 2 cursors is the minimum required to perform the gesture, and there is no
      * maximum.
      */
     public PinchSpreadRecognizer() {
-        this(2, Integer.MAX_VALUE);
+        this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT);
     }
 
     /**
