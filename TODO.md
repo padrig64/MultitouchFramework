@@ -20,3 +20,5 @@
 
 * Block state ON/OFF/BYPASS
 * Decouple Surface / Screen / Canvas
+* Application-specific: change color while drawing
+* Application-specific: auto-pan while drawing near the screen edge (different than drag)
