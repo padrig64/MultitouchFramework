@@ -58,7 +58,10 @@ public class Cursor {
     }
 
     /**
-     * Constructor specifying all the ID and the coordinates of the cursor.
+     * Constructor specifying all the ID and the coordinates of the cursor.<br>The meaning of the coordinates is left
+     * to the application logic and generally depends on the {@link com.github.multitouchframework.api.input.source
+     * .InputSource}.<br>You may refer to the {@link com.github.multitouchframework.api.input.source.InputSource}
+     * implementation in use in the application.
      *
      * @param id Cursor ID.
      * @param x  X coordinate of the cursor.
@@ -80,7 +83,8 @@ public class Cursor {
     }
 
     /**
-     * Gets the X coordinate.
+     * Gets the X coordinate.<br>The meaning of the coordinates is left to the application logic and generally depends
+     * on the {@link com.github.multitouchframework.api.input.source.InputSource}.
      *
      * @return X coordinate of the cursor.
      */
@@ -89,7 +93,8 @@ public class Cursor {
     }
 
     /**
-     * Gets the Y coordinate.
+     * Gets the Y coordinate.<br>The meaning of the coordinates is left to the application logic and generally depends
+     * on the {@link com.github.multitouchframework.api.input.source.InputSource}.
      *
      * @return Y coordinate of the cursor.
      */
