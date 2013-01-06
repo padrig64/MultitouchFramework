@@ -4,6 +4,10 @@
 
 # NEW STUFF
 
+* Fire gesture events only for wanted regions
+* Can dispatch cursors to the REST_REGION instead of the SCREEN_REGION
+* Make input cursors already on a region => remove CursorProcessor interface & repackage everything
+
 * Swing-based cursor-to-region dispatcher
 * JavaFX-based cursor-to-region-dispatcher
 * Generic cursor-to-region-dispatcher
@@ -14,6 +18,7 @@
 * MacBook trackpad / magic mouse events
 * Mouse/keyboard simulated touch events
 * Handle unintended finger up
+* Keyboard modifiers in Cursor
 * Screen resolution changes at runtime
 
 # THINK ABOUT IT
@@ -24,3 +29,4 @@
 * Application-specific: auto-pan while drawing near the screen edge (different than drag)
 * Android support?
 * Plugin for NASA World Wind?
+* TUIO input for JavaFX: TUIO events to JavaFX touch events

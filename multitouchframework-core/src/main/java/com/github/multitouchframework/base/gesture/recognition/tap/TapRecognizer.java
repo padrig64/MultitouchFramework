@@ -165,19 +165,23 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
                 context.previousTapTimestamp = tapTimestamp;
                 context.previousCursorCount = cursorCount;
 
-                // Notify listeners
+                // Notify listeners that the tap has been armed
                 fireGestureEvent(new TapEvent(TapEvent.State.ARMED, region, context.consecutiveTapCount,
                         context.previousCursorCount));
             } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
                 // Just finishing to tap (e.g. all fingers up)
                 context.previousTapTimestamp = tapTimestamp;
-                context.previousCursorCount = cursorCount;
 
-                // Notify listeners
+                // Notify listeners that the tap has been performed
                 fireGestureEvent(new TapEvent(TapEvent.State.PERFORMED, region, context.consecutiveTapCount,
                         context.previousCursorCount));
+
+                // Notify listeners of the tap has been ended
                 fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.consecutiveTapCount,
                         context.previousCursorCount));
+
+                // Update cursor count only after firing the events
+                context.previousCursorCount = cursorCount;
             }
         } else if (context.previousCursorCount != 0) {
             // All cursors are now out of the region, gesture should be unarmed

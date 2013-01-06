@@ -71,8 +71,7 @@ public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispa
      */
     @Override
     protected Region findTouchedRegion(final Cursor cursor) {
-//        Region foundRegion = SCREEN_REGION;
-        Region foundRegion = null;
+        Region foundRegion = SCREEN_REGION;
 
         for (int i = regions.size() - 1; i >= 0; i--) {
             final Region region = regions.get(i);
