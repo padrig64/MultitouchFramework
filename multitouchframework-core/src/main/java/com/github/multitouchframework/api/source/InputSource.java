@@ -23,20 +23,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.source;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
+import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+/**
+ * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
+ * touch input processing. They provide cursors to one or several cursor processors, typically {@link
+ * com.github.multitouchframework.api.filter.InputFilter}s or {@link com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher}s.
+ *
+ * @see com.github.multitouchframework.api.flow.Chainable
+ * @see com.github.multitouchframework.api.flow.CursorPerRegionProcessor
+ */
+public interface InputSource extends Chainable<CursorPerRegionProcessor> {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * States whether the input controller is started and is able to provide cursors or not.
+     *
+     * @return True if the controller is started, false otherwise.
      */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+    public boolean isStarted();
+
+    /**
+     * Starts the input controller so that it can provide cursors.
+     */
+    public void start();
+
+    /**
+     * Stops the input controller so that it no longer provide cursors.
+     */
+    public void stop();
 }

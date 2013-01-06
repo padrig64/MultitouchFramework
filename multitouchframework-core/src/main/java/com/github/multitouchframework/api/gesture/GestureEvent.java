@@ -23,20 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.gesture;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
-
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
-
-    /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
-     */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+/**
+ * Marker interface to be implemented by gesture events that are typically fired by gesture recognizers and handled by
+ * gesture listeners.
+ *
+ * @see GestureRecognizer
+ * @see GestureListener
+ */
+public interface GestureEvent {
+    // Nothing to be done yet
 }

@@ -23,20 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.gesture;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
-
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+/**
+ * Interfaces to be implemented by gesture listeners to handle gesture events.<br>Gesture listeners are typically
+ * added/queued to gesture recognizers.
+ *
+ * @param <E> Type of gesture events to be handled.
+ *
+ * @see GestureRecognizer
+ * @see GestureEvent
+ */
+public interface GestureListener<E extends GestureEvent> {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * Handles the specified gesture event.
+     *
+     * @param event Gesture event to be processed.
      */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+    public void processGestureEvent(E event);
 }

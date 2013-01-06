@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.gesture.recognition.GestureEvent;
+import com.github.multitouchframework.api.gesture.GestureEvent;
 
 public interface GestureDefinition<E extends GestureEvent> {
 

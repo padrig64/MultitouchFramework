@@ -23,20 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.base;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+/**
+ * Touchable region of the touch surface representing the whole screen.<br>Note that this is meaningful only in cases
+ * where the display matches the whole touch surface. In case of a non-clone dual screen (for instance, extension of the
+ * desktop), the behavior will not be as expected.
+ *
+ * @see Toolkit#getScreenSize()
+ */
+public class ScreenRegion implements Region {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * Detected screen size.<br>Note that screen resolution changes will not be taken into account.
+     */
+    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+
+    /**
+     * @see Region#isTouched(Cursor)
      */
     @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
+    public boolean isTouched(final Cursor cursor) {
+        return ((0 <= cursor.getX()) && (cursor.getX() < SCREEN_SIZE.width) && (0 <= cursor.getY()) &&
+                (cursor.getY() < SCREEN_SIZE.height));
     }
 }

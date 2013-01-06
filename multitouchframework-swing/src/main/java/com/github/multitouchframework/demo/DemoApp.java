@@ -25,17 +25,17 @@
 
 package com.github.multitouchframework.demo;
 
-import com.github.multitouchframework.api.gesture.recognition.GestureListener;
-import com.github.multitouchframework.api.input.filter.InputFilter;
-import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
-import com.github.multitouchframework.base.gesture.recognition.drag.DragRecognizer;
-import com.github.multitouchframework.base.gesture.recognition.pinchspread.PinchSpreadRecognizer;
-import com.github.multitouchframework.base.gesture.recognition.tap.TapEvent;
-import com.github.multitouchframework.base.gesture.recognition.tap.TapRecognizer;
-import com.github.multitouchframework.base.input.filter.BoundingBoxFilter;
-import com.github.multitouchframework.base.input.filter.NoChangeFilter;
-import com.github.multitouchframework.base.input.source.TuioSource;
-import com.github.multitouchframework.base.region.dispatch.DefaultCursorToRegionDispatcher;
+import com.github.multitouchframework.api.filter.InputFilter;
+import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.gesture.GestureListener;
+import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
+import com.github.multitouchframework.base.filter.BoundingBoxFilter;
+import com.github.multitouchframework.base.filter.NoChangeFilter;
+import com.github.multitouchframework.base.gesture.drag.DragRecognizer;
+import com.github.multitouchframework.base.gesture.pinchspread.PinchSpreadRecognizer;
+import com.github.multitouchframework.base.gesture.tap.TapEvent;
+import com.github.multitouchframework.base.gesture.tap.TapRecognizer;
+import com.github.multitouchframework.base.source.TuioSource;
 import com.github.multitouchframework.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.multitouchframework.demo.support.Canvas;
 import com.github.multitouchframework.demo.support.CursorsLayer;

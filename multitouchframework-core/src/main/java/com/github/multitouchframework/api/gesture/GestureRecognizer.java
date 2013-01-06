@@ -23,20 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.gesture;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
+import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
-
-    /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
-     */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+/**
+ * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-region
+ * dispatchers in order to recognize gestures on a specific region of the touch surface.
+ *
+ * @param <E> Type of gesture events fired by the gesture recognizer.
+ *
+ * @see GestureListener
+ * @see GestureEvent
+ * @see CursorPerRegionProcessor
+ * @see Chainable
+ */
+public interface GestureRecognizer<E extends GestureEvent> extends CursorPerRegionProcessor,
+        Chainable<GestureListener<E>> {
+    // Nothing more to be done
 }

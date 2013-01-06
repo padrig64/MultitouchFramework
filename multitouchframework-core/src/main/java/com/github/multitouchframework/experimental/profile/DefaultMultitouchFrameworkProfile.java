@@ -25,12 +25,12 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.gesture.recognition.GestureEvent;
-import com.github.multitouchframework.api.gesture.recognition.GestureRecognizer;
-import com.github.multitouchframework.api.input.filter.InputFilter;
-import com.github.multitouchframework.api.input.source.InputSource;
-import com.github.multitouchframework.api.region.Region;
-import com.github.multitouchframework.api.region.dispatch.CursorToRegionDispatcher;
+import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
+import com.github.multitouchframework.api.filter.InputFilter;
+import com.github.multitouchframework.api.gesture.GestureEvent;
+import com.github.multitouchframework.api.gesture.GestureRecognizer;
+import com.github.multitouchframework.api.source.InputSource;
 import com.github.multitouchframework.experimental.input.CompositeCursorProcessorBlock;
 
 public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkProfile {
@@ -50,7 +50,7 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
     }
 
     /**
-     * @see MultitouchFrameworkProfile#setInputController(com.github.multitouchframework.api.input.source.InputSource)
+     * @see MultitouchFrameworkProfile#setInputController(com.github.multitouchframework.api.source.InputSource)
      */
     @Override
     public void setInputController(final InputSource inputController) {

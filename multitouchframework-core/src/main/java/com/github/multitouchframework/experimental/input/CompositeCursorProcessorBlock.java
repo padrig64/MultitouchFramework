@@ -25,10 +25,10 @@
 
 package com.github.multitouchframework.experimental.input;
 
+import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
-import com.github.multitouchframework.api.region.Region;
+import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
 
 import java.util.Collection;
 

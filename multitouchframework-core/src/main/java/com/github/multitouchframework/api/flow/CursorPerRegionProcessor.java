@@ -23,20 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.flow;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+import java.util.Collection;
+
+/**
+ * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
+ * implemented by input filters, gesture recognizers, etc.
+ */
+public interface CursorPerRegionProcessor {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * Processes the specified cursors for the specified touchable region.
+     *
+     * @param region  Touchable region to which the cursors are associated.
+     * @param cursors Cursors to be processed.
      */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+    public void processCursors(Region region, Collection<Cursor> cursors);
 }

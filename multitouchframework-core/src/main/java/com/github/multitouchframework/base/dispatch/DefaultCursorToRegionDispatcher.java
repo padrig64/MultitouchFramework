@@ -23,20 +23,64 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.base.dispatch;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+import java.util.ArrayList;
+import java.util.List;
+
+// TODO
+public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispatcher {
+
+    private final List<Region> regions = new ArrayList<Region>();
+
+    public List<Region> getRegions() {
+        return regions;
+    }
+
+    public void addRegionOnTop(final Region region) {
+        regions.add(region);
+    }
+
+    public void insertRegionAt(final int i, final Region region) {
+        regions.add(i, region);
+    }
+
+    public void setRegionAt(final int i, final Region region) {
+        regions.set(i, region);
+    }
+
+    public void insertRegionAbove(final Region lowerRegion, final Region region) {
+        final int i = regions.lastIndexOf(lowerRegion);
+        if (i < 0) {
+            // Add region on top of everything
+            regions.add(region);
+        } else {
+            regions.add(i + 1, region);
+        }
+    }
+
+    public void removeRegion(final Region region) {
+        regions.remove(region);
+    }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * @see AbstractCursorToRegionDispatcher#findTouchedRegion
      */
     @Override
     protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
+        Region foundRegion = SCREEN_REGION;
+
+        for (int i = regions.size() - 1; i >= 0; i--) {
+            final Region region = regions.get(i);
+            if (region.isTouched(cursor)) {
+                foundRegion = region;
+                break;
+            }
+        }
+
+        return foundRegion;
     }
 }

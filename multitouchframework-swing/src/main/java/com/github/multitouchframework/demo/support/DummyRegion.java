@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.region.Region;
+import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.Region;
 
 import java.awt.Rectangle;
 

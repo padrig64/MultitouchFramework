@@ -26,8 +26,8 @@
 package com.github.multitouchframework.swing.gesture.recognition;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.gesture.recognition.GestureEvent;
-import com.github.multitouchframework.api.gesture.recognition.GestureListener;
+import com.github.multitouchframework.api.gesture.GestureEvent;
+import com.github.multitouchframework.api.gesture.GestureListener;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;

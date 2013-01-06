@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.swing.region;
 
-import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.region.Region;
+import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.Region;
 
 import javax.swing.SwingUtilities;
 import java.awt.Component;

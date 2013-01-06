@@ -23,20 +23,51 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.base.filter;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Simple input filter that inhibits identical consecutive events.<br>This improves performance by reducing the number
+ * of redundant touch events.
+ */
+public class NoChangeFilter extends AbstractInputFilter {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * Cursors involved in the last fired event.
+     */
+    private Set<Cursor> lastCursors = new HashSet<Cursor>();
+
+    /**
+     * @see AbstractInputFilter#processCursors(Region, Collection)
      */
     @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
+        boolean changed = false;
+
+        // Check if at least one cursor changed since the last event
+        if (cursors.size() == lastCursors.size()) {
+            // Same number of cursors as last event, so check if all cursors are the same
+            for (final Cursor cursor : cursors) {
+                if (!lastCursors.contains(cursor)) {
+                    changed = true;
+                    break;
+                }
+            }
+        } else {
+            // Not the same number of cursors as last event, so process them
+            changed = true;
+        }
+
+        // Trigger listeners if at least one cursor changed since the last event
+        if (changed) {
+            lastCursors = new HashSet<Cursor>(cursors);
+            processWithNextBlocks(region, cursors);
+        }
     }
 }

@@ -23,20 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.base.dispatch;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+/**
+ * Simple cursor-to-region dispatcher associating all cursors to the region representing the whole screen.
+ *
+ * @see AbstractCursorToRegionDispatcher
+ * @see com.github.multitouchframework.base.ScreenRegion
+ */
+public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
 
     /**
      * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
      */
     @Override
     protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
+        return SCREEN_REGION;
     }
 }

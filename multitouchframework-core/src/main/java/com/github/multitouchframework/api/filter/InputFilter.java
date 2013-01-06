@@ -23,20 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region.dispatch;
+package com.github.multitouchframework.api.filter;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
+import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
-
-    /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
-     */
-    @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        // TODO
-        return null;
-    }
+/**
+ * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors
+ * from {@link com.github.multitouchframework.api.source.InputSource}s. They provide the filtered cursors to
+ * one or several other cursor processors, typically other {@link InputFilter}s or
+ * {@link com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher}s.<br>Input filters can be
+ * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
+ * another thread, to generate more events for inertia, etc.
+ *
+ * @see CursorPerRegionProcessor
+ * @see Chainable
+ * @see com.github.multitouchframework.api.source.InputSource
+ * @see com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher
+ */
+public interface InputFilter extends CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+    // Nothing more to be done
 }
