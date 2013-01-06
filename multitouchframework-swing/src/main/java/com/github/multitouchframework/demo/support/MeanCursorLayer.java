@@ -26,7 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.input.CursorProcessor;
+import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.region.Region;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -36,7 +37,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Collection;
 
-public class MeanCursorLayer implements Layer, CursorProcessor {
+public class MeanCursorLayer implements Layer, CursorPerRegionProcessor {
 
     private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
@@ -53,7 +54,7 @@ public class MeanCursorLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void processCursors(final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         if (cursors.isEmpty()) {
             meanCursor = null;
         } else {

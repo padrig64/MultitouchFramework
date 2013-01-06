@@ -58,7 +58,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     public static final Region SCREEN_REGION = new ScreenRegion(); // Whole screen
 
     /**
-     * Mapping between cursors and region resulting from the call to {@link #processCursors(Collection)}.
+     * Mapping between cursors and region resulting from the call to {@link #processCursors(Region, Collection)}.
      */
     private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
 
@@ -84,32 +84,32 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#processCursors(Collection)
+     * @see AbstractCursorToRegionDispatcher#processCursors(Region, Collection)
      */
     @Override
-    public void processCursors(final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
         final Map<Region, Collection<Cursor>> updatesToBeForwarded = new HashMap<Region, Collection<Cursor>>();
 
         for (final Cursor cursor : cursors) {
             // Find the region holding the cursor
-            Region region = oldCursorToRegion.get(cursor.getId());
-            if (region == null) {
+            Region assignedRegion = oldCursorToRegion.get(cursor.getId());
+            if (assignedRegion == null) {
                 // Find a new candidate region to hold the cursor
-                region = findTouchedRegion(cursor);
+                assignedRegion = findTouchedRegion(cursor);
             } else {
                 // Region already holds the cursor
                 oldCursorToRegion.remove(cursor.getId());
             }
 
-            if (region != null) {
+            if (assignedRegion != null) {
                 // Update cursor for this region
-                newCursorToRegion.put(cursor.getId(), region);
+                newCursorToRegion.put(cursor.getId(), assignedRegion);
 
-                Collection<Cursor> cursorsForThisRegion = updatesToBeForwarded.get(region);
+                Collection<Cursor> cursorsForThisRegion = updatesToBeForwarded.get(assignedRegion);
                 if (cursorsForThisRegion == null) {
                     cursorsForThisRegion = new HashSet<Cursor>();
-                    updatesToBeForwarded.put(region, cursorsForThisRegion);
+                    updatesToBeForwarded.put(assignedRegion, cursorsForThisRegion);
                 }
                 cursorsForThisRegion.add(cursor);
             }
@@ -142,7 +142,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 
     /**
      * Forwards the specified region with its cursors to the next blocks.<br>Typically, this method is called for each
-     * region touch by the cursors processed in {@link #processCursors(Collection)}.
+     * region touch by the cursors processed in {@link #processCursors(Region, Collection)}.
      *
      * @param region  Region holding the specified cursors.
      * @param cursors Cursors for the specified region.

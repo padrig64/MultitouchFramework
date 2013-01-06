@@ -26,23 +26,21 @@
 package com.github.multitouchframework.api.input.filter;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.input.CursorProcessor;
+import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
 
 /**
  * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors
  * from {@link com.github.multitouchframework.api.input.source.InputSource}s. They provide the filtered cursors to
- * one or
- * several other cursor processors, typically other {@link InputFilter}s or
+ * one or several other cursor processors, typically other {@link InputFilter}s or
  * {@link com.github.multitouchframework.api.region.dispatch.CursorToRegionDispatcher}s.<br>Input filters can be
- * used, for
- * instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to another thread,
- * to generate more events for inertia, etc.
+ * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
+ * another thread, to generate more events for inertia, etc.
  *
- * @see CursorProcessor
+ * @see CursorPerRegionProcessor
  * @see Chainable
  * @see com.github.multitouchframework.api.input.source.InputSource
  * @see com.github.multitouchframework.api.region.dispatch.CursorToRegionDispatcher
  */
-public interface InputFilter extends CursorProcessor, Chainable<CursorProcessor> {
+public interface InputFilter extends CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
     // Nothing more to be done
 }

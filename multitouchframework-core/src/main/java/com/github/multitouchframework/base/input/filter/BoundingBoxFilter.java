@@ -26,6 +26,7 @@
 package com.github.multitouchframework.base.input.filter;
 
 import com.github.multitouchframework.api.input.Cursor;
+import com.github.multitouchframework.api.region.Region;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,10 +52,10 @@ public class BoundingBoxFilter extends AbstractInputFilter {
     private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
     /**
-     * @see AbstractInputFilter#processCursors(Collection)
+     * @see AbstractInputFilter#processCursors(Region, Collection)
      */
     @Override
-    public void processCursors(final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         // Quick way to remove the cursors that are no longer there
         final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
         filteredCursors = new HashMap<Long, Cursor>();
@@ -71,7 +72,7 @@ public class BoundingBoxFilter extends AbstractInputFilter {
             }
         }
 
-        processWithNextBlocks(filteredCursors.values());
+        processWithNextBlocks(region, filteredCursors.values());
     }
 
     /**

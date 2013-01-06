@@ -27,24 +27,25 @@ package com.github.multitouchframework.experimental.input;
 
 import com.github.multitouchframework.api.flow.Chainable;
 import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.input.CursorProcessor;
+import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.region.Region;
 
 import java.util.Collection;
 
-public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable<CursorProcessor> {
+public class CompositeCursorProcessorBlock implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
 
     @Override
-    public void queue(final CursorProcessor nextBlock) {
+    public void queue(final CursorPerRegionProcessor nextBlock) {
         // TODO
     }
 
     @Override
-    public void dequeue(final CursorProcessor nextBlock) {
+    public void dequeue(final CursorPerRegionProcessor nextBlock) {
         // TODO
     }
 
     @Override
-    public void processCursors(final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         // TODO
     }
     //	/**

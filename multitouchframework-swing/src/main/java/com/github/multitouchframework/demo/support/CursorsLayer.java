@@ -26,7 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.input.Cursor;
-import com.github.multitouchframework.api.input.CursorProcessor;
+import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.region.Region;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CursorsLayer implements Layer, CursorProcessor {
+public class CursorsLayer implements Layer, CursorPerRegionProcessor {
 
     private static final Color CURSOR_COLOR = UIManager.getColor("nimbusInfoBlue");
 
@@ -55,7 +56,7 @@ public class CursorsLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void processCursors(final Collection<Cursor> cursors) {
+    public void processCursors(final Region region, final Collection<Cursor> cursors) {
         this.cursors = cursors;
         canvas.repaint();
     }

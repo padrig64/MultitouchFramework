@@ -26,7 +26,6 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.gesture.recognition.GestureListener;
-import com.github.multitouchframework.api.input.CursorProcessor;
 import com.github.multitouchframework.api.input.filter.InputFilter;
 import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
 import com.github.multitouchframework.base.gesture.recognition.drag.DragRecognizer;
@@ -230,7 +229,7 @@ public class DemoApp extends JFrame {
         // Configure layers for raw cursors
         final EDTSchedulerCursorProcessor edtRawCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         inputController.queue(edtRawCursorProcessorBlock);
-        edtRawCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
+        edtRawCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
 
         // Configure cursor filtering
         final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -241,9 +240,12 @@ public class DemoApp extends JFrame {
         // Configure layers for filtered cursors
         final EDTSchedulerCursorProcessor edtFilteredCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor());
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_LINES.getProcessor());
+        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor
+                ());
+        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_MEAN_CURSOR
+                .getProcessor());
+        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_MEAN_LINES
+                .getProcessor());
 
         // Configure cursor to region dispatcher
         final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();

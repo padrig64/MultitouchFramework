@@ -31,7 +31,7 @@ import java.util.Collection;
 
 /**
  * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
- * implemented by gesture recognizers.
+ * implemented by input filters, gesture recognizers, etc.
  */
 public interface CursorPerRegionProcessor {
 

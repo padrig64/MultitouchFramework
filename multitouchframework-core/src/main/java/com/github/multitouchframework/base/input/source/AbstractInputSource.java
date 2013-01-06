@@ -25,16 +25,15 @@
 
 package com.github.multitouchframework.base.input.source;
 
-import com.github.multitouchframework.api.input.CursorProcessor;
 import com.github.multitouchframework.api.input.source.InputSource;
+import com.github.multitouchframework.api.region.CursorPerRegionProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected cursor
- * processor to process the touch input, by calling their {@link CursorProcessor#processCursors(java.util.Collection)
- * } method.
+ * processor to process the touch input, by calling their {@link CursorPerRegionProcessor#processCursors(com.github.multitouchframework.api.region.Region, java.util.Collection)} method.
  *
  * @see InputSource
  */
@@ -51,7 +50,7 @@ public abstract class AbstractInputSource implements InputSource {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    protected final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    protected final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
@@ -60,7 +59,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final CursorProcessor cursorProcessor) {
+    public void queue(final CursorPerRegionProcessor cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
@@ -71,7 +70,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final CursorProcessor cursorProcessor) {
+    public void dequeue(final CursorPerRegionProcessor cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 
