@@ -28,7 +28,7 @@ package com.github.multitouchframework.swing.flow;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
@@ -39,13 +39,12 @@ import java.util.List;
 /**
  * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
  */
-public class EDTSchedulerCursorProcessor implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+public class EDTSchedulerCursorProcessor implements CursorProcessor, Chainable<CursorProcessor> {
 
     /**
      * Blocks that are queued to this block.
      */
-    private final List<CursorPerRegionProcessor> nextBlocks = Collections.synchronizedList(new
-            ArrayList<CursorPerRegionProcessor>());
+    private final List<CursorProcessor> nextBlocks = Collections.synchronizedList(new ArrayList<CursorProcessor>());
 
     /**
      * Default constructor.
@@ -59,9 +58,9 @@ public class EDTSchedulerCursorProcessor implements CursorPerRegionProcessor, Ch
      *
      * @param firstNextBlock First block to be queued.
      *
-     * @see #queue(CursorPerRegionProcessor)
+     * @see #queue(com.github.multitouchframework.api.flow.CursorProcessor)
      */
-    public EDTSchedulerCursorProcessor(final CursorPerRegionProcessor firstNextBlock) {
+    public EDTSchedulerCursorProcessor(final CursorProcessor firstNextBlock) {
         nextBlocks.add(firstNextBlock);
     }
 
@@ -69,7 +68,7 @@ public class EDTSchedulerCursorProcessor implements CursorPerRegionProcessor, Ch
      * @see com.github.multitouchframework.api.flow.Chainable#queue(Object)
      */
     @Override
-    public void queue(final CursorPerRegionProcessor nextBlock) {
+    public void queue(final CursorProcessor nextBlock) {
         nextBlocks.add(nextBlock);
     }
 
@@ -77,14 +76,14 @@ public class EDTSchedulerCursorProcessor implements CursorPerRegionProcessor, Ch
      * @see com.github.multitouchframework.api.flow.Chainable#dequeue(Object)
      */
     @Override
-    public void dequeue(final CursorPerRegionProcessor nextBlock) {
+    public void dequeue(final CursorProcessor nextBlock) {
         nextBlocks.remove(nextBlock);
     }
 
     /**
      * Forwards the specified cursors to the next blocks on the EDT.
      *
-     * @see CursorPerRegionProcessor#processCursors(Region, Collection)
+     * @see com.github.multitouchframework.api.flow.CursorProcessor#processCursors(Region, Collection)
      */
     @Override
     public void processCursors(final Region region, final Collection<Cursor> cursors) {
@@ -95,7 +94,7 @@ public class EDTSchedulerCursorProcessor implements CursorPerRegionProcessor, Ch
             @Override
             public void run() {
                 synchronized (nextBlocks) {
-                    for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+                    for (final CursorProcessor nextBlock : nextBlocks) {
                         nextBlock.processCursors(region, copiedData);
                     }
                 }

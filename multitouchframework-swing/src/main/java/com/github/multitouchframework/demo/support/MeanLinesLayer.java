@@ -27,7 +27,7 @@ package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 import javax.swing.UIManager;
 import java.awt.BasicStroke;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MeanLinesLayer implements Layer, CursorPerRegionProcessor {
+public class MeanLinesLayer implements Layer, CursorProcessor {
 
     private static final Color MEAN_LINE_COLOR = UIManager.getColor("control");
 

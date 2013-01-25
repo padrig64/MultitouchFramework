@@ -26,16 +26,16 @@
 package com.github.multitouchframework.api.dispatch;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 /**
  * Interface to be implemented by cursor-to-region dispatchers.<br>Cursor-to-region dispatcher are meant to dispatch
  * cursor points to the touchable regions on the touch surface, for instance, in order to the allow gesture recognition
  * on specific regions independently. So, typically, gesture recognizers will be queued to cursor-to-region dispatchers.
  *
- * @see CursorPerRegionProcessor
+ * @see com.github.multitouchframework.api.flow.CursorProcessor
  * @see Chainable
  */
-public interface CursorToRegionDispatcher extends CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+public interface CursorToRegionDispatcher extends CursorProcessor, Chainable<CursorProcessor> {
     // Nothing more to be done
 }

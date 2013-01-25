@@ -28,7 +28,7 @@ package com.github.multitouchframework.base.filter;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,8 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link CursorPerRegionProcessor#processCursors(Region,
+ * process the filtered touch input, by calling their {@link com.github.multitouchframework.api.flow
+ * .CursorProcessor#processCursors(Region,
  * Collection)} method.
  *
  * @see InputFilter
@@ -46,7 +47,7 @@ public abstract class AbstractInputFilter implements InputFilter {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    private final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
+    private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
@@ -55,7 +56,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final CursorPerRegionProcessor cursorProcessor) {
+    public void queue(final CursorProcessor cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
@@ -66,7 +67,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final CursorPerRegionProcessor cursorProcessor) {
+    public void dequeue(final CursorProcessor cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 
@@ -77,7 +78,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param cursors Cursors to be processed by the next blocks.
      */
     protected void processWithNextBlocks(final Region region, final Collection<Cursor> cursors) {
-        for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+        for (final CursorProcessor nextBlock : nextBlocks) {
             nextBlock.processCursors(region, cursors);
         }
     }

@@ -27,7 +27,7 @@ package com.github.multitouchframework.base.source;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 import com.github.multitouchframework.base.ScreenRegion;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
@@ -112,7 +112,7 @@ public class TuioSource extends AbstractInputSource {
          */
         private void processWithNextBlocks() {
             final Collection<Cursor> cursorList = currentCursors.values();
-            for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+            for (final CursorProcessor nextBlock : nextBlocks) {
                 nextBlock.processCursors(region, cursorList);
             }
         }

@@ -26,7 +26,7 @@
 package com.github.multitouchframework.api.source;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 /**
  * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
@@ -35,9 +35,9 @@ import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
  * .CursorToRegionDispatcher}s.
  *
  * @see com.github.multitouchframework.api.flow.Chainable
- * @see com.github.multitouchframework.api.flow.CursorPerRegionProcessor
+ * @see com.github.multitouchframework.api.flow.CursorProcessor
  */
-public interface InputSource extends Chainable<CursorPerRegionProcessor> {
+public interface InputSource extends Chainable<CursorProcessor> {
 
     /**
      * States whether the input controller is started and is able to provide cursors or not.

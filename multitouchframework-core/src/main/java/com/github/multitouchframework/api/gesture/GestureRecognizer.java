@@ -26,7 +26,7 @@
 package com.github.multitouchframework.api.gesture;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 /**
  * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-region
@@ -36,10 +36,9 @@ import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
  *
  * @see GestureListener
  * @see GestureEvent
- * @see CursorPerRegionProcessor
+ * @see com.github.multitouchframework.api.flow.CursorProcessor
  * @see Chainable
  */
-public interface GestureRecognizer<E extends GestureEvent> extends CursorPerRegionProcessor,
-        Chainable<GestureListener<E>> {
+public interface GestureRecognizer<E extends GestureEvent> extends CursorProcessor, Chainable<GestureListener<E>> {
     // Nothing more to be done
 }

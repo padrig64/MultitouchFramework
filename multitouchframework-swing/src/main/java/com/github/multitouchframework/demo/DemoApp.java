@@ -26,7 +26,7 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 import com.github.multitouchframework.api.gesture.GestureListener;
 import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
@@ -228,7 +228,7 @@ public class DemoApp extends JFrame {
         // Configure layers for raw cursors
         final EDTSchedulerCursorProcessor edtRawCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         inputController.queue(edtRawCursorProcessorBlock);
-        edtRawCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
+        edtRawCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
 
         // Configure cursor filtering
         final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -239,12 +239,9 @@ public class DemoApp extends JFrame {
         // Configure layers for filtered cursors
         final EDTSchedulerCursorProcessor edtFilteredCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor
-                ());
-        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_MEAN_CURSOR
-                .getProcessor());
-        edtFilteredCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.FILTERED_MEAN_LINES
-                .getProcessor());
+        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor());
+        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
+        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_LINES.getProcessor());
 
         // Configure cursor to region dispatcher
         final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
@@ -256,7 +253,7 @@ public class DemoApp extends JFrame {
         final EDTSchedulerCursorProcessor edtCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         cursorToRegionDispatcher.queue(edtCursorProcessorBlock);
         ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
-        edtCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
+        edtCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.REGIONS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();

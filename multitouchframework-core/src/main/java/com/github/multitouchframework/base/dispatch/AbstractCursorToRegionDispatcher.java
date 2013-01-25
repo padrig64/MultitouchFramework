@@ -28,7 +28,7 @@ package com.github.multitouchframework.base.dispatch;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 import com.github.multitouchframework.base.ScreenRegion;
 
 import java.util.ArrayList;
@@ -65,13 +65,13 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     /**
      * Cursor-per-region processors connected and processing the output regions and cursors from this dispatcher.
      */
-    private final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
+    private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
     /**
      * @see CursorToRegionDispatcher#queue(Object)
      */
     @Override
-    public void queue(final CursorPerRegionProcessor cursorRegionProcessor) {
+    public void queue(final CursorProcessor cursorRegionProcessor) {
         nextBlocks.add(cursorRegionProcessor);
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
      * @see CursorToRegionDispatcher#dequeue(Object)
      */
     @Override
-    public void dequeue(final CursorPerRegionProcessor cursorRegionProcessor) {
+    public void dequeue(final CursorProcessor cursorRegionProcessor) {
         nextBlocks.remove(cursorRegionProcessor);
     }
 
@@ -148,7 +148,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
      * @param cursors Cursors for the specified region.
      */
     private void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
-        for (final CursorPerRegionProcessor nextBlock : nextBlocks) {
+        for (final CursorProcessor nextBlock : nextBlocks) {
             nextBlock.processCursors(region, cursors);
         }
     }

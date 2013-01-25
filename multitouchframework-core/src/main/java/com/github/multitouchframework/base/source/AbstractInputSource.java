@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.base.source;
 
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 import com.github.multitouchframework.api.source.InputSource;
 
 import java.util.ArrayList;
@@ -33,7 +33,8 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected cursor
- * processor to process the touch input, by calling their {@link CursorPerRegionProcessor#processCursors(com.github
+ * processor to process the touch input, by calling their {@link com.github.multitouchframework.api.flow
+ * .CursorProcessor#processCursors(com.github
  * .multitouchframework.api.Region, java.util.Collection)} method.
  *
  * @see InputSource
@@ -51,7 +52,7 @@ public abstract class AbstractInputSource implements InputSource {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    protected final List<CursorPerRegionProcessor> nextBlocks = new ArrayList<CursorPerRegionProcessor>();
+    protected final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
@@ -60,7 +61,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final CursorPerRegionProcessor cursorProcessor) {
+    public void queue(final CursorProcessor cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
@@ -71,7 +72,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final CursorPerRegionProcessor cursorProcessor) {
+    public void dequeue(final CursorProcessor cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 

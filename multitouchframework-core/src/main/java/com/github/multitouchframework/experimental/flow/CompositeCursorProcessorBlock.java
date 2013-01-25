@@ -23,24 +23,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.input;
+package com.github.multitouchframework.experimental.flow;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorPerRegionProcessor;
+import com.github.multitouchframework.api.flow.CursorProcessor;
 
 import java.util.Collection;
 
-public class CompositeCursorProcessorBlock implements CursorPerRegionProcessor, Chainable<CursorPerRegionProcessor> {
+public class CompositeCursorProcessorBlock implements CursorProcessor, Chainable<CursorProcessor> {
 
     @Override
-    public void queue(final CursorPerRegionProcessor nextBlock) {
+    public void queue(final CursorProcessor nextBlock) {
         // TODO
     }
 
     @Override
-    public void dequeue(final CursorPerRegionProcessor nextBlock) {
+    public void dequeue(final CursorProcessor nextBlock) {
         // TODO
     }
 
