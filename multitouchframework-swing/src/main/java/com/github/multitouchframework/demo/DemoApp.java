@@ -44,8 +44,7 @@ import com.github.multitouchframework.demo.support.Layer;
 import com.github.multitouchframework.demo.support.MeanCursorLayer;
 import com.github.multitouchframework.demo.support.MeanLinesLayer;
 import com.github.multitouchframework.demo.support.RegionsLayer;
-import com.github.multitouchframework.swing.input.EDTSchedulerCursorProcessor;
-import com.github.multitouchframework.swing.region.EDTSchedulerCursorPerRegionProcessor;
+import com.github.multitouchframework.swing.flow.EDTSchedulerCursorProcessor;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,11 +253,10 @@ public class DemoApp extends JFrame {
         noChangeFilter.queue(cursorToRegionDispatcher);
 
         // Configure layer for regions
-        final EDTSchedulerCursorPerRegionProcessor edtCursorPerRegionProcessorBlock = new
-                EDTSchedulerCursorPerRegionProcessor();
-        cursorToRegionDispatcher.queue(edtCursorPerRegionProcessorBlock);
+        final EDTSchedulerCursorProcessor edtCursorProcessorBlock = new EDTSchedulerCursorProcessor();
+        cursorToRegionDispatcher.queue(edtCursorProcessorBlock);
         ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
-        edtCursorPerRegionProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
+        edtCursorProcessorBlock.queue((CursorPerRegionProcessor) LayerProcessor.REGIONS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();

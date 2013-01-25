@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.input;
+package com.github.multitouchframework.swing.flow;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;

@@ -23,30 +23,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.region;
+package com.github.multitouchframework.swing.dispatch;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
 
-import javax.swing.SwingUtilities;
-import java.awt.Component;
-import java.awt.Point;
-
-public class ComponentRegion implements Region {
-
-    private final Component component;
-
-    public ComponentRegion(final Component component) {
-        this.component = component;
-    }
+public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
 
     /**
-     * @see Region#isTouched(Cursor)
+     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
      */
     @Override
-    public boolean isTouched(final Cursor cursor) {
-        final Point cursorPosition = new Point(cursor.getX(), cursor.getY());
-        SwingUtilities.convertPointFromScreen(cursorPosition, component);
-        return component.contains(cursorPosition.x, cursorPosition.y);
+    protected Region findTouchedRegion(final Cursor cursor) {
+        // TODO
+        return null;
     }
 }

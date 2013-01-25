@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.gesture.recognition;
+package com.github.multitouchframework.swing.flow;
 
 import com.github.multitouchframework.api.flow.Chainable;
 import com.github.multitouchframework.api.gesture.GestureEvent;

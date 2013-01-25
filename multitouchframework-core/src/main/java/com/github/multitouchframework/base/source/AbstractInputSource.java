@@ -33,7 +33,8 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected cursor
- * processor to process the touch input, by calling their {@link CursorPerRegionProcessor#processCursors(com.github.multitouchframework.api.Region, java.util.Collection)} method.
+ * processor to process the touch input, by calling their {@link CursorPerRegionProcessor#processCursors(com.github
+ * .multitouchframework.api.Region, java.util.Collection)} method.
  *
  * @see InputSource
  */
