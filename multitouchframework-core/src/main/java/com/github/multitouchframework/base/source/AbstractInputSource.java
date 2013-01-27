@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.base.source;
 
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 import com.github.multitouchframework.api.source.InputSource;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Abstract implementation of an input controller.<br>Sub-classes are meant to make use of the connected cursor
  * processor to process the touch input, by calling their {@link com.github.multitouchframework.api.flow
- * .CursorProcessor#processCursors(com.github
+ * .CursorProcessor#processTouchEvent(com.github
  * .multitouchframework.api.Region, java.util.Collection)} method.
  *
  * @see InputSource

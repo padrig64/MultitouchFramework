@@ -30,6 +30,7 @@ import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.gesture.GestureEvent;
 import com.github.multitouchframework.api.gesture.GestureListener;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,8 +75,8 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
     /**
      * Saved recognition context for each region.
      *
-     * @see #getContext(Region)
-     * @see #createContext(Region)
+     * @see #getContext(long, Region)
+     * @see #createContext(long, Region)
      */
     private final Map<Region, C> regionContexts = new WeakHashMap<Region, C>();
 
@@ -162,53 +163,57 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      */
     protected void fireGestureEvent(final E event) {
         for (final GestureListener<E> listener : gestureListeners) {
-            listener.processGestureEvent(event);
+            listener.processTouchEvent(event);
         }
     }
 
     /**
-     * @see GestureRecognizer#processCursors(Region, Collection)
+     * @see GestureRecognizer#processTouchEvent(CursorEvent)
      */
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
-        process(getContext(region), region, cursors);
+    public void processTouchEvent(final CursorEvent event) {
+        process(getContext(event.getUserId(), event.getRegion()), event.getUserId(), event.getRegion(),
+                event.getCursors());
     }
 
     /**
      * Gets a context for the specified region.<br>This method will create a new context for the region if it does not
      * exist.
      *
+     * @param userId ID of the user performing the gesture.
      * @param region Region to get a context for.
      *
      * @return Context for the region.
      *
-     * @see #createContext(Region)
+     * @see #createContext(long, Region)
      */
-    protected C getContext(final Region region) {
+    protected C getContext(final long userId, final Region region) {
         C context = regionContexts.get(region);
         if (context == null) {
-            context = createContext(region);
+            context = createContext(userId, region);
             regionContexts.put(region, context);
         }
         return context;
     }
 
     /**
-     * Creates a new context for the specified region.<br>This method is to be implemented by sub-classes.
+     * Creates a new context for the specified user and region.<br>This method is to be implemented by sub-classes.
      *
+     * @param userId ID of the user performing the gesture.
      * @param region Region to create a context for.
      *
-     * @return Newly created context for the region.
+     * @return Newly created context for the user and region.
      */
-    protected abstract C createContext(Region region);
+    protected abstract C createContext(long userId, Region region);
 
     /**
      * Processes the specified cursors for the specified region and region context.<br>This method is to be
      * implemented by sub-classes.
      *
      * @param context Context associated to the region to which the cursors apply.
+     * @param userId  ID of the user performing the gesture.
      * @param region  Touchable region to which the cursors are associated.
      * @param cursors Cursors to be processed.
      */
-    protected abstract void process(C context, Region region, Collection<Cursor> cursors);
+    protected abstract void process(C context, long userId, Region region, Collection<Cursor> cursors);
 }

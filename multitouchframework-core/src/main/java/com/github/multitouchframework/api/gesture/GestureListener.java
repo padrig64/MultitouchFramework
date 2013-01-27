@@ -41,5 +41,5 @@ public interface GestureListener<E extends GestureEvent> {
      *
      * @param event Gesture event to be processed.
      */
-    public void processGestureEvent(E event);
+    public void processTouchEvent(E event);
 }

@@ -42,7 +42,7 @@ public class EDTSchedulerGestureListener<E extends GestureEvent> implements Gest
      *
      * @see #queue(GestureListener)
      * @see #dequeue(GestureListener)
-     * @see #processGestureEvent(GestureEvent)
+     * @see #processTouchEvent(GestureEvent)
      */
     private final List<GestureListener<E>> gestureListeners = Collections.synchronizedList(new
             ArrayList<GestureListener<E>>());
@@ -60,16 +60,16 @@ public class EDTSchedulerGestureListener<E extends GestureEvent> implements Gest
     /**
      * Forwards the specified gesture event to the next blocks on the EDT.
      *
-     * @see GestureListener#processGestureEvent(GestureEvent)
+     * @see GestureListener#processTouchEvent(GestureEvent)
      */
     @Override
-    public void processGestureEvent(final E event) {
+    public void processTouchEvent(final E event) {
         final Runnable edtRunnable = new Runnable() {
             @Override
             public void run() {
                 synchronized (gestureListeners) {
                     for (final GestureListener<E> nextBlock : gestureListeners) {
-                        nextBlock.processGestureEvent(event);
+                        nextBlock.processTouchEvent(event);
                     }
                 }
             }

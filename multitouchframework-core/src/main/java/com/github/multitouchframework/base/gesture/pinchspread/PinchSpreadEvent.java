@@ -62,14 +62,19 @@ public class PinchSpreadEvent implements GestureEvent {
     }
 
     /**
-     * State of the recognized gesture.
+     * ID of the user performing the gesture.
      */
-    private final State state;
+    private final long userId;
 
     /**
      * Region to which the gesture applies.
      */
     private final Region region;
+
+    /**
+     * State of the recognized gesture.
+     */
+    private final State state;
 
     /**
      * Scale movement axis relatively to the previous event.
@@ -84,30 +89,42 @@ public class PinchSpreadEvent implements GestureEvent {
     /**
      * Constructor specifying all the information on the gesture.
      *
+     * @param userId  ID of the user performing the gesture.
+     * @param region  Region to which the gesture applies.
      * @param state   State of the recognized gesture.
-     * @param region  Region to which the gesture applies
      * @param ds      Scale movement relatively to the previous event.
      * @param dsTotal Scale movement relatively to the very beginning of the gesture.
      */
-    public PinchSpreadEvent(final State state, final Region region, final double ds, final double dsTotal) {
-        this.state = state;
+    public PinchSpreadEvent(final long userId, final Region region, final State state, final double ds,
+                            final double dsTotal) {
+        this.userId = userId;
         this.region = region;
+        this.state = state;
         this.ds = ds;
         this.dsTotal = dsTotal;
     }
 
     /**
-     * Gets the state of the recognized gesture.
+     * @see GestureEvent#getUserId()
      */
-    public State getState() {
-        return state;
+    public long getUserId() {
+        return userId;
     }
 
     /**
-     * Gets the region to which the gesture applies.
+     * @see GestureEvent#getRegion()
      */
     public Region getRegion() {
         return region;
+    }
+
+    /**
+     * Gets the state of the recognized gesture.
+     *
+     * @return Gesture state.
+     */
+    public State getState() {
+        return state;
     }
 
     /**

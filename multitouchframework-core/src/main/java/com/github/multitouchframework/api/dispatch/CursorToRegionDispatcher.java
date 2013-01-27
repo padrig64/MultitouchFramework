@@ -26,7 +26,7 @@
 package com.github.multitouchframework.api.dispatch;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 /**
  * Interface to be implemented by cursor-to-region dispatchers.<br>Cursor-to-region dispatcher are meant to dispatch

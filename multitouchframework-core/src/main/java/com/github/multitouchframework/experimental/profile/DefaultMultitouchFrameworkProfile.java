@@ -55,13 +55,13 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
     @Override
     public void setInputController(final InputSource inputController) {
         if (this.inputController != null) {
-            this.inputController.dequeue(filterComposition);
+//            this.inputController.dequeue(filterComposition);
         }
 
         this.inputController = inputController;
 
         if (this.inputController != null) {
-            this.inputController.queue(filterComposition);
+//            this.inputController.queue(filterComposition);
         }
     }
 
@@ -87,13 +87,13 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 
     public void setTouchableObjectController(final CursorToRegionDispatcher toc) {
         if (this.toc != null) {
-            filterComposition.dequeue(this.toc);
+//            filterComposition.dequeue(this.toc);
         }
 
         this.toc = toc;
 
         if (toc != null) {
-            filterComposition.queue(toc);
+//            filterComposition.queue(toc);
         }
     }
 

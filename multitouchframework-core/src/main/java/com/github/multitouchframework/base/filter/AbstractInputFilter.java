@@ -28,7 +28,8 @@ package com.github.multitouchframework.base.filter;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +37,7 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link CursorProcessor#processCursors(Region, Collection)} method.
+ * process the filtered touch input, by calling their {@link CursorProcessor#processTouchEvent(CursorEvent)} method.
  *
  * @see InputFilter
  */
@@ -72,12 +73,14 @@ public abstract class AbstractInputFilter implements InputFilter {
     /**
      * Processes the specified cursors using the blocks/listeners that are queued/added to this input filter.
      *
+     * @param userId  ID of the user touching the surface.
      * @param region  Touchable region to process the cursors for.
      * @param cursors Cursors to be processed by the next blocks.
      */
-    protected void processWithNextBlocks(final Region region, final Collection<Cursor> cursors) {
+    protected void processWithNextBlocks(final long userId, final Region region, final Collection<Cursor> cursors) {
+        final CursorEvent event = new CursorEvent(userId, region, cursors);
         for (final CursorProcessor nextBlock : nextBlocks) {
-            nextBlock.processCursors(region, cursors);
+            nextBlock.processTouchEvent(event);
         }
     }
 }

@@ -23,16 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.flow;
+package com.github.multitouchframework.api.gesture.cursor;
 
 /**
- *
+ * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
+ * implemented by input filters, gesture recognizers, etc.
  */
-public enum BlockState {
+public interface CursorProcessor {
 
-    ON,
-
-    BYPASS,
-
-    OFF,
+    /**
+     * Processes the cursors of the specified touch event.
+     */
+    public void processTouchEvent(final CursorEvent event);
 }

@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -56,8 +56,8 @@ public class CursorsLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
-        this.cursors = cursors;
+    public void processTouchEvent(final CursorEvent event) {
+        this.cursors = event.getCursors();
         canvas.repaint();
     }
 

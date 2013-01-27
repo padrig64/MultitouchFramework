@@ -49,6 +49,11 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
     protected static class RegionContext {
 
         /**
+         * ID of the user performing the gesture.
+         */
+        public long userId = -1;
+
+        /**
          * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This
          * makes sure that we will get the complete set of events.
          */
@@ -111,17 +116,18 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
     }
 
     /**
-     * @see AbstractGestureRecognizer#createContext(Region)
+     * @see AbstractGestureRecognizer#createContext(long, Region)
      */
-    protected RegionContext createContext(final Region region) {
+    protected RegionContext createContext(final long userId, final Region region) {
         return new RegionContext();
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Object, Region, Collection)
+     * @see AbstractGestureRecognizer#process(Object, long, Region, Collection)
      */
     @Override
-    protected void process(final RegionContext context, final Region region, final Collection<Cursor> cursors) {
+    protected void process(final RegionContext context, final long userId, final Region region,
+                           final Collection<Cursor> cursors) {
         final int cursorCount = cursors.size();
 
         // Test this first because it is the most likely to happen
@@ -132,7 +138,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
                 processValidCursorCountChanged(context, cursors);
             }
         } else if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-            processDragArmed(context, region, cursors);
+            processDragArmed(context, userId, region, cursors);
         } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
             processDragUnarmed(context);
         } else {
@@ -144,12 +150,14 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
      * Handles the fact that the change of input cursors armed the gesture.
      *
      * @param context Region context to be updated.
+     * @param userId  ID of the user performing the gesture.
      * @param region  Touchable region to which the cursors are associated.
      * @param cursors New input cursors.
      */
-    private void processDragArmed(final RegionContext context, final Region region, final Collection<Cursor> cursors) {
+    private void processDragArmed(final RegionContext context, final long userId, final Region region,
+                                  final Collection<Cursor> cursors) {
         // Trigger listeners
-        final DragEvent event = new DragEvent(DragEvent.State.ARMED, region, 0, 0, 0, 0);
+        final DragEvent event = new DragEvent(userId, region, DragEvent.State.ARMED, 0, 0, 0, 0);
         fireGestureEvent(event);
 
         // Calculate mean point
@@ -164,6 +172,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
         meanY /= cursorCount;
 
         // Save context
+        context.userId = userId;
         context.activeRegion = region; // Prevent garbage collection
         context.previousState = DragEvent.State.ARMED;
         context.previousCursorCount = cursorCount;
@@ -196,8 +205,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
         final int offsetY = meanY - context.previousMeanY;
 
         // Trigger listeners
-        final DragEvent event = new DragEvent(DragEvent.State.PERFORMED, context.activeRegion, offsetX, offsetY,
-                meanX - context.referenceX, meanY - context.referenceY);
+        final DragEvent event = new DragEvent(context.userId, context.activeRegion, DragEvent.State.PERFORMED,
+                offsetX, offsetY, meanX - context.referenceX, meanY - context.referenceY);
         fireGestureEvent(event);
 
         // Save context (no change of reference point or active region)
@@ -247,11 +256,12 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
      */
     private void processDragUnarmed(final RegionContext context) {
         // Trigger listeners
-        final DragEvent event = new DragEvent(DragEvent.State.UNARMED, context.activeRegion, 0, 0,
+        final DragEvent event = new DragEvent(context.userId, context.activeRegion, DragEvent.State.UNARMED, 0, 0,
                 context.previousMeanX - context.referenceX, context.previousMeanY - context.referenceY);
         fireGestureEvent(event);
 
         // Clear context
+        context.userId = -1;
         context.activeRegion = null; // Allow garbage collection
         context.previousState = DragEvent.State.UNARMED;
         context.previousCursorCount = 0;
@@ -268,6 +278,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Reg
      */
     private void processNothingHappened(final RegionContext context) {
         // Clear context
+        context.userId = -1;
         context.activeRegion = null;
         context.previousState = DragEvent.State.UNARMED;
         context.previousCursorCount = 0;

@@ -28,7 +28,8 @@ package com.github.multitouchframework.base.dispatch;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 import com.github.multitouchframework.base.ScreenRegion;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     public static final Region SCREEN_REGION = new ScreenRegion(); // Whole screen
 
     /**
-     * Mapping between cursors and region resulting from the call to {@link #processCursors(Region, Collection)}.
+     * Mapping between cursors and region resulting from the call to {@link #processTouchEvent(CursorEvent)}.
      */
     private Map<Long, Region> oldCursorToRegion = new HashMap<Long, Region>(); // Initially, no cursor down
 
@@ -84,14 +85,14 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#processCursors(Region, Collection)
+     * @see AbstractCursorToRegionDispatcher#processTouchEvent(CursorEvent)
      */
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
+    public void processTouchEvent(final CursorEvent event) {
         final Map<Long, Region> newCursorToRegion = new HashMap<Long, Region>();
         final Map<Region, Collection<Cursor>> updatesToBeForwarded = new HashMap<Region, Collection<Cursor>>();
 
-        for (final Cursor cursor : cursors) {
+        for (final Cursor cursor : event.getCursors()) {
             // Find the region holding the cursor
             Region assignedRegion = oldCursorToRegion.get(cursor.getId());
             if (assignedRegion == null) {
@@ -124,7 +125,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 
         // Forward updated regions and cursors to next blocks
         for (final Map.Entry<Region, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
-            forwardToNextBlocks(entry.getKey(), entry.getValue());
+            forwardToNextBlocks(event.getUserId(), entry.getKey(), entry.getValue());
         }
 
         // Save mapping for next time
@@ -142,14 +143,16 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
 
     /**
      * Forwards the specified region with its cursors to the next blocks.<br>Typically, this method is called for each
-     * region touch by the cursors processed in {@link #processCursors(Region, Collection)}.
+     * region touch by the cursors processed in {@link #processTouchEvent(CursorEvent)}.
      *
+     * @param userId  ID of the user touching the surface.
      * @param region  Region holding the specified cursors.
      * @param cursors Cursors for the specified region.
      */
-    private void forwardToNextBlocks(final Region region, final Collection<Cursor> cursors) {
+    private void forwardToNextBlocks(final long userId, final Region region, final Collection<Cursor> cursors) {
+        final CursorEvent event = new CursorEvent(userId, region, cursors);
         for (final CursorProcessor nextBlock : nextBlocks) {
-            nextBlock.processCursors(region, cursors);
+            nextBlock.processTouchEvent(event);
         }
     }
 }

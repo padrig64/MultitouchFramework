@@ -62,14 +62,19 @@ public class DragEvent implements GestureEvent {
     }
 
     /**
-     * State of the recognized gesture.
+     * ID of the user performing the gesture.
      */
-    private final State state;
+    private final long userId;
 
     /**
      * Region to which the gesture applies.
      */
     private final Region region;
+
+    /**
+     * State of the recognized gesture.
+     */
+    private final State state;
 
     /**
      * Drag movement on the X axis relatively to the previous event.
@@ -94,17 +99,19 @@ public class DragEvent implements GestureEvent {
     /**
      * Constructor specifying all the information on the gesture.
      *
+     * @param userId  ID of the user performing the gesture.
+     * @param region  Region to which the gesture applies.
      * @param state   State of the recognized gesture.
-     * @param region  Region to which the gesture applies
      * @param dx      Drag movement on the X axis relatively to the previous event.
      * @param dy      Drag movement on the Y axis relatively to the previous event.
      * @param dxTotal Drag movement on the X axis relatively to the very beginning of the gesture.
      * @param dyTotal Drag movement on the Y axis relatively to the very beginning of the gesture.
      */
-    public DragEvent(final State state, final Region region, final int dx, final int dy, final int dxTotal,
-                     final int dyTotal) {
-        this.state = state;
+    public DragEvent(final long userId, final Region region, final State state, final int dx, final int dy,
+                     final int dxTotal, final int dyTotal) {
+        this.userId = userId;
         this.region = region;
+        this.state = state;
         this.dx = dx;
         this.dy = dy;
         this.dxTotal = dxTotal;
@@ -112,17 +119,28 @@ public class DragEvent implements GestureEvent {
     }
 
     /**
-     * Gets the state of the recognized gesture.
+     * @see GestureEvent#getUserId()
      */
-    public State getState() {
-        return state;
+    @Override
+    public long getUserId() {
+        return userId;
     }
 
     /**
-     * Gets the region to which the gesture applies.
+     * @see GestureEvent#getRegion()
      */
+    @Override
     public Region getRegion() {
         return region;
+    }
+
+    /**
+     * Gets the state of the recognized gesture.
+     *
+     * @return Gesture state.
+     */
+    public State getState() {
+        return state;
     }
 
     /**

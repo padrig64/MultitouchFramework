@@ -26,7 +26,7 @@
 package com.github.multitouchframework.api.filter;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 /**
  * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors

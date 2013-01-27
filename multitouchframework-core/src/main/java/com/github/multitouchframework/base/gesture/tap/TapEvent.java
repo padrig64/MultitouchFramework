@@ -62,14 +62,19 @@ public class TapEvent implements GestureEvent {
     }
 
     /**
-     * State of the recognized gesture.
+     * ID of the user performing the gesture.
      */
-    private final State state;
+    private final long userId;
 
     /**
      * Region to which the gesture applies.
      */
     private final Region region;
+
+    /**
+     * State of the recognized gesture.
+     */
+    private final State state;
 
     /**
      * Number of consecutive taps that have been performed, including this one.
@@ -84,30 +89,42 @@ public class TapEvent implements GestureEvent {
     /**
      * Constructor specifying all the information on the gesture.
      *
+     * @param userId      ID of the user performing the gesture.
+     * @param region      Region to which the gesture applies.
      * @param state       State of the recognized gesture.
-     * @param region      Region to which the gesture applies
      * @param tapCount    Number of consecutive taps that have been performed, including this one.
      * @param cursorCount Number of cursors involved for this tap.
      */
-    public TapEvent(final State state, final Region region, final int tapCount, final int cursorCount) {
-        this.state = state;
+    public TapEvent(final long userId, final Region region, final State state, final int tapCount,
+                    final int cursorCount) {
+        this.userId = userId;
         this.region = region;
+        this.state = state;
         this.tapCount = tapCount;
         this.cursorCount = cursorCount;
     }
 
     /**
-     * Gets the state of the recognized gesture.
+     * @see GestureEvent#getUserId()
      */
-    public State getState() {
-        return state;
+    public long getUserId() {
+        return userId;
     }
 
     /**
-     * Gets the region to which the gesture applies.
+     * @see GestureEvent#getRegion()
      */
     public Region getRegion() {
         return region;
+    }
+
+    /**
+     * Gets the state of the recognized gesture.
+     *
+     * @return Gesture state.
+     */
+    public State getState() {
+        return state;
     }
 
     /**

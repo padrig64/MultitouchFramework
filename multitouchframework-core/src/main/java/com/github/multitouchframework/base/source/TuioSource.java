@@ -27,7 +27,8 @@ package com.github.multitouchframework.base.source;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 import com.github.multitouchframework.base.ScreenRegion;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
@@ -39,7 +40,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.net.BindException;
 import java.net.SocketException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,9 +111,9 @@ public class TuioSource extends AbstractInputSource {
          * Processes the current cursors using the blocks/listeners that are queued/added to this input source.
          */
         private void processWithNextBlocks() {
-            final Collection<Cursor> cursorList = currentCursors.values();
+            final CursorEvent event = new CursorEvent(0, region, currentCursors.values());
             for (final CursorProcessor nextBlock : nextBlocks) {
-                nextBlock.processCursors(region, cursorList);
+                nextBlock.processTouchEvent(event);
             }
         }
     }

@@ -23,15 +23,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.gesture;
+package com.github.multitouchframework.api.gesture.cursor;
 
-/**
- * Marker interface to be implemented by gesture events that are typically fired by gesture recognizers and handled by
- * gesture listeners.
- *
- * @see GestureRecognizer
- * @see GestureListener
- */
-public interface GestureEvent extends TouchEvent {
-    // Nothing to be done yet
+import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.gesture.TouchEvent;
+
+import java.util.Collection;
+
+public class CursorEvent implements TouchEvent {
+
+    private final long userId;
+
+    private final Region region;
+
+    private final Collection<Cursor> cursors;
+
+    /**
+     * @param region  Touchable region to which the cursors are associated.
+     * @param cursors Cursors to be processed.
+     */
+    public CursorEvent(final long userId, final Region region, final Collection<Cursor> cursors) {
+        this.userId = userId;
+        this.region = region;
+        this.cursors = cursors;
+    }
+
+    @Override
+    public long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public Region getRegion() {
+        return region;
+    }
+
+    public Collection<Cursor> getCursors() {
+        return cursors;
+    }
 }

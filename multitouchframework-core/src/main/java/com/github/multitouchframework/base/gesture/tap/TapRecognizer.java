@@ -48,7 +48,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
     protected static class RegionContext {
 
         /**
-         * Number of cursors on the last call to {@link #process(RegionContext, Region, Collection)}.
+         * Number of cursors on the last call to {@link #process(RegionContext, long, Region, Collection)}.
          */
         public int previousCursorCount = 0;
 
@@ -136,18 +136,19 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
     }
 
     /**
-     * @see AbstractGestureRecognizer#createContext(Region)
+     * @see AbstractGestureRecognizer#createContext(long, Region)
      */
     @Override
-    protected RegionContext createContext(final Region region) {
+    protected RegionContext createContext(final long userId, final Region region) {
         return new RegionContext();
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Object, Region, Collection)
+     * @see AbstractGestureRecognizer#process(Object, long, Region, Collection)
      */
     @Override
-    protected void process(final RegionContext context, final Region region, final Collection<Cursor> cursors) {
+    protected void process(final RegionContext context, final long userId, final Region region,
+                           final Collection<Cursor> cursors) {
         // Check if at least 1 cursor is still on the region
         if (isGestureStillArmed(region, cursors)) {
             final int cursorCount = cursors.size();
@@ -166,18 +167,18 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
                 context.previousCursorCount = cursorCount;
 
                 // Notify listeners that the tap has been armed
-                fireGestureEvent(new TapEvent(TapEvent.State.ARMED, region, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.ARMED, context.consecutiveTapCount,
                         context.previousCursorCount));
             } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
                 // Just finishing to tap (e.g. all fingers up)
                 context.previousTapTimestamp = tapTimestamp;
 
                 // Notify listeners that the tap has been performed
-                fireGestureEvent(new TapEvent(TapEvent.State.PERFORMED, region, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.PERFORMED, context.consecutiveTapCount,
                         context.previousCursorCount));
 
                 // Notify listeners of the tap has been ended
-                fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.UNARMED, context.consecutiveTapCount,
                         context.previousCursorCount));
 
                 // Update cursor count only after firing the events
@@ -188,7 +189,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
             context.previousCursorCount = 0;
 
             // Notify listeners
-            fireGestureEvent(new TapEvent(TapEvent.State.UNARMED, region, context.consecutiveTapCount,
+            fireGestureEvent(new TapEvent(userId, region, TapEvent.State.UNARMED, context.consecutiveTapCount,
                     context.previousCursorCount));
         }
     }

@@ -23,24 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.flow;
+package com.github.multitouchframework.api.gesture;
 
-import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 
-import java.util.Collection;
-
-/**
- * Interface to be implemented by entities processing cursors associated to a touchable region.<br>It is typically
- * implemented by input filters, gesture recognizers, etc.
- */
-public interface CursorProcessor {
+public interface TouchEvent {
 
     /**
-     * Processes the specified cursors for the specified touchable region.
+     * Gets the ID of the user touching the surface.
      *
-     * @param region  Touchable region to which the cursors are associated.
-     * @param cursors Cursors to be processed.
+     * @return ID of the user touching the surface.
      */
-    public void processCursors(Region region, Collection<Cursor> cursors);
+    public long getUserId();
+
+    /**
+     * Gets the region to which the touch event applies.
+     *
+     * @return Region to which the touch event applies.
+     */
+    public Region getRegion();
 }

@@ -26,9 +26,9 @@
 package com.github.multitouchframework.swing.flow;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class EDTSchedulerCursorProcessor implements CursorProcessor, Chainable<C
      *
      * @param firstNextBlock First block to be queued.
      *
-     * @see #queue(com.github.multitouchframework.api.flow.CursorProcessor)
+     * @see #queue(com.github.multitouchframework.api.gesture.cursor.CursorProcessor)
      */
     public EDTSchedulerCursorProcessor(final CursorProcessor firstNextBlock) {
         nextBlocks.add(firstNextBlock);
@@ -83,19 +83,21 @@ public class EDTSchedulerCursorProcessor implements CursorProcessor, Chainable<C
     /**
      * Forwards the specified cursors to the next blocks on the EDT.
      *
-     * @see com.github.multitouchframework.api.flow.CursorProcessor#processCursors(Region, Collection)
+     * @see com.github.multitouchframework.api.gesture.cursor.CursorProcessor#processTouchEvent(CursorEvent)
      */
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
+    public void processTouchEvent(final CursorEvent event) {
         // Just put the cursors in a new list, no need to clone them
-        final Collection<Cursor> copiedData = new ArrayList<Cursor>(cursors);
+
+        final Collection<Cursor> copiedData = new ArrayList<Cursor>(event.getCursors());
+        final CursorEvent cloneEvent = new CursorEvent(event.getUserId(), event.getRegion(), copiedData);
 
         final Runnable edtRunnable = new Runnable() {
             @Override
             public void run() {
                 synchronized (nextBlocks) {
                     for (final CursorProcessor nextBlock : nextBlocks) {
-                        nextBlock.processCursors(region, copiedData);
+                        nextBlock.processTouchEvent(cloneEvent);
                     }
                 }
             }

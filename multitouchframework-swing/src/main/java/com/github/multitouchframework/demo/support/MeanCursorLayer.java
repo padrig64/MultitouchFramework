@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.flow.CursorProcessor;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -54,7 +54,8 @@ public class MeanCursorLayer implements Layer, CursorProcessor {
     }
 
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
+    public void processTouchEvent(final CursorEvent event) {
+        final Collection<Cursor> cursors = event.getCursors();
         if (cursors.isEmpty()) {
             meanCursor = null;
         } else {

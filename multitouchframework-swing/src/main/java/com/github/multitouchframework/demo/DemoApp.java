@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.flow.CursorProcessor;
 import com.github.multitouchframework.api.gesture.GestureListener;
+import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
@@ -267,20 +267,20 @@ public class DemoApp extends JFrame {
 //		dragRecognizer.queue(new GestureListener<DragEvent>() {
 //
 //			@Override
-//			public void processGestureEvent(final DragEvent event) {
+//			public void processTouchEvent(final DragEvent event) {
 //				System.out.println(event);
 //			}
 //		});
 //        pinchSpreadRecognizer.queue(new GestureListener<PinchSpreadEvent>() {
 //
 //            @Override
-//            public void processGestureEvent(final PinchSpreadEvent event) {
+//            public void processTouchEvent(final PinchSpreadEvent event) {
 //                System.out.println(event);
 //            }
 //        });
         tapRecognizer.queue(new GestureListener<TapEvent>() {
             @Override
-            public void processGestureEvent(TapEvent event) {
+            public void processTouchEvent(TapEvent event) {
                 System.out.println(event);
             }
         });

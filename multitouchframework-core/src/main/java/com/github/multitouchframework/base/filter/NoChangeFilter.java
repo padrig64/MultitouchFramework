@@ -26,7 +26,7 @@
 package com.github.multitouchframework.base.filter;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,13 +44,14 @@ public class NoChangeFilter extends AbstractInputFilter {
     private Set<Cursor> lastCursors = new HashSet<Cursor>();
 
     /**
-     * @see AbstractInputFilter#processCursors(Region, Collection)
+     * @see AbstractInputFilter#processTouchEvent(CursorEvent)
      */
     @Override
-    public void processCursors(final Region region, final Collection<Cursor> cursors) {
+    public void processTouchEvent(final CursorEvent event) {
         boolean changed = false;
 
         // Check if at least one cursor changed since the last event
+        final Collection<Cursor> cursors = event.getCursors();
         if (cursors.size() == lastCursors.size()) {
             // Same number of cursors as last event, so check if all cursors are the same
             for (final Cursor cursor : cursors) {
@@ -67,7 +68,7 @@ public class NoChangeFilter extends AbstractInputFilter {
         // Trigger listeners if at least one cursor changed since the last event
         if (changed) {
             lastCursors = new HashSet<Cursor>(cursors);
-            processWithNextBlocks(region, cursors);
+            processWithNextBlocks(event.getUserId(), event.getRegion(), cursors);
         }
     }
 }
