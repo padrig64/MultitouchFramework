@@ -26,15 +26,15 @@
 package com.github.multitouchframework.base.gesture.drag;
 
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.gesture.GestureEvent;
+import com.github.multitouchframework.api.touch.TouchEvent;
 
 /**
  * Event fired when the drag/pan gesture is recognized.
  *
- * @see GestureEvent
+ * @see TouchEvent
  * @see DragRecognizer
  */
-public class DragEvent implements GestureEvent {
+public class DragEvent implements TouchEvent {
 
     /**
      * Possible states of the gesture.
@@ -119,7 +119,7 @@ public class DragEvent implements GestureEvent {
     }
 
     /**
-     * @see GestureEvent#getUserId()
+     * @see TouchEvent#getUserId()
      */
     @Override
     public long getUserId() {
@@ -127,7 +127,7 @@ public class DragEvent implements GestureEvent {
     }
 
     /**
-     * @see GestureEvent#getRegion()
+     * @see TouchEvent#getRegion()
      */
     @Override
     public Region getRegion() {

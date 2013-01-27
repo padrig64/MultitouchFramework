@@ -26,7 +26,9 @@
 package com.github.multitouchframework.api.gesture;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 /**
  * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-region
@@ -34,11 +36,13 @@ import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
  *
  * @param <E> Type of gesture events fired by the gesture recognizer.
  *
- * @see GestureListener
- * @see GestureEvent
- * @see CursorProcessor
+ * @see com.github.multitouchframework.api.touch.TouchListener
+ * @see com.github.multitouchframework.api.touch.TouchEvent
+ * @see TouchListener
+ * @see CursorEvent
  * @see Chainable
  */
-public interface GestureRecognizer<E extends GestureEvent> extends CursorProcessor, Chainable<GestureListener<E>> {
+public interface GestureRecognizer<E extends TouchEvent> extends TouchListener<CursorEvent>,
+        Chainable<TouchListener<E>> {
     // Nothing more to be done
 }

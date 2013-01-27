@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.gesture.GestureListener;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
@@ -228,7 +228,7 @@ public class DemoApp extends JFrame {
         // Configure layers for raw cursors
         final EDTSchedulerCursorProcessor edtRawCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         inputController.queue(edtRawCursorProcessorBlock);
-        edtRawCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.RAW_CURSORS.getProcessor());
+        edtRawCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.RAW_CURSORS.getProcessor());
 
         // Configure cursor filtering
         final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -239,9 +239,12 @@ public class DemoApp extends JFrame {
         // Configure layers for filtered cursors
         final EDTSchedulerCursorProcessor edtFilteredCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_CURSORS.getProcessor());
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_CURSOR.getProcessor());
-        edtFilteredCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.FILTERED_MEAN_LINES.getProcessor());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_CURSORS
+                .getProcessor());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_MEAN_CURSOR
+                .getProcessor());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_MEAN_LINES
+                .getProcessor());
 
         // Configure cursor to region dispatcher
         final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
@@ -253,7 +256,7 @@ public class DemoApp extends JFrame {
         final EDTSchedulerCursorProcessor edtCursorProcessorBlock = new EDTSchedulerCursorProcessor();
         cursorToRegionDispatcher.queue(edtCursorProcessorBlock);
         ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
-        edtCursorProcessorBlock.queue((CursorProcessor) LayerProcessor.REGIONS.getProcessor());
+        edtCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.REGIONS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();
@@ -264,23 +267,23 @@ public class DemoApp extends JFrame {
         cursorToRegionDispatcher.queue(tapRecognizer);
 
         // Configure gesture listeners
-//		dragRecognizer.queue(new GestureListener<DragEvent>() {
+//		dragRecognizer.queue(new TouchListener<DragEvent>() {
 //
 //			@Override
 //			public void processTouchEvent(final DragEvent event) {
 //				System.out.println(event);
 //			}
 //		});
-//        pinchSpreadRecognizer.queue(new GestureListener<PinchSpreadEvent>() {
+//        pinchSpreadRecognizer.queue(new TouchListener<PinchSpreadEvent>() {
 //
 //            @Override
 //            public void processTouchEvent(final PinchSpreadEvent event) {
 //                System.out.println(event);
 //            }
 //        });
-        tapRecognizer.queue(new GestureListener<TapEvent>() {
+        tapRecognizer.queue(new TouchListener<TapEvent>() {
             @Override
-            public void processTouchEvent(TapEvent event) {
+            public void processTouchEvent(final TapEvent event) {
                 System.out.println(event);
             }
         });

@@ -28,8 +28,8 @@ package com.github.multitouchframework.base.dispatch;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.ScreenRegion;
 
 import java.util.ArrayList;
@@ -66,13 +66,13 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
     /**
      * Cursor-per-region processors connected and processing the output regions and cursors from this dispatcher.
      */
-    private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    private final List<TouchListener<CursorEvent>> nextBlocks = new ArrayList<TouchListener<CursorEvent>>();
 
     /**
      * @see CursorToRegionDispatcher#queue(Object)
      */
     @Override
-    public void queue(final CursorProcessor cursorRegionProcessor) {
+    public void queue(final TouchListener<CursorEvent> cursorRegionProcessor) {
         nextBlocks.add(cursorRegionProcessor);
     }
 
@@ -80,7 +80,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
      * @see CursorToRegionDispatcher#dequeue(Object)
      */
     @Override
-    public void dequeue(final CursorProcessor cursorRegionProcessor) {
+    public void dequeue(final TouchListener<CursorEvent> cursorRegionProcessor) {
         nextBlocks.remove(cursorRegionProcessor);
     }
 
@@ -151,7 +151,7 @@ public abstract class AbstractCursorToRegionDispatcher implements CursorToRegion
      */
     private void forwardToNextBlocks(final long userId, final Region region, final Collection<Cursor> cursors) {
         final CursorEvent event = new CursorEvent(userId, region, cursors);
-        for (final CursorProcessor nextBlock : nextBlocks) {
+        for (final TouchListener<CursorEvent> nextBlock : nextBlocks) {
             nextBlock.processTouchEvent(event);
         }
     }

@@ -25,8 +25,9 @@
 
 package com.github.multitouchframework.base.source;
 
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
 import com.github.multitouchframework.api.source.InputSource;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public abstract class AbstractInputSource implements InputSource {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    protected final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    protected final List<TouchListener<CursorEvent>> nextBlocks = new ArrayList<TouchListener<CursorEvent>>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
@@ -61,7 +62,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final CursorProcessor cursorProcessor) {
+    public void queue(final TouchListener<CursorEvent> cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
@@ -72,7 +73,7 @@ public abstract class AbstractInputSource implements InputSource {
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final CursorProcessor cursorProcessor) {
+    public void dequeue(final TouchListener<CursorEvent> cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 

@@ -23,23 +23,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.gesture;
+package com.github.multitouchframework.api.touch;
 
-import com.github.multitouchframework.api.Region;
-
-public interface TouchEvent {
-
-    /**
-     * Gets the ID of the user touching the surface.
-     *
-     * @return ID of the user touching the surface.
-     */
-    public long getUserId();
+/**
+ * Interfaces to be implemented by touch and gesture listeners to handle touch events.
+ *
+ * @param <E> Type of gesture events to be handled.
+ *
+ * @see TouchEvent
+ */
+public interface TouchListener<E extends TouchEvent> {
 
     /**
-     * Gets the region to which the touch event applies.
+     * Handles the specified touch event.
      *
-     * @return Region to which the touch event applies.
+     * @param event Touch event to be processed.
      */
-    public Region getRegion();
+    public void processTouchEvent(E event);
 }

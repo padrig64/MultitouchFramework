@@ -23,15 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.gesture;
+package com.github.multitouchframework.api.touch;
 
-/**
- * Marker interface to be implemented by gesture events that are typically fired by gesture recognizers and handled by
- * gesture listeners.
- *
- * @see GestureRecognizer
- * @see GestureListener
- */
-public interface GestureEvent extends TouchEvent {
-    // Nothing to be done yet
+import com.github.multitouchframework.api.Region;
+
+public interface TouchEvent {
+
+    /**
+     * Gets the ID of the user touching the surface.
+     *
+     * @return ID of the user touching the surface.
+     */
+    public long getUserId();
+
+    /**
+     * Gets the region to which the touch event applies.
+     *
+     * @return Region to which the touch event applies.
+     */
+    public Region getRegion();
 }

@@ -26,7 +26,8 @@
 package com.github.multitouchframework.api.filter;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 /**
  * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors
@@ -36,11 +37,12 @@ import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
  * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
  * another thread, to generate more events for inertia, etc.
  *
- * @see CursorProcessor
+ * @see TouchListener
+ * @see CursorEvent
  * @see Chainable
  * @see com.github.multitouchframework.api.source.InputSource
  * @see com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher
  */
-public interface InputFilter extends CursorProcessor, Chainable<CursorProcessor> {
+public interface InputFilter extends TouchListener<CursorEvent>, Chainable<TouchListener<CursorEvent>> {
     // Nothing more to be done
 }

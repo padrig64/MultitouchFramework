@@ -28,16 +28,17 @@ package com.github.multitouchframework.base.filter;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link CursorProcessor#processTouchEvent(CursorEvent)} method.
+ * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor
+ * processors to process the filtered touch input, by calling their {@link TouchListener#processTouchEvent(com.github
+ * .multitouchframework.api.touch.TouchEvent)} method.
  *
  * @see InputFilter
  */
@@ -46,7 +47,7 @@ public abstract class AbstractInputFilter implements InputFilter {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    private final List<CursorProcessor> nextBlocks = new ArrayList<CursorProcessor>();
+    private final List<TouchListener<CursorEvent>> nextBlocks = new ArrayList<TouchListener<CursorEvent>>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
@@ -55,7 +56,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final CursorProcessor cursorProcessor) {
+    public void queue(final TouchListener<CursorEvent> cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
@@ -66,7 +67,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final CursorProcessor cursorProcessor) {
+    public void dequeue(final TouchListener<CursorEvent> cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 
@@ -79,7 +80,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      */
     protected void processWithNextBlocks(final long userId, final Region region, final Collection<Cursor> cursors) {
         final CursorEvent event = new CursorEvent(userId, region, cursors);
-        for (final CursorProcessor nextBlock : nextBlocks) {
+        for (final TouchListener<CursorEvent> nextBlock : nextBlocks) {
             nextBlock.processTouchEvent(event);
         }
     }

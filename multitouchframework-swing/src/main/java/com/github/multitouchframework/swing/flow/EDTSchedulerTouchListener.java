@@ -26,41 +26,40 @@
 package com.github.multitouchframework.swing.flow;
 
 import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.gesture.GestureEvent;
-import com.github.multitouchframework.api.gesture.GestureListener;
+import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchListener;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EDTSchedulerGestureListener<E extends GestureEvent> implements GestureListener<E>,
-        Chainable<GestureListener<E>> {
+public class EDTSchedulerTouchListener<E extends TouchEvent> implements TouchListener<E>, Chainable<TouchListener<E>> {
 
     /**
      * Listeners to events of the gesture.
      *
-     * @see #queue(GestureListener)
-     * @see #dequeue(GestureListener)
-     * @see #processTouchEvent(GestureEvent)
+     * @see #queue(com.github.multitouchframework.api.touch.TouchListener)
+     * @see #dequeue(com.github.multitouchframework.api.touch.TouchListener)
+     * @see #processTouchEvent(TouchEvent)
      */
-    private final List<GestureListener<E>> gestureListeners = Collections.synchronizedList(new
-            ArrayList<GestureListener<E>>());
+    private final List<TouchListener<E>> gestureListeners = Collections.synchronizedList(new
+            ArrayList<TouchListener<E>>());
 
     @Override
-    public void queue(final GestureListener<E> gestureListener) {
+    public void queue(final TouchListener<E> gestureListener) {
         gestureListeners.add(gestureListener);
     }
 
     @Override
-    public void dequeue(final GestureListener<E> gestureListener) {
+    public void dequeue(final TouchListener<E> gestureListener) {
         gestureListeners.remove(gestureListener);
     }
 
     /**
      * Forwards the specified gesture event to the next blocks on the EDT.
      *
-     * @see GestureListener#processTouchEvent(GestureEvent)
+     * @see com.github.multitouchframework.api.touch.TouchListener#processTouchEvent(TouchEvent)
      */
     @Override
     public void processTouchEvent(final E event) {
@@ -68,7 +67,7 @@ public class EDTSchedulerGestureListener<E extends GestureEvent> implements Gest
             @Override
             public void run() {
                 synchronized (gestureListeners) {
-                    for (final GestureListener<E> nextBlock : gestureListeners) {
+                    for (final TouchListener<E> nextBlock : gestureListeners) {
                         nextBlock.processTouchEvent(event);
                     }
                 }

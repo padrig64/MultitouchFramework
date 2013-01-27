@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CursorsLayer implements Layer, CursorProcessor {
+public class CursorsLayer implements Layer, TouchListener<CursorEvent> {
 
     private static final Color CURSOR_COLOR = UIManager.getColor("nimbusInfoBlue");
 

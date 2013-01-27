@@ -23,23 +23,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.gesture;
+package com.github.multitouchframework.api.touch.cursor;
 
-/**
- * Interfaces to be implemented by gesture listeners to handle gesture events.<br>Gesture listeners are typically
- * added/queued to gesture recognizers.
- *
- * @param <E> Type of gesture events to be handled.
- *
- * @see GestureRecognizer
- * @see GestureEvent
- */
-public interface GestureListener<E extends GestureEvent> {
+import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.TouchEvent;
+
+import java.util.Collection;
+
+public class CursorEvent implements TouchEvent {
+
+    private final long userId;
+
+    private final Region region;
+
+    private final Collection<Cursor> cursors;
 
     /**
-     * Handles the specified gesture event.
-     *
-     * @param event Gesture event to be processed.
+     * @param region  Touchable region to which the cursors are associated.
+     * @param cursors Cursors to be processed.
      */
-    public void processTouchEvent(E event);
+    public CursorEvent(final long userId, final Region region, final Collection<Cursor> cursors) {
+        this.userId = userId;
+        this.region = region;
+        this.cursors = cursors;
+    }
+
+    @Override
+    public long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public Region getRegion() {
+        return region;
+    }
+
+    public Collection<Cursor> getCursors() {
+        return cursors;
+    }
 }

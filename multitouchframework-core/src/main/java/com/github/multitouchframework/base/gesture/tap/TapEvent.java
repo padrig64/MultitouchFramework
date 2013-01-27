@@ -26,15 +26,15 @@
 package com.github.multitouchframework.base.gesture.tap;
 
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.gesture.GestureEvent;
+import com.github.multitouchframework.api.touch.TouchEvent;
 
 /**
  * Event fired when the tap gesture is recognized.
  *
- * @see GestureEvent
+ * @see TouchEvent
  * @see TapRecognizer
  */
-public class TapEvent implements GestureEvent {
+public class TapEvent implements TouchEvent {
 
     /**
      * Possible states of the gesture.
@@ -105,14 +105,14 @@ public class TapEvent implements GestureEvent {
     }
 
     /**
-     * @see GestureEvent#getUserId()
+     * @see TouchEvent#getUserId()
      */
     public long getUserId() {
         return userId;
     }
 
     /**
-     * @see GestureEvent#getRegion()
+     * @see TouchEvent#getRegion()
      */
     public Region getRegion() {
         return region;

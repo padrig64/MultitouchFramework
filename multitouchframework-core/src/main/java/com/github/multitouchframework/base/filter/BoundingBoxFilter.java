@@ -26,7 +26,7 @@
 package com.github.multitouchframework.base.filter;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class BoundingBoxFilter extends AbstractInputFilter {
     private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
     /**
-     * @see AbstractInputFilter#processTouchEvent(CursorEvent)
+     * @see AbstractInputFilter#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorEvent event) {

@@ -27,10 +27,10 @@ package com.github.multitouchframework.base.gesture;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.gesture.GestureEvent;
-import com.github.multitouchframework.api.gesture.GestureListener;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
+import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,10 +48,10 @@ import java.util.WeakHashMap;
  * @param <E> Type of gesture events fired by the gesture recognizer.
  *
  * @see GestureRecognizer
- * @see GestureEvent
- * @see GestureListener
+ * @see TouchEvent
+ * @see com.github.multitouchframework.api.touch.TouchListener
  */
-public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> implements GestureRecognizer<E> {
+public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> implements GestureRecognizer<E> {
 
     /**
      * Minimum number of cursors required to perform the gesture.
@@ -66,11 +66,11 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
     /**
      * Listeners to events of the gesture.
      *
-     * @see #queue(GestureListener)
-     * @see #dequeue(GestureListener)
-     * @see #fireGestureEvent(GestureEvent)
+     * @see #queue(com.github.multitouchframework.api.touch.TouchListener)
+     * @see #dequeue(com.github.multitouchframework.api.touch.TouchListener)
+     * @see #fireGestureEvent(TouchEvent)
      */
-    private final List<GestureListener<E>> gestureListeners = new ArrayList<GestureListener<E>>();
+    private final List<TouchListener<E>> gestureListeners = new ArrayList<TouchListener<E>>();
 
     /**
      * Saved recognition context for each region.
@@ -143,7 +143,7 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * @see GestureRecognizer#queue(Object)
      */
     @Override
-    public void queue(final GestureListener<E> gestureListener) {
+    public void queue(final TouchListener<E> gestureListener) {
         gestureListeners.add(gestureListener);
     }
 
@@ -151,7 +151,7 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * @see GestureRecognizer#dequeue(Object)
      */
     @Override
-    public void dequeue(final GestureListener<E> gestureListener) {
+    public void dequeue(final TouchListener<E> gestureListener) {
         gestureListeners.remove(gestureListener);
     }
 
@@ -162,13 +162,13 @@ public abstract class AbstractGestureRecognizer<C, E extends GestureEvent> imple
      * @param event Gesture event to be fired.
      */
     protected void fireGestureEvent(final E event) {
-        for (final GestureListener<E> listener : gestureListeners) {
+        for (final TouchListener<E> listener : gestureListeners) {
             listener.processTouchEvent(event);
         }
     }
 
     /**
-     * @see GestureRecognizer#processTouchEvent(CursorEvent)
+     * @see GestureRecognizer#processTouchEvent(TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorEvent event) {

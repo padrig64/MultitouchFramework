@@ -27,8 +27,8 @@ package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.gesture.cursor.CursorEvent;
-import com.github.multitouchframework.api.gesture.cursor.CursorProcessor;
+import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
 
 import javax.swing.UIManager;
@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegionsLayer implements Layer, CursorProcessor {
+public class RegionsLayer implements Layer, TouchListener<CursorEvent> {
 
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
