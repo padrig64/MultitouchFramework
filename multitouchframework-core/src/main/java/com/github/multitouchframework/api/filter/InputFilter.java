@@ -36,7 +36,7 @@ import com.github.multitouchframework.api.flow.CursorProcessor;
  * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
  * another thread, to generate more events for inertia, etc.
  *
- * @see com.github.multitouchframework.api.flow.CursorProcessor
+ * @see CursorProcessor
  * @see Chainable
  * @see com.github.multitouchframework.api.source.InputSource
  * @see com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher

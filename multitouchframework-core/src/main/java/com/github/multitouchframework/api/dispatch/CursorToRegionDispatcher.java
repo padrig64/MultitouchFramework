@@ -33,7 +33,7 @@ import com.github.multitouchframework.api.flow.CursorProcessor;
  * cursor points to the touchable regions on the touch surface, for instance, in order to the allow gesture recognition
  * on specific regions independently. So, typically, gesture recognizers will be queued to cursor-to-region dispatchers.
  *
- * @see com.github.multitouchframework.api.flow.CursorProcessor
+ * @see CursorProcessor
  * @see Chainable
  */
 public interface CursorToRegionDispatcher extends CursorProcessor, Chainable<CursorProcessor> {

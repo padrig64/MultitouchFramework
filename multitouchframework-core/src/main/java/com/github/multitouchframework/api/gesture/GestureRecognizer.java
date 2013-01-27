@@ -36,7 +36,7 @@ import com.github.multitouchframework.api.flow.CursorProcessor;
  *
  * @see GestureListener
  * @see GestureEvent
- * @see com.github.multitouchframework.api.flow.CursorProcessor
+ * @see CursorProcessor
  * @see Chainable
  */
 public interface GestureRecognizer<E extends GestureEvent> extends CursorProcessor, Chainable<GestureListener<E>> {

@@ -36,9 +36,7 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor processor to
- * process the filtered touch input, by calling their {@link com.github.multitouchframework.api.flow
- * .CursorProcessor#processCursors(Region,
- * Collection)} method.
+ * process the filtered touch input, by calling their {@link CursorProcessor#processCursors(Region, Collection)} method.
  *
  * @see InputFilter
  */
