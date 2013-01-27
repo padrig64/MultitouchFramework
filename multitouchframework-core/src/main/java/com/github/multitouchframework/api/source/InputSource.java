@@ -26,8 +26,8 @@
 package com.github.multitouchframework.api.source;
 
 import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 /**
  * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of

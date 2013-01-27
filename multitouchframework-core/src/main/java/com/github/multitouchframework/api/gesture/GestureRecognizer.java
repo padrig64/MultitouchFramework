@@ -26,9 +26,9 @@
 package com.github.multitouchframework.api.gesture;
 
 import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 /**
  * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-region

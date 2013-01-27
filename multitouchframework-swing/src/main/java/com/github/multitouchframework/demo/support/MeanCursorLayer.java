@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.Cursor;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import javax.swing.UIManager;
 import java.awt.Color;

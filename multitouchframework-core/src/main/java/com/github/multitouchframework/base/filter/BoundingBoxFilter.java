@@ -26,7 +26,7 @@
 package com.github.multitouchframework.base.filter;
 
 import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
+import com.github.multitouchframework.api.touch.CursorEvent;
 
 import java.util.HashMap;
 import java.util.Map;

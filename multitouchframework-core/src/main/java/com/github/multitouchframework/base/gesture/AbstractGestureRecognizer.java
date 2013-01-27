@@ -28,9 +28,9 @@ package com.github.multitouchframework.base.gesture;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +49,7 @@ import java.util.WeakHashMap;
  *
  * @see GestureRecognizer
  * @see TouchEvent
- * @see com.github.multitouchframework.api.touch.TouchListener
+ * @see TouchListener
  */
 public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> implements GestureRecognizer<E> {
 
@@ -66,8 +66,8 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
     /**
      * Listeners to events of the gesture.
      *
-     * @see #queue(com.github.multitouchframework.api.touch.TouchListener)
-     * @see #dequeue(com.github.multitouchframework.api.touch.TouchListener)
+     * @see #queue(TouchListener)
+     * @see #dequeue(TouchListener)
      * @see #fireGestureEvent(TouchEvent)
      */
     private final List<TouchListener<E>> gestureListeners = new ArrayList<TouchListener<E>>();

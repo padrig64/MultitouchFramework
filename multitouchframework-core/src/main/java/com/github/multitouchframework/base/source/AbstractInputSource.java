@@ -26,8 +26,8 @@
 package com.github.multitouchframework.base.source;
 
 import com.github.multitouchframework.api.source.InputSource;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -27,8 +27,8 @@ package com.github.multitouchframework.base.source;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.ScreenRegion;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;

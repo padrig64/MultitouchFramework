@@ -25,80 +25,61 @@
 
 package com.github.multitouchframework.swing.flow;
 
-import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Cursor processor block forwarding the cursors on the Event Dispatch Thread.
+ * Processing block re-scheduling the processing of {@link TouchEvent}s on the EDT thread.
+ *
+ * @param <E> Type of event to be process forwarded by this block to the queued block.
  */
-public class EDTSchedulerCursorProcessor implements TouchListener<CursorEvent>, Chainable<TouchListener<CursorEvent>> {
+public class EDTScheduler<E extends TouchEvent> implements TouchListener<E>, Chainable<TouchListener<E>> {
 
     /**
-     * Blocks that are queued to this block.
-     */
-    private final List<TouchListener<CursorEvent>> nextBlocks = Collections.synchronizedList(new
-            ArrayList<TouchListener<CursorEvent>>());
-
-    /**
-     * Default constructor.
-     */
-    public EDTSchedulerCursorProcessor() {
-        // Nothing to be done
-    }
-
-    /**
-     * Constructor specifying the first black to be queued to this block.
-     *
-     * @param firstNextBlock First block to be queued.
+     * Listeners to events of the gesture.
      *
      * @see #queue(TouchListener)
+     * @see #dequeue(TouchListener)
+     * @see #processTouchEvent(TouchEvent)
      */
-    public EDTSchedulerCursorProcessor(final TouchListener<CursorEvent> firstNextBlock) {
-        nextBlocks.add(firstNextBlock);
-    }
+    private final List<TouchListener<E>> gestureListeners = Collections.synchronizedList(new
+            ArrayList<TouchListener<E>>());
 
     /**
      * @see Chainable#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<CursorEvent> nextBlock) {
-        nextBlocks.add(nextBlock);
+    public void queue(final TouchListener<E> gestureListener) {
+        gestureListeners.add(gestureListener);
     }
 
     /**
      * @see Chainable#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<CursorEvent> nextBlock) {
-        nextBlocks.remove(nextBlock);
+    public void dequeue(final TouchListener<E> gestureListener) {
+        gestureListeners.remove(gestureListener);
     }
 
     /**
-     * Forwards the specified cursors to the next blocks on the EDT.
+     * Forwards the specified gesture event to the next blocks on the EDT.
      *
-     * @see TouchListener#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see TouchListener#processTouchEvent(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorEvent event) {
-        // Just put the cursors in a new list, no need to clone them
-
-        final Collection<Cursor> copiedData = new ArrayList<Cursor>(event.getCursors());
-        final CursorEvent cloneEvent = new CursorEvent(event.getUserId(), event.getRegion(), copiedData);
-
+    public void processTouchEvent(final E event) {
         final Runnable edtRunnable = new Runnable() {
             @Override
             public void run() {
-                synchronized (nextBlocks) {
-                    for (final TouchListener<CursorEvent> nextBlock : nextBlocks) {
-                        nextBlock.processTouchEvent(cloneEvent);
+                synchronized (gestureListeners) {
+                    for (final TouchListener<E> nextBlock : gestureListeners) {
+                        nextBlock.processTouchEvent(event);
                     }
                 }
             }

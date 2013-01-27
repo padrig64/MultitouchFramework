@@ -23,25 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.touch.cursor;
+package com.github.multitouchframework.api.touch;
 
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.touch.TouchEvent;
 
 import java.util.Collection;
 
 public class CursorEvent implements TouchEvent {
 
+    /**
+     * ID of the user touching the surface.
+     */
     private final long userId;
 
+    /**
+     * Touchable region to which the cursors are associated.
+     */
     private final Region region;
 
+    /**
+     * Cursors on the associated region.
+     */
     private final Collection<Cursor> cursors;
 
     /**
+     * @param userId  ID of the user touching the surface.
      * @param region  Touchable region to which the cursors are associated.
-     * @param cursors Cursors to be processed.
+     * @param cursors Cursors on the associated region.
      */
     public CursorEvent(final long userId, final Region region, final Collection<Cursor> cursors) {
         this.userId = userId;
@@ -49,16 +58,27 @@ public class CursorEvent implements TouchEvent {
         this.cursors = cursors;
     }
 
+    /**
+     * @see TouchEvent#getUserId()
+     */
     @Override
     public long getUserId() {
         return userId;
     }
 
+    /**
+     * @see TouchEvent#getRegion()
+     */
     @Override
     public Region getRegion() {
         return region;
     }
 
+    /**
+     * Gets the cursors corresponding to the points of contacts with the surface on the associated region.
+     *
+     * @return Cursors on the associated region.
+     */
     public Collection<Cursor> getCursors() {
         return cursors;
     }

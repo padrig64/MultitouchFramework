@@ -28,8 +28,8 @@ package com.github.multitouchframework.base.dispatch;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.ScreenRegion;
 
 import java.util.ArrayList;

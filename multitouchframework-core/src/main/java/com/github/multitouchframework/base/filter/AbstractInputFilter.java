@@ -28,8 +28,8 @@ package com.github.multitouchframework.base.filter;
 import com.github.multitouchframework.api.Cursor;
 import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;

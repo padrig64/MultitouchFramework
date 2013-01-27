@@ -26,8 +26,8 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.filter.InputFilter;
+import com.github.multitouchframework.api.touch.CursorEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.cursor.CursorEvent;
 import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
@@ -44,7 +44,7 @@ import com.github.multitouchframework.demo.support.Layer;
 import com.github.multitouchframework.demo.support.MeanCursorLayer;
 import com.github.multitouchframework.demo.support.MeanLinesLayer;
 import com.github.multitouchframework.demo.support.RegionsLayer;
-import com.github.multitouchframework.swing.flow.EDTSchedulerCursorProcessor;
+import com.github.multitouchframework.swing.flow.EDTScheduler;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,7 +226,7 @@ public class DemoApp extends JFrame {
         final TuioSource inputController = new TuioSource();
 
         // Configure layers for raw cursors
-        final EDTSchedulerCursorProcessor edtRawCursorProcessorBlock = new EDTSchedulerCursorProcessor();
+        final EDTScheduler<CursorEvent> edtRawCursorProcessorBlock = new EDTScheduler<CursorEvent>();
         inputController.queue(edtRawCursorProcessorBlock);
         edtRawCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.RAW_CURSORS.getProcessor());
 
@@ -237,7 +237,7 @@ public class DemoApp extends JFrame {
         boundingBoxFilter.queue(noChangeFilter);
 
         // Configure layers for filtered cursors
-        final EDTSchedulerCursorProcessor edtFilteredCursorProcessorBlock = new EDTSchedulerCursorProcessor();
+        final EDTScheduler<CursorEvent> edtFilteredCursorProcessorBlock = new EDTScheduler<CursorEvent>();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
         edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_CURSORS
                 .getProcessor());
@@ -253,7 +253,7 @@ public class DemoApp extends JFrame {
         noChangeFilter.queue(cursorToRegionDispatcher);
 
         // Configure layer for regions
-        final EDTSchedulerCursorProcessor edtCursorProcessorBlock = new EDTSchedulerCursorProcessor();
+        final EDTScheduler<CursorEvent> edtCursorProcessorBlock = new EDTScheduler<CursorEvent>();
         cursorToRegionDispatcher.queue(edtCursorProcessorBlock);
         ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
         edtCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.REGIONS.getProcessor());
