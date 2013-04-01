@@ -25,29 +25,29 @@
 
 package com.github.multitouchframework.base.gesture.pinchspread;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.gesture.AbstractGestureRecognizer;
 
 import java.util.Collection;
 
 /**
- * Entity responsible for recognizing a pinch/spread/zoom/etc. gesture.<br>The recognition is made on a per-region basis
+ * Entity responsible for recognizing a pinch/spread/zoom/etc. gesture.<br>The recognition is made on a per-target basis
  * and is based on the mean distance of all the cursors to the mean cursor (average of all the cursors).<br>Note that
  * this recognizer works best after filtering the input and limiting the number of input touch events.
  *
  * @see AbstractGestureRecognizer
  * @see PinchSpreadEvent
  */
-public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpreadRecognizer.RegionContext,
+public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpreadRecognizer.TouchTargetContext,
         PinchSpreadEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single region.<br>The recognition is based on the
-     * mean distance of all distances between the cursors and their mean point, but making sure that changing the number
-     * of cursors has no influence on the gesture.
+     * Context storing the state of recognition of the gesture for a single touch target.<br>The recognition is based on
+     * the mean distance of all distances between the cursors and their mean point, but making sure that changing the
+     * number of cursors has no influence on the gesture.
      */
-    protected static class RegionContext {
+    protected static class TouchTargetContext {
 
         /**
          * ID of the user performing the gesture.
@@ -55,24 +55,24 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         public long userId = -1;
 
         /**
-         * Strong reference to the region when the gesture is not unarmed to prevent garbage collection.<br>This
+         * Strong reference to the touch target when the gesture is not unarmed to prevent garbage collection.<br>This
          * makes sure that we will get the complete set of events.
          */
-        public Region activeRegion = null;
+        public TouchTarget activeTarget = null;
 
         /**
-         * Last state of the gesture for the region.
+         * Last state of the gesture for the touch target.
          */
         public PinchSpreadEvent.State previousState = PinchSpreadEvent.State.UNARMED;
 
         /**
-         * Last number of cursors on the region.
+         * Last number of cursors on the touch target.
          */
         public int previousCursorCount = 0;
 
         /**
          * Last reference distance between the mean point and the cursors used to calculate the total movement of the
-         * gesture on the region.
+         * gesture on the touch target.
          */
         public double referenceDistance = 1.0;
 
@@ -108,18 +108,18 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     }
 
     /**
-     * @see AbstractGestureRecognizer#createContext(long, Region)
+     * @see AbstractGestureRecognizer#createContext(long, TouchTarget)
      */
     @Override
-    protected RegionContext createContext(final long userId, final Region region) {
-        return new RegionContext();
+    protected TouchTargetContext createContext(final long userId, final TouchTarget target) {
+        return new TouchTargetContext();
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Object, long, Region, Collection)
+     * @see AbstractGestureRecognizer#process(Object, long, TouchTarget, Collection)
      */
     @Override
-    protected void process(final RegionContext context, final long userId, final Region region,
+    protected void process(final TouchTargetContext context, final long userId, final TouchTarget target,
                            final Collection<Cursor> cursors) {
         final int cursorCount = cursors.size();
 
@@ -131,7 +131,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
                 processValidCursorCountChanged(context, cursors);
             }
         } else if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
-            processPinchOrSpreadArmed(context, userId, region, cursors);
+            processPinchOrSpreadArmed(context, userId, target, cursors);
         } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
             processPinchOrSpreadUnarmed(context);
         } else {
@@ -142,15 +142,15 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     /**
      * Handles the fact that the change of input cursors armed the gesture.
      *
-     * @param context Region context to be updated.
+     * @param context Touch target context to be updated.
      * @param userId  ID of the user performing the gesture.
-     * @param region  Touchable region to which the cursors are associated.
+     * @param target  Touch target to which the cursors are associated.
      * @param cursors New input cursors.
      */
-    private void processPinchOrSpreadArmed(final RegionContext context, final long userId, final Region region,
-                                           final Collection<Cursor> cursors) {
+    private void processPinchOrSpreadArmed(final TouchTargetContext context, final long userId,
+                                           final TouchTarget target, final Collection<Cursor> cursors) {
         // Trigger listeners
-        final PinchSpreadEvent event = new PinchSpreadEvent(userId, region, PinchSpreadEvent.State.ARMED, 1.0, 1.0);
+        final PinchSpreadEvent event = new PinchSpreadEvent(userId, target, PinchSpreadEvent.State.ARMED, 1.0, 1.0);
         fireGestureEvent(event);
 
         // Calculate mean point
@@ -174,7 +174,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
 
         // Save context
         context.userId = userId;
-        context.activeRegion = region; // Prevent garbage collection
+        context.activeTarget = target; // Prevent garbage collection
         context.previousState = PinchSpreadEvent.State.ARMED;
         context.previousCursorCount = cursorCount;
         context.referenceDistance = meanDistance;
@@ -184,10 +184,10 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     /**
      * Handles the fact that the change of input cursors corresponds to a pinch or spread.
      *
-     * @param context Region context to be used and updated.
+     * @param context Touch target context to be used and updated.
      * @param cursors New input cursors.
      */
-    private void processPinchOrSpreadPerformed(final RegionContext context, final Collection<Cursor> cursors) {
+    private void processPinchOrSpreadPerformed(final TouchTargetContext context, final Collection<Cursor> cursors) {
         // Calculate mean point
         final int cursorCount = cursors.size();
         int meanX = 0;
@@ -208,12 +208,12 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         meanDistance /= cursorCount;
 
         // Trigger listeners
-        final PinchSpreadEvent event = new PinchSpreadEvent(context.userId, context.activeRegion,
+        final PinchSpreadEvent event = new PinchSpreadEvent(context.userId, context.activeTarget,
                 PinchSpreadEvent.State.PERFORMED, meanDistance / context.previousMeanDistance,
                 meanDistance / context.referenceDistance);
         fireGestureEvent(event);
 
-        // Save context (no change of reference point or active region)
+        // Save context (no change of reference point or active touch target)
         context.previousState = PinchSpreadEvent.State.PERFORMED;
         context.previousCursorCount = cursorCount;
         context.previousMeanDistance = meanDistance;
@@ -223,10 +223,10 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
      * Handles the fact that the number of cursors changed.<br>Note that it is expected here that the validity of the
      * cursor count has already been checked before.
      *
-     * @param context Region context to be used and updated.
+     * @param context Touch target context to be used and updated.
      * @param cursors New input cursors.
      */
-    private void processValidCursorCountChanged(final RegionContext context, final Collection<Cursor> cursors) {
+    private void processValidCursorCountChanged(final TouchTargetContext context, final Collection<Cursor> cursors) {
         // Calculate mean point
         final int cursorCount = cursors.size();
         int meanX = 0;
@@ -251,7 +251,7 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
         // Calculate new reference point to have the same total difference
         final double newReferenceDistance = meanDistance * context.referenceDistance / context.previousMeanDistance;
 
-        // Save context (no change of state or active region)
+        // Save context (no change of state or active touch target)
         context.previousCursorCount = cursorCount;
         context.referenceDistance = newReferenceDistance;
         context.previousMeanDistance = meanDistance;
@@ -260,17 +260,17 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     /**
      * Handles the fact that the change of input cursors unarmed the gesture.
      *
-     * @param context Region context to be updated.
+     * @param context Touch target context to be updated.
      */
-    private void processPinchOrSpreadUnarmed(final RegionContext context) {
+    private void processPinchOrSpreadUnarmed(final TouchTargetContext context) {
         // Trigger listeners
-        final PinchSpreadEvent event = new PinchSpreadEvent(context.userId, context.activeRegion,
+        final PinchSpreadEvent event = new PinchSpreadEvent(context.userId, context.activeTarget,
                 PinchSpreadEvent.State.UNARMED, 0, context.previousMeanDistance / context.referenceDistance);
         fireGestureEvent(event);
 
         // Clear context
         context.userId = -1;
-        context.activeRegion = null; // Allow garbage collection
+        context.activeTarget = null; // Allow garbage collection
         context.previousState = PinchSpreadEvent.State.UNARMED;
         context.previousCursorCount = 0;
         context.referenceDistance = 1.0;
@@ -280,12 +280,12 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     /**
      * Handles the fact that the change of input cursors has no effect in the gesture.
      *
-     * @param context Region context to be updated.
+     * @param context Touch target context to be updated.
      */
-    private void processNothingHappened(final RegionContext context) {
+    private void processNothingHappened(final TouchTargetContext context) {
         // Clear context
         context.userId = -1;
-        context.activeRegion = null;
+        context.activeTarget = null;
         context.previousState = PinchSpreadEvent.State.UNARMED;
         context.previousCursorCount = 0;
         context.referenceDistance = 1.0;

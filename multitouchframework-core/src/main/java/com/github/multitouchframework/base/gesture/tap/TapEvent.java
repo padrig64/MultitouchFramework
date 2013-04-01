@@ -25,13 +25,13 @@
 
 package com.github.multitouchframework.base.gesture.tap;
 
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 /**
  * Event fired when the tap gesture is recognized.
  *
- * @see TouchEvent
+ * @see com.github.multitouchframework.api.touch.TouchEvent
  * @see TapRecognizer
  */
 public class TapEvent implements TouchEvent {
@@ -39,7 +39,7 @@ public class TapEvent implements TouchEvent {
     /**
      * Possible states of the gesture.
      */
-    public enum State {
+    public static enum State {
 
         /**
          * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
@@ -67,9 +67,9 @@ public class TapEvent implements TouchEvent {
     private final long userId;
 
     /**
-     * Region to which the gesture applies.
+     * Touch target for which the event is produced.
      */
-    private final Region region;
+    private final TouchTarget target;
 
     /**
      * State of the recognized gesture.
@@ -90,32 +90,33 @@ public class TapEvent implements TouchEvent {
      * Constructor specifying all the information on the gesture.
      *
      * @param userId      ID of the user performing the gesture.
-     * @param region      Region to which the gesture applies.
+     * @param target      Touch target for which the event is produced.
      * @param state       State of the recognized gesture.
      * @param tapCount    Number of consecutive taps that have been performed, including this one.
      * @param cursorCount Number of cursors involved for this tap.
      */
-    public TapEvent(final long userId, final Region region, final State state, final int tapCount,
+    public TapEvent(final long userId, final TouchTarget target, final State state, final int tapCount,
                     final int cursorCount) {
         this.userId = userId;
-        this.region = region;
+        this.target = target;
         this.state = state;
         this.tapCount = tapCount;
         this.cursorCount = cursorCount;
     }
 
     /**
-     * @see TouchEvent#getUserId()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getUserId()
      */
     public long getUserId() {
         return userId;
     }
 
     /**
-     * @see TouchEvent#getRegion()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getTouchTarget()
      */
-    public Region getRegion() {
-        return region;
+    @Override
+    public TouchTarget getTouchTarget() {
+        return target;
     }
 
     /**
@@ -150,6 +151,6 @@ public class TapEvent implements TouchEvent {
      */
     @Override
     public String toString() {
-        return "TAP{state=" + state + "; taps=" + tapCount + "; cursors=" + cursorCount + "} on " + region;
+        return "TAP{state=" + state + "; taps=" + tapCount + "; cursors=" + cursorCount + "} on " + target;
     }
 }

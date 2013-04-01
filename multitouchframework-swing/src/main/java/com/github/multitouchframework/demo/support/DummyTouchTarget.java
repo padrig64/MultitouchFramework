@@ -23,30 +23,52 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing;
+package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
-import javax.swing.SwingUtilities;
-import java.awt.Component;
-import java.awt.Point;
+import java.awt.Rectangle;
 
-public class ComponentRegion implements Region {
+public class DummyTouchTarget implements TouchTarget {
 
-    private final Component component;
+    private final String id;
+    private final Rectangle bounds;
 
-    public ComponentRegion(final Component component) {
-        this.component = component;
+    public DummyTouchTarget(final String id, final int x, final int y, final int width, final int height) {
+        this(id, new Rectangle(x, y, width, height));
     }
 
-    /**
-     * @see Region#isTouched(Cursor)
-     */
+    public DummyTouchTarget(final String id, final Rectangle bounds) {
+        this.id = id;
+        this.bounds = bounds;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Rectangle getTouchableBounds() {
+        return bounds;
+    }
+
+    @Override
+    public int getMaximumWidth() {
+        return bounds.width;
+    }
+
+    @Override
+    public int getMaximumHeight() {
+        return bounds.height;
+    }
+
     @Override
     public boolean isTouched(final Cursor cursor) {
-        final Point cursorPosition = new Point(cursor.getX(), cursor.getY());
-        SwingUtilities.convertPointFromScreen(cursorPosition, component);
-        return component.contains(cursorPosition.x, cursorPosition.y);
+        return bounds.contains(cursor.getX(), cursor.getY());
+    }
+
+    @Override
+    public String toString() {
+        return id;
     }
 }

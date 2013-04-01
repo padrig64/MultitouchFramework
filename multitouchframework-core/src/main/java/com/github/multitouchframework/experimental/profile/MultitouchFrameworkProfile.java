@@ -25,11 +25,11 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
 import com.github.multitouchframework.api.source.InputSource;
 import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 public interface MultitouchFrameworkProfile {
 
@@ -53,7 +53,7 @@ public interface MultitouchFrameworkProfile {
     public <E extends TouchEvent> void removeGestureListener(E gestureListener);
 
     public <E extends TouchEvent> void addGestureListener(GestureDefinition<E> gestureDefinition, E gestureListener,
-                                                          Region touchableObject);
+                                                          TouchTarget touchableObject);
 
-    public <E extends TouchEvent> void removeGestureListener(E gestureListener, Region touchableObject);
+    public <E extends TouchEvent> void removeGestureListener(E gestureListener, TouchTarget touchableObject);
 }

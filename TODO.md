@@ -4,13 +4,13 @@
 
 # NEW STUFF
 
-* Fire gesture events only for wanted regions
-* Can dispatch cursors to the REST_REGION instead of the SCREEN_REGION
-* Make input cursors already on a region => remove CursorProcessor interface & repackage everything
+* Fire gesture events only for wanted touch targets
+* Can dispatch cursors to the REST_TOUCH_TARGET instead of the SCREEN_TOUCH_TARGET
+* Make input cursors already on a touch target => remove CursorProcessor interface & repackage everything
 
-* Swing-based cursor-to-region dispatcher
-* JavaFX-based cursor-to-region-dispatcher
-* Generic cursor-to-region-dispatcher
+* Swing-based cursor-to-target dispatcher
+* JavaFX-based cursor-to-target dispatcher
+* Generic cursor-to-target dispatcher
 * Gesture lock
 * Better packaging: Swing, basic gestures, Windows, MacBook trackpad, JavaFX, etc.
 * Windows 7/8 touch events
@@ -23,6 +23,7 @@
 
 # THINK ABOUT IT
 
+* CursorToUserDispatcher
 * Block state ON/OFF/BYPASS
 * Decouple Surface / Screen / Canvas
 * Application-specific: change color while drawing

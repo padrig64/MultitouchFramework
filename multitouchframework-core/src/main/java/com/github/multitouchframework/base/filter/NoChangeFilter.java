@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.base.filter;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class NoChangeFilter extends AbstractInputFilter {
      * @see AbstractInputFilter#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorEvent event) {
+    public void processTouchEvent(final CursorUpdateEvent event) {
         boolean changed = false;
 
         // Check if at least one cursor changed since the last event
@@ -68,7 +68,7 @@ public class NoChangeFilter extends AbstractInputFilter {
         // Trigger listeners if at least one cursor changed since the last event
         if (changed) {
             lastCursors = new HashSet<Cursor>(cursors);
-            processWithNextBlocks(event.getUserId(), event.getRegion(), cursors);
+            processWithNextBlocks(event.getUserId(), event.getTouchTarget(), cursors);
         }
     }
 }

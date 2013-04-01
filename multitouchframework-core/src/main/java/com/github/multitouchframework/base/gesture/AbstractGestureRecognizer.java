@@ -25,12 +25,12 @@
 
 package com.github.multitouchframework.base.gesture;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,18 +39,19 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Abstract implementation of a gesture recognizer.<br>It provides basic support for a per-region gesture recognition
+ * Abstract implementation of a gesture recognizer.<br>It provides basic support for a per-target gesture recognition
  * and for notifying gesture listeners.<br>Implementing sub-classes are meant to create context objects that will hold
- * all the metadata associated to the recognition of the gesture for a specific region, and to process the cursors for
- * this context and region.
+ * all the metadata associated to the recognition of the gesture for a specific touch target, and to process the cursors
+ * for this context and touch target.
  *
- * @param <C> Type of context holding the recognition metadata associated to a region.
+ * @param <C> Type of context holding the recognition metadata associated to a touch target.
  * @param <E> Type of gesture events fired by the gesture recognizer.
  *
  * @see GestureRecognizer
- * @see TouchEvent
  * @see TouchListener
+ * @see TouchEvent
  */
+
 public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> implements GestureRecognizer<E> {
 
     /**
@@ -73,12 +74,12 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
     private final List<TouchListener<E>> gestureListeners = new ArrayList<TouchListener<E>>();
 
     /**
-     * Saved recognition context for each region.
+     * Saved recognition context for each touch target.
      *
-     * @see #getContext(long, Region)
-     * @see #createContext(long, Region)
+     * @see #getContext(long, TouchTarget)
+     * @see #createContext(long, TouchTarget)
      */
-    private final Map<Region, C> regionContexts = new WeakHashMap<Region, C>();
+    private final Map<TouchTarget, C> targetContexts = new WeakHashMap<TouchTarget, C>();
 
     /**
      * Constructor specifying the minimum and maximum numbers of cursors required to perform the gesture.
@@ -171,49 +172,50 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @see GestureRecognizer#processTouchEvent(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorEvent event) {
-        process(getContext(event.getUserId(), event.getRegion()), event.getUserId(), event.getRegion(),
+    public void processTouchEvent(final CursorUpdateEvent event) {
+        process(getContext(event.getUserId(), event.getTouchTarget()), event.getUserId(), event.getTouchTarget(),
                 event.getCursors());
     }
 
     /**
-     * Gets a context for the specified region.<br>This method will create a new context for the region if it does not
-     * exist.
+     * Gets a context for the specified touch target.<br>This method will create a new context for the touch target
+     * if it does not exist.
      *
      * @param userId ID of the user performing the gesture.
-     * @param region Region to get a context for.
+     * @param target Touch target to get a context for.
      *
-     * @return Context for the region.
+     * @return Context for the touch target.
      *
-     * @see #createContext(long, Region)
+     * @see #createContext(long, TouchTarget)
      */
-    protected C getContext(final long userId, final Region region) {
-        C context = regionContexts.get(region);
+    protected C getContext(final long userId, final TouchTarget target) {
+        C context = targetContexts.get(target);
         if (context == null) {
-            context = createContext(userId, region);
-            regionContexts.put(region, context);
+            context = createContext(userId, target);
+            targetContexts.put(target, context);
         }
         return context;
     }
 
     /**
-     * Creates a new context for the specified user and region.<br>This method is to be implemented by sub-classes.
+     * Creates a new context for the specified user and touch target.<br>This method is to be implemented by
+     * sub-classes.
      *
      * @param userId ID of the user performing the gesture.
-     * @param region Region to create a context for.
+     * @param target Touch target to create a context for.
      *
-     * @return Newly created context for the user and region.
+     * @return Newly created context for the user and touch target.
      */
-    protected abstract C createContext(long userId, Region region);
+    protected abstract C createContext(long userId, TouchTarget target);
 
     /**
-     * Processes the specified cursors for the specified region and region context.<br>This method is to be
+     * Processes the specified cursors for the specified touch target and target context.<br>This method is to be
      * implemented by sub-classes.
      *
-     * @param context Context associated to the region to which the cursors apply.
+     * @param context Context associated to the touch target to which the cursors apply.
      * @param userId  ID of the user performing the gesture.
-     * @param region  Touchable region to which the cursors are associated.
+     * @param target  Touch target to which the cursors are associated.
      * @param cursors Cursors to be processed.
      */
-    protected abstract void process(C context, long userId, Region region, Collection<Cursor> cursors);
+    protected abstract void process(C context, long userId, TouchTarget target, Collection<Cursor> cursors);
 }

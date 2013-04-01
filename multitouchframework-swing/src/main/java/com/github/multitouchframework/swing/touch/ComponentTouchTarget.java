@@ -23,24 +23,48 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base.dispatch;
+package com.github.multitouchframework.swing.touch;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
-/**
- * Simple cursor-to-region dispatcher associating all cursors to the region representing the whole screen.
- *
- * @see AbstractCursorToRegionDispatcher
- * @see com.github.multitouchframework.base.ScreenRegion
- */
-public class CursorToScreenDispatcher extends AbstractCursorToRegionDispatcher {
+import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.Point;
+
+public class ComponentTouchTarget implements TouchTarget {
+
+    private final Component component;
+
+    public ComponentTouchTarget(final Component component) {
+        this.component = component;
+    }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * @see TouchTarget#getMaximumWidth()
+     * @see Component#getWidth()
      */
     @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        return SCREEN_REGION;
+    public int getMaximumWidth() {
+        return component.getWidth();
+    }
+
+    /**
+     * @see TouchTarget#getMaximumHeight()
+     * @see Component#getHeight()
+     */
+    @Override
+    public int getMaximumHeight() {
+        return component.getHeight();
+    }
+
+    /**
+     * @see TouchTarget#isTouched(Cursor)
+     */
+    @Override
+    public boolean isTouched(final Cursor cursor) {
+        final Point cursorPosition = new Point(cursor.getX(), cursor.getY());
+        SwingUtilities.convertPointFromScreen(cursorPosition, component);
+        return component.contains(cursorPosition.x, cursorPosition.y);
     }
 }

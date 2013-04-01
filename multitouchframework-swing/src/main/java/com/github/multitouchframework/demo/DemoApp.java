@@ -26,9 +26,9 @@
 package com.github.multitouchframework.demo;
 
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
+import com.github.multitouchframework.base.dispatch.SimpleCursorToTargetDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
 import com.github.multitouchframework.base.gesture.drag.DragRecognizer;
@@ -36,14 +36,15 @@ import com.github.multitouchframework.base.gesture.pinchspread.PinchSpreadRecogn
 import com.github.multitouchframework.base.gesture.tap.TapEvent;
 import com.github.multitouchframework.base.gesture.tap.TapRecognizer;
 import com.github.multitouchframework.base.source.TuioSource;
+import com.github.multitouchframework.base.touch.ScreenTouchTarget;
 import com.github.multitouchframework.demo.support.BoundingBoxFilterOutputLayer;
 import com.github.multitouchframework.demo.support.Canvas;
 import com.github.multitouchframework.demo.support.CursorsLayer;
-import com.github.multitouchframework.demo.support.DummyRegion;
+import com.github.multitouchframework.demo.support.DummyTouchTarget;
 import com.github.multitouchframework.demo.support.Layer;
 import com.github.multitouchframework.demo.support.MeanCursorLayer;
 import com.github.multitouchframework.demo.support.MeanLinesLayer;
-import com.github.multitouchframework.demo.support.RegionsLayer;
+import com.github.multitouchframework.demo.support.TouchTargetsLayer;
 import com.github.multitouchframework.swing.flow.EDTScheduler;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
@@ -118,7 +119,7 @@ public class DemoApp extends JFrame {
         RAW_CURSORS("Raw cursors", new CursorsLayer(canvas)),
         FILTERED_CURSORS("Filtered cursors", new BoundingBoxFilterOutputLayer(canvas)),
         FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas)),
-        REGIONS("Regions", new RegionsLayer(canvas));
+        TOUCH_TARGETS("Touch targets", new TouchTargetsLayer(canvas));
 
         private final String presentationName;
         private final Layer layer;
@@ -223,12 +224,12 @@ public class DemoApp extends JFrame {
 
     private void initGestureProfile() {
         // Create input source
-        final TuioSource inputController = new TuioSource();
+        final TuioSource inputController = new TuioSource(new ScreenTouchTarget());
 
         // Configure layers for raw cursors
-        final EDTScheduler<CursorEvent> edtRawCursorProcessorBlock = new EDTScheduler<CursorEvent>();
+        final EDTScheduler<CursorUpdateEvent> edtRawCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         inputController.queue(edtRawCursorProcessorBlock);
-        edtRawCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.RAW_CURSORS.getProcessor());
+        edtRawCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.RAW_CURSORS.getProcessor());
 
         // Configure cursor filtering
         final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -237,34 +238,34 @@ public class DemoApp extends JFrame {
         boundingBoxFilter.queue(noChangeFilter);
 
         // Configure layers for filtered cursors
-        final EDTScheduler<CursorEvent> edtFilteredCursorProcessorBlock = new EDTScheduler<CursorEvent>();
+        final EDTScheduler<CursorUpdateEvent> edtFilteredCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_CURSORS
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_CURSORS
                 .getProcessor());
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_MEAN_CURSOR
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_MEAN_CURSOR
                 .getProcessor());
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.FILTERED_MEAN_LINES
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_MEAN_LINES
                 .getProcessor());
 
-        // Configure cursor to region dispatcher
-        final DefaultCursorToRegionDispatcher cursorToRegionDispatcher = new DefaultCursorToRegionDispatcher();
-        cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("TopLeft", 10, 10, 500, 500));
-        cursorToRegionDispatcher.addRegionOnTop(new DummyRegion("SomewhereElse", 700, 200, 100, 100));
-        noChangeFilter.queue(cursorToRegionDispatcher);
+        // Configure cursor-to-target dispatcher
+        final SimpleCursorToTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTargetDispatcher();
+        cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("TopLeft", 10, 10, 500, 500));
+        cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("SomewhereElse", 700, 200, 100, 100));
+        noChangeFilter.queue(cursorToTargetDispatcher);
 
-        // Configure layer for regions
-        final EDTScheduler<CursorEvent> edtCursorProcessorBlock = new EDTScheduler<CursorEvent>();
-        cursorToRegionDispatcher.queue(edtCursorProcessorBlock);
-        ((RegionsLayer) LayerProcessor.REGIONS.getLayer()).setRegionProvider(cursorToRegionDispatcher);
-        edtCursorProcessorBlock.queue((TouchListener<CursorEvent>) LayerProcessor.REGIONS.getProcessor());
+        // Configure layer for touch targets
+        final EDTScheduler<CursorUpdateEvent> edtCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
+        cursorToTargetDispatcher.queue(edtCursorProcessorBlock);
+        ((TouchTargetsLayer) LayerProcessor.TOUCH_TARGETS.getLayer()).setTouchTargetProvider(cursorToTargetDispatcher);
+        edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.TOUCH_TARGETS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();
-        cursorToRegionDispatcher.queue(dragRecognizer);
+        cursorToTargetDispatcher.queue(dragRecognizer);
         final PinchSpreadRecognizer pinchSpreadRecognizer = new PinchSpreadRecognizer();
-        cursorToRegionDispatcher.queue(pinchSpreadRecognizer);
+        cursorToTargetDispatcher.queue(pinchSpreadRecognizer);
         final TapRecognizer tapRecognizer = new TapRecognizer();
-        cursorToRegionDispatcher.queue(tapRecognizer);
+        cursorToTargetDispatcher.queue(tapRecognizer);
 
         // Configure gesture listeners
 //		dragRecognizer.queue(new TouchListener<DragEvent>() {

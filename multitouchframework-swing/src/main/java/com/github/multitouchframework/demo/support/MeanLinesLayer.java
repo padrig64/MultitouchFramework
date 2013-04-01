@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
 import javax.swing.UIManager;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MeanLinesLayer implements Layer, TouchListener<CursorEvent> {
+public class MeanLinesLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
     private static final Color MEAN_LINE_COLOR = UIManager.getColor("control");
 
@@ -55,7 +55,7 @@ public class MeanLinesLayer implements Layer, TouchListener<CursorEvent> {
     }
 
     @Override
-    public void processTouchEvent(final CursorEvent event) {
+    public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         canvas.repaint();
     }

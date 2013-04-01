@@ -25,12 +25,12 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.dispatch.CursorToRegionDispatcher;
+import com.github.multitouchframework.api.dispatch.CursorToTargetDispatcher;
 import com.github.multitouchframework.api.filter.InputFilter;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
 import com.github.multitouchframework.api.source.InputSource;
 import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.experimental.flow.CompositeCursorProcessorBlock;
 
 public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkProfile {
@@ -39,7 +39,7 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 
     private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
 
-    private CursorToRegionDispatcher toc = null;
+    private CursorToTargetDispatcher toc = null;
 
     /**
      * @see MultitouchFrameworkProfile#getInputController()
@@ -81,11 +81,11 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 //		filterComposition.removeSubBlock(inputFilter);
     }
 
-    public CursorToRegionDispatcher getTouchableObjectController() {
+    public CursorToTargetDispatcher getTouchableObjectController() {
         return toc;
     }
 
-    public void setTouchableObjectController(final CursorToRegionDispatcher toc) {
+    public void setTouchableObjectController(final CursorToTargetDispatcher toc) {
         if (this.toc != null) {
 //            filterComposition.dequeue(this.toc);
         }
@@ -119,10 +119,10 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 
     @Override
     public <E extends TouchEvent> void addGestureListener(final GestureDefinition<E> gestureDefinition,
-                                                          final E gestureListener, final Region touchableObject) {
+                                                          final E gestureListener, final TouchTarget touchableObject) {
     }
 
     @Override
-    public <E extends TouchEvent> void removeGestureListener(final E gestureListener, final Region touchableObject) {
+    public <E extends TouchEvent> void removeGestureListener(final E gestureListener, final TouchTarget touchableObject) {
     }
 }

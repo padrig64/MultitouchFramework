@@ -25,11 +25,11 @@
 
 package com.github.multitouchframework.base.filter;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,8 +37,8 @@ import java.util.List;
 
 /**
  * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor
- * processors to process the filtered touch input, by calling their {@link TouchListener#processTouchEvent(com.github
- * .multitouchframework.api.touch.TouchEvent)} method.
+ * processors to process the filtered touch input, by calling their
+ * {@link TouchListener#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)} method.
  *
  * @see InputFilter
  */
@@ -47,27 +47,27 @@ public abstract class AbstractInputFilter implements InputFilter {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    private final List<TouchListener<CursorEvent>> nextBlocks = new ArrayList<TouchListener<CursorEvent>>();
+    private final List<TouchListener<CursorUpdateEvent>> nextBlocks = new ArrayList<TouchListener<CursorUpdateEvent>>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-     * input filters or cursor-to-region dispatchers.
+     * input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final TouchListener<CursorEvent> cursorProcessor) {
+    public void queue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
         nextBlocks.add(cursorProcessor);
     }
 
     /**
      * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-     * instance, input filters or cursor-to-region dispatchers.
+     * instance, input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final TouchListener<CursorEvent> cursorProcessor) {
+    public void dequeue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
     }
 
@@ -75,12 +75,13 @@ public abstract class AbstractInputFilter implements InputFilter {
      * Processes the specified cursors using the blocks/listeners that are queued/added to this input filter.
      *
      * @param userId  ID of the user touching the surface.
-     * @param region  Touchable region to process the cursors for.
+     * @param target  Touch target to process the cursors for.
      * @param cursors Cursors to be processed by the next blocks.
      */
-    protected void processWithNextBlocks(final long userId, final Region region, final Collection<Cursor> cursors) {
-        final CursorEvent event = new CursorEvent(userId, region, cursors);
-        for (final TouchListener<CursorEvent> nextBlock : nextBlocks) {
+    protected void processWithNextBlocks(final long userId, final TouchTarget target,
+                                         final Collection<Cursor> cursors) {
+        final CursorUpdateEvent event = new CursorUpdateEvent(userId, target, cursors);
+        for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
             nextBlock.processTouchEvent(event);
         }
     }

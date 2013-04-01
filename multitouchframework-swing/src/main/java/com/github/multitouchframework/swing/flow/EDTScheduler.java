@@ -35,7 +35,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Processing block re-scheduling the processing of {@link TouchEvent}s on the EDT thread.
+ * Processing block re-scheduling the processing of {@link com.github.multitouchframework.api.touch.TouchEvent}s on
+ * the EDT thread.
  *
  * @param <E> Type of event to be process forwarded by this block to the queued block.
  */
@@ -46,7 +47,7 @@ public class EDTScheduler<E extends TouchEvent> implements TouchListener<E>, Cha
      *
      * @see #queue(TouchListener)
      * @see #dequeue(TouchListener)
-     * @see #processTouchEvent(TouchEvent)
+     * @see #processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     private final List<TouchListener<E>> gestureListeners = Collections.synchronizedList(new
             ArrayList<TouchListener<E>>());
@@ -70,7 +71,7 @@ public class EDTScheduler<E extends TouchEvent> implements TouchListener<E>, Cha
     /**
      * Forwards the specified gesture event to the next blocks on the EDT.
      *
-     * @see TouchListener#processTouchEvent(TouchEvent)
+     * @see TouchListener#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final E event) {

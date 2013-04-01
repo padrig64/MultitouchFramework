@@ -25,8 +25,10 @@
 
 package com.github.multitouchframework.api.touch;
 
-import com.github.multitouchframework.api.Region;
-
+/**
+ * Interface to be implemented by touch events.<br>Events are always triggered by a specific user and on a specific
+ * touch target.
+ */
 public interface TouchEvent {
 
     /**
@@ -37,9 +39,9 @@ public interface TouchEvent {
     public long getUserId();
 
     /**
-     * Gets the region to which the touch event applies.
+     * Gets the touch target for which the event is produced.
      *
-     * @return Region to which the touch event applies.
+     * @return Touch target for which the event is produced.
      */
-    public Region getRegion();
+    public TouchTarget getTouchTarget();
 }

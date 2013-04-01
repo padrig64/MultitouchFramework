@@ -25,17 +25,17 @@
 
 package com.github.multitouchframework.swing.dispatch;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToRegionDispatcher;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.dispatch.AbstractCursorToTargetDispatcher;
 
-public class CursorToComponentDispatcher extends AbstractCursorToRegionDispatcher {
+public class CursorToComponentDispatcher extends AbstractCursorToTargetDispatcher {
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion(Cursor)
+     * @see com.github.multitouchframework.base.dispatch.AbstractCursorToTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
+    protected TouchTarget findTouchedTarget(final Cursor cursor) {
         // TODO
         return null;
     }

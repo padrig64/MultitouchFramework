@@ -25,30 +25,31 @@
 
 package com.github.multitouchframework.base.gesture.tap;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.gesture.AbstractGestureRecognizer;
 
 import java.util.Collection;
 
 /**
- * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-region
+ * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-target
  * basis.<br>Note that this recognizer works best after filtering the input and limiting the number of input touch
  * events.
  *
  * @see AbstractGestureRecognizer
  * @see TapEvent
  */
-public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.RegionContext, TapEvent> {
+public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.TouchTargetContext, TapEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single region.<br>The recognition is based on the
-     * variation of touch points.
+     * Context storing the state of recognition of the gesture for a single touch target.<br>The recognition is based on
+     * the variation of touch points.
      */
-    protected static class RegionContext {
+    protected static class TouchTargetContext {
 
         /**
-         * Number of cursors on the last call to {@link #process(RegionContext, long, Region, Collection)}.
+         * Number of cursors on the last call to {@link #process(TapRecognizer.TouchTargetContext, long, TouchTarget,
+         * Collection)}.
          */
         public int previousCursorCount = 0;
 
@@ -136,21 +137,22 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
     }
 
     /**
-     * @see AbstractGestureRecognizer#createContext(long, Region)
+     * @see AbstractGestureRecognizer#createContext(long, com.github.multitouchframework.api.touch.TouchTarget)
      */
     @Override
-    protected RegionContext createContext(final long userId, final Region region) {
-        return new RegionContext();
+    protected TouchTargetContext createContext(final long userId, final TouchTarget target) {
+        return new TouchTargetContext();
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Object, long, Region, Collection)
+     * @see AbstractGestureRecognizer#process(Object, long, com.github.multitouchframework.api.touch.TouchTarget,
+     *      Collection)
      */
     @Override
-    protected void process(final RegionContext context, final long userId, final Region region,
+    protected void process(final TouchTargetContext context, final long userId, final TouchTarget target,
                            final Collection<Cursor> cursors) {
-        // Check if at least 1 cursor is still on the region
-        if (isGestureStillArmed(region, cursors)) {
+        // Check if at least 1 cursor is still on the touch target
+        if (isGestureStillArmed(target, cursors)) {
             final int cursorCount = cursors.size();
             final long tapTimestamp = System.currentTimeMillis();
 
@@ -167,40 +169,40 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Regio
                 context.previousCursorCount = cursorCount;
 
                 // Notify listeners that the tap has been armed
-                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.ARMED, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, target, TapEvent.State.ARMED, context.consecutiveTapCount,
                         context.previousCursorCount));
             } else if (isCursorCountValid(context.previousCursorCount) && !isCursorCountValid(cursorCount)) {
                 // Just finishing to tap (e.g. all fingers up)
                 context.previousTapTimestamp = tapTimestamp;
 
                 // Notify listeners that the tap has been performed
-                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.PERFORMED, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, target, TapEvent.State.PERFORMED, context.consecutiveTapCount,
                         context.previousCursorCount));
 
                 // Notify listeners of the tap has been ended
-                fireGestureEvent(new TapEvent(userId, region, TapEvent.State.UNARMED, context.consecutiveTapCount,
+                fireGestureEvent(new TapEvent(userId, target, TapEvent.State.UNARMED, context.consecutiveTapCount,
                         context.previousCursorCount));
 
                 // Update cursor count only after firing the events
                 context.previousCursorCount = cursorCount;
             }
         } else if (context.previousCursorCount != 0) {
-            // All cursors are now out of the region, gesture should be unarmed
+            // All cursors are now out of the touch target, gesture should be unarmed
             context.previousCursorCount = 0;
 
             // Notify listeners
-            fireGestureEvent(new TapEvent(userId, region, TapEvent.State.UNARMED, context.consecutiveTapCount,
+            fireGestureEvent(new TapEvent(userId, target, TapEvent.State.UNARMED, context.consecutiveTapCount,
                     context.previousCursorCount));
         }
     }
 
-    private boolean isGestureStillArmed(final Region region, final Collection<Cursor> cursors) {
+    private boolean isGestureStillArmed(final TouchTarget target, final Collection<Cursor> cursors) {
         boolean stillArmed = false;
 
         if (cursors.isEmpty()) {
             stillArmed = true;
         } else for (final Cursor cursor : cursors) {
-            if (region.isTouched(cursor)) {
+            if (target.isTouched(cursor)) {
                 stillArmed = true;
                 break;
             }

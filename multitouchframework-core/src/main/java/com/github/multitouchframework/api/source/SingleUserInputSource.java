@@ -23,42 +23,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.support;
+package com.github.multitouchframework.api.source;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+/**
+ * Interface that can be implemented by input controllers that can natively handle only one user.
+ *
+ * @see InputSource
+ */
+public interface SingleUserInputSource extends InputSource {
 
-import java.awt.Rectangle;
+    /**
+     * Gets the ID of the single user for which the multitouch events are produced.
+     *
+     * @return Single user ID.
+     */
+    public long getUserId();
 
-public class DummyRegion implements Region {
-
-    private final String id;
-    private final Rectangle bounds;
-
-    public DummyRegion(final String id, final int x, final int y, final int width, final int height) {
-        this(id, new Rectangle(x, y, width, height));
-    }
-
-    public DummyRegion(final String id, final Rectangle bounds) {
-        this.id = id;
-        this.bounds = bounds;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Rectangle getTouchableBounds() {
-        return bounds;
-    }
-
-    @Override
-    public boolean isTouched(final Cursor cursor) {
-        return bounds.contains(cursor.getX(), cursor.getY());
-    }
-
-    @Override
-    public String toString() {
-        return id;
-    }
+    /**
+     * Sets the ID of the single user for which the multitouch events will be produced.
+     *
+     * @param userId Single user ID.
+     */
+    public void setUserId(long userId);
 }

@@ -38,7 +38,7 @@ public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainab
 //    }
 //
 //    @Override
-//    public void processTouchEvent(final Region region, final Collection<Cursor> cursors) {
+//    public void processTouchEvent(final TouchTarget target, final Collection<Cursor> cursors) {
 //        // TODO
 //    }
     //	/**

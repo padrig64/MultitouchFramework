@@ -25,13 +25,13 @@
 
 package com.github.multitouchframework.base.gesture.drag;
 
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 /**
  * Event fired when the drag/pan gesture is recognized.
  *
- * @see TouchEvent
+ * @see com.github.multitouchframework.api.touch.TouchEvent
  * @see DragRecognizer
  */
 public class DragEvent implements TouchEvent {
@@ -39,7 +39,7 @@ public class DragEvent implements TouchEvent {
     /**
      * Possible states of the gesture.
      */
-    public enum State {
+    public static enum State {
 
         /**
          * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
@@ -67,9 +67,9 @@ public class DragEvent implements TouchEvent {
     private final long userId;
 
     /**
-     * Region to which the gesture applies.
+     * Touch target for which the event is produced.
      */
-    private final Region region;
+    private final TouchTarget target;
 
     /**
      * State of the recognized gesture.
@@ -100,17 +100,17 @@ public class DragEvent implements TouchEvent {
      * Constructor specifying all the information on the gesture.
      *
      * @param userId  ID of the user performing the gesture.
-     * @param region  Region to which the gesture applies.
+     * @param target  Touch target for which the event is produced.
      * @param state   State of the recognized gesture.
      * @param dx      Drag movement on the X axis relatively to the previous event.
      * @param dy      Drag movement on the Y axis relatively to the previous event.
      * @param dxTotal Drag movement on the X axis relatively to the very beginning of the gesture.
      * @param dyTotal Drag movement on the Y axis relatively to the very beginning of the gesture.
      */
-    public DragEvent(final long userId, final Region region, final State state, final int dx, final int dy,
+    public DragEvent(final long userId, final TouchTarget target, final State state, final int dx, final int dy,
                      final int dxTotal, final int dyTotal) {
         this.userId = userId;
-        this.region = region;
+        this.target = target;
         this.state = state;
         this.dx = dx;
         this.dy = dy;
@@ -119,7 +119,7 @@ public class DragEvent implements TouchEvent {
     }
 
     /**
-     * @see TouchEvent#getUserId()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getUserId()
      */
     @Override
     public long getUserId() {
@@ -127,11 +127,11 @@ public class DragEvent implements TouchEvent {
     }
 
     /**
-     * @see TouchEvent#getRegion()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getTouchTarget()
      */
     @Override
-    public Region getRegion() {
-        return region;
+    public TouchTarget getTouchTarget() {
+        return target;
     }
 
     /**
@@ -185,6 +185,6 @@ public class DragEvent implements TouchEvent {
     @Override
     public String toString() {
         return "DRAG{state=" + state + "; dx=" + dx + "; dy=" + dy + "; dxTotal=" + dxTotal + "; dyTotal=" + dyTotal +
-                "} on " + region;
+                "} on " + target;
     }
 }

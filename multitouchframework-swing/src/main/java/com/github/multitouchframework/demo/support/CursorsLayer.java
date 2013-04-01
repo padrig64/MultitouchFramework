@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
 import javax.swing.UIManager;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CursorsLayer implements Layer, TouchListener<CursorEvent> {
+public class CursorsLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
     private static final Color CURSOR_COLOR = UIManager.getColor("nimbusInfoBlue");
 
@@ -56,7 +56,7 @@ public class CursorsLayer implements Layer, TouchListener<CursorEvent> {
     }
 
     @Override
-    public void processTouchEvent(final CursorEvent event) {
+    public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         canvas.repaint();
     }

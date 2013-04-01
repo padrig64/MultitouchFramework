@@ -25,11 +25,11 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.base.dispatch.DefaultCursorToRegionDispatcher;
+import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.dispatch.SimpleCursorToTargetDispatcher;
 
 import javax.swing.UIManager;
 import java.awt.Dimension;
@@ -40,31 +40,32 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegionsLayer implements Layer, TouchListener<CursorEvent> {
+public class TouchTargetsLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
     private final Canvas canvas;
 
-    private DefaultCursorToRegionDispatcher cursorToRegionDispatcher = null;
+    private SimpleCursorToTargetDispatcher cursorToTargetDispatcher = null;
 
-    private final Map<Region, Collection<Cursor>> cursorsForRegions = new HashMap<Region, Collection<Cursor>>();
+    private final Map<TouchTarget, Collection<Cursor>> cursorsForTargets = new HashMap<TouchTarget,
+            Collection<Cursor>>();
 
-    public RegionsLayer(final Canvas canvas) {
+    public TouchTargetsLayer(final Canvas canvas) {
         this.canvas = canvas;
     }
 
-    public DefaultCursorToRegionDispatcher getRegionProvider() {
-        return cursorToRegionDispatcher;
+    public SimpleCursorToTargetDispatcher getTouchTargetProvider() {
+        return cursorToTargetDispatcher;
     }
 
-    public void setRegionProvider(final DefaultCursorToRegionDispatcher cursorToRegionDispatcher) {
-        this.cursorToRegionDispatcher = cursorToRegionDispatcher;
+    public void setTouchTargetProvider(final SimpleCursorToTargetDispatcher cursorToTargetDispatcher) {
+        this.cursorToTargetDispatcher = cursorToTargetDispatcher;
     }
 
     @Override
-    public void processTouchEvent(final CursorEvent event) {
-        cursorsForRegions.put(event.getRegion(), event.getCursors());
+    public void processTouchEvent(final CursorUpdateEvent event) {
+        cursorsForTargets.put(event.getTouchTarget(), event.getCursors());
         canvas.repaint();
     }
 
@@ -72,19 +73,19 @@ public class RegionsLayer implements Layer, TouchListener<CursorEvent> {
     public void paint(final Graphics2D g2d) {
         g2d.setColor(UIManager.getColor("nimbusGreen"));
 
-        // Draw all regions
-        if (cursorToRegionDispatcher != null) {
-            for (final Region region : cursorToRegionDispatcher.getRegions()) {
-                final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) region).getTouchableBounds());
+        // Draw all touch targets
+        if (cursorToTargetDispatcher != null) {
+            for (final TouchTarget target : cursorToTargetDispatcher.getTouchTargets()) {
+                final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) target).getTouchableBounds());
                 g2d.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
             }
         }
 
-        // Fill all touched regions
-        for (final Map.Entry<Region, Collection<Cursor>> entry : cursorsForRegions.entrySet()) {
+        // Fill all touched touch targets
+        for (final Map.Entry<TouchTarget, Collection<Cursor>> entry : cursorsForTargets.entrySet()) {
             if (!entry.getValue().isEmpty()) {
-                if (!DefaultCursorToRegionDispatcher.SCREEN_REGION.equals(entry.getKey())) {
-                    final Rectangle bounds = convertScreenBoundsToCanvas(((DummyRegion) entry.getKey())
+                if (!SimpleCursorToTargetDispatcher.SCREEN_TOUCH_TARGET.equals(entry.getKey())) {
+                    final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) entry.getKey())
                             .getTouchableBounds());
                     g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
                 }

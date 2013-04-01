@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
 import javax.swing.UIManager;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class BoundingBoxFilterOutputLayer implements Layer, TouchListener<CursorEvent> {
+public class BoundingBoxFilterOutputLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
     private static final Color BOUNDING_BOX_COLOR = UIManager.getColor("nimbusOrange");
 
@@ -61,7 +61,7 @@ public class BoundingBoxFilterOutputLayer implements Layer, TouchListener<Cursor
     }
 
     @Override
-    public void processTouchEvent(final CursorEvent event) {
+    public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         canvas.repaint();
     }

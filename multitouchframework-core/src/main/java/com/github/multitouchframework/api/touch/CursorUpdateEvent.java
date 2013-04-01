@@ -25,12 +25,14 @@
 
 package com.github.multitouchframework.api.touch;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-
 import java.util.Collection;
 
-public class CursorEvent implements TouchEvent {
+/**
+ * Event representing updates of cursor positions.
+ *
+ * @see TouchEvent
+ */
+public class CursorUpdateEvent implements TouchEvent {
 
     /**
      * ID of the user touching the surface.
@@ -38,23 +40,26 @@ public class CursorEvent implements TouchEvent {
     private final long userId;
 
     /**
-     * Touchable region to which the cursors are associated.
+     * Touchable target for which the event is produced.
      */
-    private final Region region;
+    private final TouchTarget target;
 
     /**
-     * Cursors on the associated region.
+     * Cursors on the associated target.
      */
     private final Collection<Cursor> cursors;
 
     /**
+     * Constructor specifying the ID of the user touching the surface, the touched target and the cursors representing
+     * the points of contacts with the surface.
+     *
      * @param userId  ID of the user touching the surface.
-     * @param region  Touchable region to which the cursors are associated.
-     * @param cursors Cursors on the associated region.
+     * @param target  Touch target for which the event is produced.
+     * @param cursors Cursors on the associated touch target.
      */
-    public CursorEvent(final long userId, final Region region, final Collection<Cursor> cursors) {
+    public CursorUpdateEvent(final long userId, final TouchTarget target, final Collection<Cursor> cursors) {
         this.userId = userId;
-        this.region = region;
+        this.target = target;
         this.cursors = cursors;
     }
 
@@ -67,17 +72,17 @@ public class CursorEvent implements TouchEvent {
     }
 
     /**
-     * @see TouchEvent#getRegion()
+     * @see TouchEvent#getTouchTarget()
      */
     @Override
-    public Region getRegion() {
-        return region;
+    public TouchTarget getTouchTarget() {
+        return target;
     }
 
     /**
-     * Gets the cursors corresponding to the points of contacts with the surface on the associated region.
+     * Gets the cursors corresponding to the points of contacts with the surface on the associated target.
      *
-     * @return Cursors on the associated region.
+     * @return Cursors on the associated target.
      */
     public Collection<Cursor> getCursors() {
         return cursors;

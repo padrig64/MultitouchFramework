@@ -23,34 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base;
+package com.github.multitouchframework.api.dispatch;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
+import com.github.multitouchframework.api.touch.TouchListener;
 
 /**
- * Touchable region of the touch surface representing the whole screen.<br>Note that this is meaningful only in cases
- * where the display matches the whole touch surface. In case of a non-clone dual screen (for instance, extension of the
- * desktop), the behavior will not be as expected.
+ * Interface to be implemented by cursor-to-target dispatchers.<br>Cursor-to-target dispatcher are meant to dispatch
+ * cursor points to the touch targets on the touch surface, for instance, in order to the allow gesture recognition
+ * on specific touch targets independently. So, typically, gesture recognizers will be queued to cursor-to-target
+ * dispatchers.
  *
- * @see Toolkit#getScreenSize()
+ * @see TouchListener
+ * @see CursorUpdateEvent
+ * @see Chainable
  */
-public class ScreenRegion implements Region {
-
-    /**
-     * Detected screen size.<br>Note that screen resolution changes will not be taken into account.
-     */
-    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-
-    /**
-     * @see Region#isTouched(Cursor)
-     */
-    @Override
-    public boolean isTouched(final Cursor cursor) {
-        return ((0 <= cursor.getX()) && (cursor.getX() < SCREEN_SIZE.width) && (0 <= cursor.getY()) &&
-                (cursor.getY() < SCREEN_SIZE.height));
-    }
+public interface CursorToTargetDispatcher extends TouchListener<CursorUpdateEvent>,
+        Chainable<TouchListener<CursorUpdateEvent>> {
+    // Nothing more to be done
 }

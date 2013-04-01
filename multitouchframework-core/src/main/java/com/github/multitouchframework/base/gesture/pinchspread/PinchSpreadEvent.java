@@ -25,13 +25,13 @@
 
 package com.github.multitouchframework.base.gesture.pinchspread;
 
-import com.github.multitouchframework.api.Region;
 import com.github.multitouchframework.api.touch.TouchEvent;
+import com.github.multitouchframework.api.touch.TouchTarget;
 
 /**
  * Event fired when pinch/spread/zoom gesture is recognized.
  *
- * @see TouchEvent
+ * @see com.github.multitouchframework.api.touch.TouchEvent
  * @see PinchSpreadRecognizer
  */
 public class PinchSpreadEvent implements TouchEvent {
@@ -39,7 +39,7 @@ public class PinchSpreadEvent implements TouchEvent {
     /**
      * Possible states of the gesture.
      */
-    public enum State {
+    public static enum State {
 
         /**
          * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
@@ -67,9 +67,9 @@ public class PinchSpreadEvent implements TouchEvent {
     private final long userId;
 
     /**
-     * Region to which the gesture applies.
+     * Touch target for which the event is produced.
      */
-    private final Region region;
+    private final TouchTarget target;
 
     /**
      * State of the recognized gesture.
@@ -90,32 +90,33 @@ public class PinchSpreadEvent implements TouchEvent {
      * Constructor specifying all the information on the gesture.
      *
      * @param userId  ID of the user performing the gesture.
-     * @param region  Region to which the gesture applies.
+     * @param target  Touch target for which the event is produced.
      * @param state   State of the recognized gesture.
      * @param ds      Scale movement relatively to the previous event.
      * @param dsTotal Scale movement relatively to the very beginning of the gesture.
      */
-    public PinchSpreadEvent(final long userId, final Region region, final State state, final double ds,
+    public PinchSpreadEvent(final long userId, final TouchTarget target, final State state, final double ds,
                             final double dsTotal) {
         this.userId = userId;
-        this.region = region;
+        this.target = target;
         this.state = state;
         this.ds = ds;
         this.dsTotal = dsTotal;
     }
 
     /**
-     * @see TouchEvent#getUserId()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getUserId()
      */
     public long getUserId() {
         return userId;
     }
 
     /**
-     * @see TouchEvent#getRegion()
+     * @see com.github.multitouchframework.api.touch.TouchEvent#getTouchTarget()
      */
-    public Region getRegion() {
-        return region;
+    @Override
+    public TouchTarget getTouchTarget() {
+        return target;
     }
 
     /**
@@ -150,6 +151,6 @@ public class PinchSpreadEvent implements TouchEvent {
      */
     @Override
     public String toString() {
-        return "PINCHSPREAD{state=" + state + "; ds=" + ds + "; dsTotal=" + dsTotal + "} on " + region;
+        return "PINCHSPREAD{state=" + state + "; ds=" + ds + "; dsTotal=" + dsTotal + "} on " + target;
     }
 }

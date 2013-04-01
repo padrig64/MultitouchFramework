@@ -23,21 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.dispatch;
-
-import com.github.multitouchframework.api.flow.Chainable;
-import com.github.multitouchframework.api.touch.CursorEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
+package com.github.multitouchframework.api.touch;
 
 /**
- * Interface to be implemented by cursor-to-region dispatchers.<br>Cursor-to-region dispatcher are meant to dispatch
- * cursor points to the touchable regions on the touch surface, for instance, in order to the allow gesture recognition
- * on specific regions independently. So, typically, gesture recognizers will be queued to cursor-to-region dispatchers.
- *
- * @see TouchListener
- * @see CursorEvent
- * @see Chainable
+ * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
+ * shape, a GUI component, etc.. Note that a touch target may not be rectangle.
  */
-public interface CursorToRegionDispatcher extends TouchListener<CursorEvent>, Chainable<TouchListener<CursorEvent>> {
-    // Nothing more to be done
+public interface TouchTarget {
+
+    /**
+     * Gets the maximum width of the touch target.
+     *
+     * @return Maximum width of the touch target.
+     */
+    public int getMaximumWidth();
+
+    /**
+     * Gets the maximum height of the touch target.
+     *
+     * @return Maximum height of the touch target.
+     */
+    public int getMaximumHeight();
+
+    /**
+     * States whether the touch target is touched by the specified cursor.
+     *
+     * @param cursor Cursor to be checked.
+     *
+     * @return True if the touch target is touched by the cursor, false otherwise.
+     */
+    public boolean isTouched(Cursor cursor);
 }

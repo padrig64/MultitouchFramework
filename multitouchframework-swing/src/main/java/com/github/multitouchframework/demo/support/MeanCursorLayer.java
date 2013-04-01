@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.touch.CursorEvent;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
 import javax.swing.UIManager;
@@ -37,7 +37,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Collection;
 
-public class MeanCursorLayer implements Layer, TouchListener<CursorEvent> {
+public class MeanCursorLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
     private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
@@ -54,7 +54,7 @@ public class MeanCursorLayer implements Layer, TouchListener<CursorEvent> {
     }
 
     @Override
-    public void processTouchEvent(final CursorEvent event) {
+    public void processTouchEvent(final CursorUpdateEvent event) {
         final Collection<Cursor> cursors = event.getCursors();
         if (cursors.isEmpty()) {
             meanCursor = null;

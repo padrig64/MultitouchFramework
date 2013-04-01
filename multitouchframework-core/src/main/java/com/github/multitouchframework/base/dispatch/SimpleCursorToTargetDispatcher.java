@@ -25,62 +25,65 @@
 
 package com.github.multitouchframework.base.dispatch;
 
-import com.github.multitouchframework.api.Cursor;
-import com.github.multitouchframework.api.Region;
+import com.github.multitouchframework.api.touch.Cursor;
+import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.touch.ScreenTouchTarget;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO
-public class DefaultCursorToRegionDispatcher extends AbstractCursorToRegionDispatcher {
+public class SimpleCursorToTargetDispatcher extends AbstractCursorToTargetDispatcher {
 
-    private final List<Region> regions = new ArrayList<Region>();
+    public static final TouchTarget SCREEN_TOUCH_TARGET = new ScreenTouchTarget();
 
-    public List<Region> getRegions() {
-        return regions;
+    private final List<TouchTarget> targets = new ArrayList<TouchTarget>();
+
+    public List<TouchTarget> getTouchTargets() {
+        return targets;
     }
 
-    public void addRegionOnTop(final Region region) {
-        regions.add(region);
+    public void addTouchTargetOnTop(final TouchTarget target) {
+        targets.add(target);
     }
 
-    public void insertRegionAt(final int i, final Region region) {
-        regions.add(i, region);
+    public void insertTouchTargetAt(final int i, final TouchTarget target) {
+        targets.add(i, target);
     }
 
-    public void setRegionAt(final int i, final Region region) {
-        regions.set(i, region);
+    public void setTouchTargetAt(final int i, final TouchTarget target) {
+        targets.set(i, target);
     }
 
-    public void insertRegionAbove(final Region lowerRegion, final Region region) {
-        final int i = regions.lastIndexOf(lowerRegion);
+    public void insertTouchTargetAbove(final TouchTarget lowerTarget, final TouchTarget target) {
+        final int i = targets.lastIndexOf(lowerTarget);
         if (i < 0) {
-            // Add region on top of everything
-            regions.add(region);
+            // Add touch target on top of everything
+            targets.add(target);
         } else {
-            regions.add(i + 1, region);
+            targets.add(i + 1, target);
         }
     }
 
-    public void removeRegion(final Region region) {
-        regions.remove(region);
+    public void removeTouchTarget(final TouchTarget target) {
+        targets.remove(target);
     }
 
     /**
-     * @see AbstractCursorToRegionDispatcher#findTouchedRegion
+     * @see AbstractCursorToTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
-    protected Region findTouchedRegion(final Cursor cursor) {
-        Region foundRegion = SCREEN_REGION;
+    protected TouchTarget findTouchedTarget(final Cursor cursor) {
+        TouchTarget foundTarget = SCREEN_TOUCH_TARGET;
 
-        for (int i = regions.size() - 1; i >= 0; i--) {
-            final Region region = regions.get(i);
-            if (region.isTouched(cursor)) {
-                foundRegion = region;
+        for (int i = targets.size() - 1; i >= 0; i--) {
+            final TouchTarget target = targets.get(i);
+            if (target.isTouched(cursor)) {
+                foundTarget = target;
                 break;
             }
         }
 
-        return foundRegion;
+        return foundTarget;
     }
 }
