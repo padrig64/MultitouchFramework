@@ -6,6 +6,7 @@
 
 * Tap gesture with min/max tap count (including delay to make sure there is no more)
 * Fire gesture events only for wanted regions
+* "DouleTapAndSlideToZoom" gesture
 * Can dispatch cursors to the REST_REGION instead of the SCREEN_REGION
 * Make input cursors already on a region => remove CursorProcessor interface & repackage everything
 * Swing-based cursor-to-region dispatcher
