@@ -33,7 +33,7 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * Interface to be implemented by input filters.<br>Input filters are cursor processors that filter the input cursors
  * from {@link com.github.multitouchframework.api.source.InputSource}s. They provide the filtered cursors to
  * one or several other cursor processors, typically other {@link InputFilter}s or
- * {@link com.github.multitouchframework.api.dispatch.CursorToTargetDispatcher}s.<br>Input filters can be
+ * {@link com.github.multitouchframework.api.dispatch.CursorToTouchTargetDispatcher}s.<br>Input filters can be
  * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
  * another thread, to generate more events for inertia, etc.
  *
@@ -41,7 +41,7 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * @see com.github.multitouchframework.api.touch.CursorUpdateEvent
  * @see Chainable
  * @see com.github.multitouchframework.api.source.InputSource
- * @see com.github.multitouchframework.api.dispatch.CursorToTargetDispatcher
+ * @see com.github.multitouchframework.api.dispatch.CursorToTouchTargetDispatcher
  */
 public interface InputFilter extends TouchListener<CursorUpdateEvent>, Chainable<TouchListener<CursorUpdateEvent>> {
     // Nothing more to be done

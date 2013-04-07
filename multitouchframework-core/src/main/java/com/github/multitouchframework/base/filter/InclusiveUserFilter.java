@@ -23,20 +23,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.dispatch;
+package com.github.multitouchframework.base.filter;
 
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.TouchTarget;
-import com.github.multitouchframework.base.dispatch.AbstractCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 
-public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDispatcher {
+import java.util.HashSet;
+import java.util.Set;
 
-    /**
-     * @see AbstractCursorToTouchTargetDispatcher#findTouchedTarget(Cursor)
-     */
+public class InclusiveUserFilter extends AbstractInputFilter {
+
+    private final Set<Long> userIds = new HashSet<Long>();
+
+    public void addUser(final long userId) {
+        userIds.add(userId);
+    }
+
+    public void removeUser(final long userId) {
+        userIds.remove(userId);
+    }
+
     @Override
-    protected TouchTarget findTouchedTarget(final Cursor cursor) {
-        // TODO
-        return null;
+    public void processTouchEvent(final CursorUpdateEvent event) {
+        if (userIds.contains(event.getUserId())) {
+            processWithNextBlocks(event);
+        }
     }
 }

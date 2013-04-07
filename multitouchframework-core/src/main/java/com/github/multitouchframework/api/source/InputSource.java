@@ -33,7 +33,7 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
  * touch input processing. They provide cursors to one or several cursor processors, typically {@link
  * com.github.multitouchframework.api.filter.InputFilter}s or {@link com.github.multitouchframework.api.dispatch
- * .CursorToTargetDispatcher}s.
+ * .CursorToTouchTargetDispatcher}s.
  *
  * @see Chainable
  * @see com.github.multitouchframework.api.touch.TouchListener

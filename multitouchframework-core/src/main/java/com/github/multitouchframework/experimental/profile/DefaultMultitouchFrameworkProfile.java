@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.dispatch.CursorToTargetDispatcher;
+import com.github.multitouchframework.api.dispatch.CursorToTouchTargetDispatcher;
 import com.github.multitouchframework.api.filter.InputFilter;
 import com.github.multitouchframework.api.gesture.GestureRecognizer;
 import com.github.multitouchframework.api.source.InputSource;
@@ -39,7 +39,7 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 
     private final CompositeCursorProcessorBlock filterComposition = new CompositeCursorProcessorBlock();
 
-    private CursorToTargetDispatcher toc = null;
+    private CursorToTouchTargetDispatcher toc = null;
 
     /**
      * @see MultitouchFrameworkProfile#getInputController()
@@ -81,11 +81,11 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
 //		filterComposition.removeSubBlock(inputFilter);
     }
 
-    public CursorToTargetDispatcher getTouchableObjectController() {
+    public CursorToTouchTargetDispatcher getTouchableObjectController() {
         return toc;
     }
 
-    public void setTouchableObjectController(final CursorToTargetDispatcher toc) {
+    public void setTouchableObjectController(final CursorToTouchTargetDispatcher toc) {
         if (this.toc != null) {
 //            filterComposition.dequeue(this.toc);
         }

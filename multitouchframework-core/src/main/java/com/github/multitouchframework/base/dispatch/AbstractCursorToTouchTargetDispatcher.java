@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.base.dispatch;
 
-import com.github.multitouchframework.api.dispatch.CursorToTargetDispatcher;
+import com.github.multitouchframework.api.dispatch.CursorToTouchTargetDispatcher;
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
@@ -50,7 +50,7 @@ import java.util.Map;
  *
  * @see #findTouchedTarget(Cursor)
  */
-public abstract class AbstractCursorToTargetDispatcher implements CursorToTargetDispatcher {
+public abstract class AbstractCursorToTouchTargetDispatcher implements CursorToTouchTargetDispatcher {
 
     /**
      * Mapping between cursors and touch targets resulting from the call to {@link #processTouchEvent
@@ -64,7 +64,7 @@ public abstract class AbstractCursorToTargetDispatcher implements CursorToTarget
     private final List<TouchListener<CursorUpdateEvent>> nextBlocks = new ArrayList<TouchListener<CursorUpdateEvent>>();
 
     /**
-     * @see CursorToTargetDispatcher#queue(Object)
+     * @see CursorToTouchTargetDispatcher#queue(Object)
      */
     @Override
     public void queue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
@@ -72,7 +72,7 @@ public abstract class AbstractCursorToTargetDispatcher implements CursorToTarget
     }
 
     /**
-     * @see CursorToTargetDispatcher#dequeue(Object)
+     * @see CursorToTouchTargetDispatcher#dequeue(Object)
      */
     @Override
     public void dequeue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
@@ -80,7 +80,7 @@ public abstract class AbstractCursorToTargetDispatcher implements CursorToTarget
     }
 
     /**
-     * @see CursorToTargetDispatcher#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see CursorToTouchTargetDispatcher#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {

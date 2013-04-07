@@ -29,9 +29,9 @@ import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
-import com.github.multitouchframework.base.dispatch.SimpleCursorToTargetDispatcher;
+import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
 
-import javax.swing.UIManager;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -46,7 +46,7 @@ public class TouchTargetsLayer implements Layer, TouchListener<CursorUpdateEvent
 
     private final Canvas canvas;
 
-    private SimpleCursorToTargetDispatcher cursorToTargetDispatcher = null;
+    private SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = null;
 
     private final Map<TouchTarget, Collection<Cursor>> cursorsForTargets = new HashMap<TouchTarget,
             Collection<Cursor>>();
@@ -55,11 +55,11 @@ public class TouchTargetsLayer implements Layer, TouchListener<CursorUpdateEvent
         this.canvas = canvas;
     }
 
-    public SimpleCursorToTargetDispatcher getTouchTargetProvider() {
+    public SimpleCursorToTouchTargetDispatcher getTouchTargetProvider() {
         return cursorToTargetDispatcher;
     }
 
-    public void setTouchTargetProvider(final SimpleCursorToTargetDispatcher cursorToTargetDispatcher) {
+    public void setTouchTargetProvider(final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher) {
         this.cursorToTargetDispatcher = cursorToTargetDispatcher;
     }
 
@@ -71,23 +71,23 @@ public class TouchTargetsLayer implements Layer, TouchListener<CursorUpdateEvent
 
     @Override
     public void paint(final Graphics2D g2d) {
-        g2d.setColor(UIManager.getColor("nimbusGreen"));
+        g2d.setColor(new Color(255, 145, 0));
 
         // Draw all touch targets
         if (cursorToTargetDispatcher != null) {
             for (final TouchTarget target : cursorToTargetDispatcher.getTouchTargets()) {
                 final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) target).getTouchableBounds());
-                g2d.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+                g2d.drawRoundRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 20, 20);
             }
         }
 
         // Fill all touched touch targets
         for (final Map.Entry<TouchTarget, Collection<Cursor>> entry : cursorsForTargets.entrySet()) {
             if (!entry.getValue().isEmpty()) {
-                if (!SimpleCursorToTargetDispatcher.SCREEN_TOUCH_TARGET.equals(entry.getKey())) {
+                if (!SimpleCursorToTouchTargetDispatcher.SCREEN_TOUCH_TARGET.equals(entry.getKey())) {
                     final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) entry.getKey())
                             .getTouchableBounds());
-                    g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                    g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 20, 20);
                 }
             }
         }

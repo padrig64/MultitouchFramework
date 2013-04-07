@@ -39,7 +39,7 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * @see CursorUpdateEvent
  * @see Chainable
  */
-public interface CursorToTargetDispatcher extends TouchListener<CursorUpdateEvent>,
+public interface CursorToTouchTargetDispatcher extends TouchListener<CursorUpdateEvent>,
         Chainable<TouchListener<CursorUpdateEvent>> {
     // Nothing more to be done
 }

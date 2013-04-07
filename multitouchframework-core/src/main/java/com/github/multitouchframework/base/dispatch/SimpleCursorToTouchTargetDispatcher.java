@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO
-public class SimpleCursorToTargetDispatcher extends AbstractCursorToTargetDispatcher {
+public class SimpleCursorToTouchTargetDispatcher extends AbstractCursorToTouchTargetDispatcher {
 
     public static final TouchTarget SCREEN_TOUCH_TARGET = new ScreenTouchTarget();
 
@@ -70,7 +70,7 @@ public class SimpleCursorToTargetDispatcher extends AbstractCursorToTargetDispat
     }
 
     /**
-     * @see AbstractCursorToTargetDispatcher#findTouchedTarget(Cursor)
+     * @see AbstractCursorToTouchTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
     protected TouchTarget findTouchedTarget(final Cursor cursor) {

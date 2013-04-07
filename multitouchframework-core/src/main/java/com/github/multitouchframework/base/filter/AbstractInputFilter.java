@@ -80,7 +80,15 @@ public abstract class AbstractInputFilter implements InputFilter {
      */
     protected void processWithNextBlocks(final long userId, final TouchTarget target,
                                          final Collection<Cursor> cursors) {
-        final CursorUpdateEvent event = new CursorUpdateEvent(userId, target, cursors);
+        processWithNextBlocks(new CursorUpdateEvent(userId, target, cursors));
+    }
+
+    /**
+     * Processes the specified event using the blocks/listeners that are queued/added to this input filter.
+     *
+     * @param event Cursor update event to be processed by the next blocks.
+     */
+    protected void processWithNextBlocks(final CursorUpdateEvent event) {
         for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
             nextBlock.processTouchEvent(event);
         }

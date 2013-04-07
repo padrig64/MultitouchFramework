@@ -28,7 +28,7 @@ package com.github.multitouchframework.demo;
 import com.github.multitouchframework.api.filter.InputFilter;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.base.dispatch.SimpleCursorToTargetDispatcher;
+import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
 import com.github.multitouchframework.base.gesture.drag.DragRecognizer;
@@ -248,7 +248,7 @@ public class DemoApp extends JFrame {
                 .getProcessor());
 
         // Configure cursor-to-target dispatcher
-        final SimpleCursorToTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTargetDispatcher();
+        final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTouchTargetDispatcher();
         cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("TopLeft", 10, 10, 500, 500));
         cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("SomewhereElse", 700, 200, 100, 100));
         noChangeFilter.queue(cursorToTargetDispatcher);
