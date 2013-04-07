@@ -28,6 +28,11 @@ package com.github.multitouchframework.swing.dispatch;
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.AbstractCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.swing.touch.ComponentTouchTarget;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Window;
 
 public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDispatcher {
 
@@ -36,7 +41,37 @@ public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDisp
      */
     @Override
     protected TouchTarget findTouchedTarget(final Cursor cursor) {
-        // TODO
-        return null;
+        TouchTarget touchTarget = null;
+
+        // TODO Find deepest component of the top most touched window
+        for (final Window window : Window.getWindows()) {
+            final Component component = findDeepestComponent(window);
+            if (component != null) {
+                touchTarget = new ComponentTouchTarget(component);
+                break;
+            }
+        }
+
+        return touchTarget;
+    }
+
+    private Component findDeepestComponent(final Component parent) {
+        Component deepest = null;
+
+        if (parent.contains(parent.getX(), parent.getY())) {
+            if ((parent instanceof Container) && (((Container) parent).getComponentCount() > 0)) {
+                for (final Component child : ((Container) parent).getComponents()) {
+                    deepest = findDeepestComponent(child);
+                    if (deepest != null) {
+                        break;
+                    }
+                }
+            } else {
+                // Specified component has no children
+                deepest = parent;
+            }
+        }
+
+        return deepest;
     }
 }

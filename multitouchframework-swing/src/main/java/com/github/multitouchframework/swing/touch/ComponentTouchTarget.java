@@ -41,6 +41,14 @@ public class ComponentTouchTarget implements TouchTarget {
     }
 
     /**
+     * @see TouchTarget#getBaseObject()
+     */
+    @Override
+    public Object getBaseObject() {
+        return component;
+    }
+
+    /**
      * @see TouchTarget#getMaximumWidth()
      * @see Component#getWidth()
      */

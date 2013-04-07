@@ -37,8 +37,8 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * used, for instance to reduced the number of events, to alter cursor positions, to re-schedule the processing to
  * another thread, to generate more events for inertia, etc.
  *
- * @see com.github.multitouchframework.api.touch.TouchListener
- * @see com.github.multitouchframework.api.touch.CursorUpdateEvent
+ * @see TouchListener
+ * @see CursorUpdateEvent
  * @see Chainable
  * @see com.github.multitouchframework.api.source.InputSource
  * @see com.github.multitouchframework.api.dispatch.CursorToTouchTargetDispatcher

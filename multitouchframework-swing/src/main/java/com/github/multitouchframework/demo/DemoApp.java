@@ -45,6 +45,7 @@ import com.github.multitouchframework.demo.support.Layer;
 import com.github.multitouchframework.demo.support.MeanCursorLayer;
 import com.github.multitouchframework.demo.support.MeanLinesLayer;
 import com.github.multitouchframework.demo.support.TouchTargetsLayer;
+import com.github.multitouchframework.swing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.flow.EDTScheduler;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
@@ -162,11 +163,14 @@ public class DemoApp extends JFrame {
 
     private void initContentPane() {
         final JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.setName("ContentPane");
 
         // Create layer list
         final JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
+        controlPanel.setName("ControlPanel");
         controlPanel.setBorder(new MatteBorder(0, 0, 0, 1, UIManager.getColor("nimbusBorder")));
         final JScrollPane controlScrollPane = new JScrollPane(controlPanel);
+        controlScrollPane.setName("ControlScrollPane");
         controlScrollPane.setBorder(null);
         contentPane.add(controlScrollPane, BorderLayout.WEST);
 
@@ -186,8 +190,10 @@ public class DemoApp extends JFrame {
 
     private Component createGestureListPanel() {
         final JPanel gestureListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        gestureListPanel.setName("GestureListPanel");
 
         final JLabel titleLabel = new JLabel("Gestures");
+        titleLabel.setName("GesturesTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         gestureListPanel.add(titleLabel);
 
@@ -195,6 +201,7 @@ public class DemoApp extends JFrame {
         final GestureProcessor[] gestureProcessors = GestureProcessor.values();
         for (final GestureProcessor gestureProcessor : gestureProcessors) {
             final JCheckBox gestureControlCheckBox = new JCheckBox(gestureProcessor.toString());
+            gestureControlCheckBox.setName("GestureControlCheckBox");
             // TODO
             gestureControlCheckBox.setSelected(true);
             gestureListPanel.add(gestureControlCheckBox, "gap 10");
@@ -205,8 +212,10 @@ public class DemoApp extends JFrame {
 
     private Component createLayerListPanel() {
         final JPanel layerListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        layerListPanel.setName("LayerListPanel");
 
         final JLabel titleLabel = new JLabel("Layers");
+        titleLabel.setName("LayersTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         layerListPanel.add(titleLabel);
 
@@ -214,6 +223,7 @@ public class DemoApp extends JFrame {
         final LayerProcessor[] layerProcessors = LayerProcessor.values();
         for (final LayerProcessor layerProcessor : layerProcessors) {
             final JCheckBox layerControlCheckBox = new JCheckBox(layerProcessor.toString());
+            layerControlCheckBox.setName("LayerControlCheckBox");
             layerControlCheckBox.addItemListener(layerControlAdapter);
             layerControlCheckBox.setSelected(true);
             layerListPanel.add(layerControlCheckBox, "gap 10");
@@ -252,6 +262,19 @@ public class DemoApp extends JFrame {
         cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("TopLeft", 10, 10, 500, 500));
         cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("SomewhereElse", 700, 200, 100, 100));
         noChangeFilter.queue(cursorToTargetDispatcher);
+
+        final CursorToComponentDispatcher componentDispatcher = new CursorToComponentDispatcher();
+        componentDispatcher.queue(new TouchListener<CursorUpdateEvent>() {
+            @Override
+            public void processTouchEvent(final CursorUpdateEvent event) {
+                Object baseObject = event.getTouchTarget().getBaseObject();
+                if (baseObject instanceof Component) {
+                    baseObject = ((Component) baseObject).getName();
+                }
+                System.out.println(baseObject);
+            }
+        });
+        noChangeFilter.queue(componentDispatcher);
 
         // Configure layer for touch targets
         final EDTScheduler<CursorUpdateEvent> edtCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();

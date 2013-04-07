@@ -32,6 +32,14 @@ package com.github.multitouchframework.api.touch;
 public interface TouchTarget {
 
     /**
+     * Gets the real base object represented by this touch target.<br>This may be, for instance, a JComponent, the
+     * touch target itself, etc..
+     *
+     * @return Base object represented by this touch target.
+     */
+    public Object getBaseObject();
+
+    /**
      * Gets the maximum width of the touch target.
      *
      * @return Maximum width of the touch target.

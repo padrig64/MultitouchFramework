@@ -72,6 +72,14 @@ public class ScreenTouchTarget implements TouchTarget {
     }
 
     /**
+     * @see TouchTarget#getBaseObject()
+     */
+    @Override
+    public Object getBaseObject() {
+        return this;
+    }
+
+    /**
      * @see TouchTarget#getMaximumWidth()
      */
     @Override

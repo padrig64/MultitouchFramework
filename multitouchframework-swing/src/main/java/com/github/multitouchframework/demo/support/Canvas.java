@@ -49,6 +49,11 @@ public class Canvas extends JComponent {
 
     private final Set<Layer> visibleLayers = new HashSet<Layer>();
 
+    public Canvas() {
+        super();
+        setName("Canvas");
+    }
+
     public void addLayer(final Layer layer) {
         layers.add(layer);
         visibleLayers.add(layer);

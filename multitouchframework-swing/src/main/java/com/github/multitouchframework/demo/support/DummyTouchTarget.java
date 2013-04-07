@@ -52,6 +52,14 @@ public class DummyTouchTarget implements TouchTarget {
         return bounds;
     }
 
+    /**
+     * @see TouchTarget#getBaseObject()
+     */
+    @Override
+    public Object getBaseObject() {
+        return this;
+    }
+
     @Override
     public int getMaximumWidth() {
         return bounds.width;
