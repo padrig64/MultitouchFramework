@@ -29,39 +29,40 @@ import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MeanLinesLayer implements Layer, TouchListener<CursorUpdateEvent> {
+public class MeanLinesLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
 
-    private static final Color MEAN_LINE_COLOR = UIManager.getColor("control");
+    /**
+     * Generated serial UID.
+     */
+    private static final long serialVersionUID = 1540757629897718731L;
 
-    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-
-    private final Canvas canvas;
+    private static final Color MEAN_LINE_COLOR = UIManager.getColor("control").darker().darker();
 
     private Collection<Cursor> cursors = null;
-
-    public MeanLinesLayer(final Canvas canvas) {
-        this.canvas = canvas;
-    }
 
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
-        canvas.repaint();
+        getParent().repaint();
     }
 
     @Override
-    public void paint(final Graphics2D g2d) {
+    public void paintComponent(final Graphics graphics) {
+        ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
             final List<Point> canvasPoints = new ArrayList<Point>();
@@ -70,7 +71,7 @@ public class MeanLinesLayer implements Layer, TouchListener<CursorUpdateEvent> {
 
             // Calculate mean cursor
             for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToCanvas(cursor);
+                final Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
 
                 meanX += canvasPoint.getX();
@@ -80,19 +81,18 @@ public class MeanLinesLayer implements Layer, TouchListener<CursorUpdateEvent> {
             meanY /= canvasPoints.size();
 
             // Paint cursors and lines
-            g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.0f,
-                    new float[]{5.0f, 5.0f}, 0.0f));
-            g2d.setColor(MEAN_LINE_COLOR);
+            ((Graphics2D) graphics).setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                    0.0f, new float[]{5.0f, 5.0f}, 0.0f));
+            graphics.setColor(MEAN_LINE_COLOR);
             for (final Point canvasPoint : canvasPoints) {
-                g2d.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
+                graphics.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
             }
         }
     }
 
-    private Point convertCursorToCanvas(final Cursor screenCursor) {
-        final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-        final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
-
-        return new Point(canvasX, canvasY);
+    private Point convertCursorToComponent(final Cursor screenCursor) {
+        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
+        SwingUtilities.convertPointFromScreen(point, this);
+        return point;
     }
 }

@@ -29,61 +29,61 @@ import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CursorsLayer implements Layer, TouchListener<CursorUpdateEvent> {
+public class CursorsLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
+
+    /**
+     * Generated serial UID.
+     */
+    private static final long serialVersionUID = -8344669485004582702L;
 
     private static final Color CURSOR_COLOR = UIManager.getColor("nimbusInfoBlue");
 
     private static final int CURSOR_SIZE = 6;
 
-    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-
-    private final Canvas canvas;
-
     private Collection<Cursor> cursors = null;
-
-    public CursorsLayer(final Canvas canvas) {
-        this.canvas = canvas;
-    }
 
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
-        canvas.repaint();
+        getParent().repaint();
     }
 
     @Override
-    public void paint(final Graphics2D g2d) {
+    protected void paintComponent(final Graphics graphics) {
+        ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
             final List<Point> canvasPoints = new ArrayList<Point>();
             for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToCanvas(cursor);
+                final Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
             }
 
             // Paint cursors
-            g2d.setColor(CURSOR_COLOR);
+            graphics.setColor(CURSOR_COLOR);
             for (final Point canvasPoint : canvasPoints) {
-                g2d.fillOval(canvasPoint.x - CURSOR_SIZE / 2, canvasPoint.y - CURSOR_SIZE / 2, CURSOR_SIZE,
+                graphics.fillOval(canvasPoint.x - CURSOR_SIZE / 2, canvasPoint.y - CURSOR_SIZE / 2, CURSOR_SIZE,
                         CURSOR_SIZE);
             }
         }
     }
 
-    private Point convertCursorToCanvas(final Cursor screenCursor) {
-        final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-        final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
-
-        return new Point(canvasX, canvasY);
+    private Point convertCursorToComponent(final Cursor screenCursor) {
+        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
+        SwingUtilities.convertPointFromScreen(point, this);
+        return point;
     }
 }

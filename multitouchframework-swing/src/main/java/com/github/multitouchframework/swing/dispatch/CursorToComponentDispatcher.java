@@ -30,6 +30,7 @@ import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.AbstractCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.swing.touch.ComponentTouchTarget;
 
+import javax.swing.RootPaneContainer;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -45,7 +46,8 @@ public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDisp
 
         // TODO Find deepest component of the top most touched window
         for (final Window window : Window.getWindows()) {
-            final Component component = findDeepestComponent(window);
+            // TODO Check if window is touchable
+            final Component component = findDeepestComponent(window, cursor.getX(), cursor.getY());
             if (component != null) {
                 touchTarget = new ComponentTouchTarget(component);
                 break;
@@ -55,19 +57,24 @@ public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDisp
         return touchTarget;
     }
 
-    private Component findDeepestComponent(final Component parent) {
+    private Component findDeepestComponent(final Component parent, final int x, final int y) {
         Component deepest = null;
 
-        if (parent.contains(parent.getX(), parent.getY())) {
-            if ((parent instanceof Container) && (((Container) parent).getComponentCount() > 0)) {
+        if (parent.contains(x, y)) {
+            if (parent instanceof RootPaneContainer) {
+                final Container contentPane = ((RootPaneContainer) parent).getContentPane();
+                deepest = findDeepestComponent(contentPane, x - contentPane.getX(), y - contentPane.getY());
+            } else if (parent instanceof Container) {
                 for (final Component child : ((Container) parent).getComponents()) {
-                    deepest = findDeepestComponent(child);
+                    deepest = findDeepestComponent(child, x - child.getX(), y - child.getY());
                     if (deepest != null) {
                         break;
                     }
                 }
-            } else {
-                // Specified component has no children
+            }
+
+            if (deepest == null) {
+                // No child containing the cursor
                 deepest = parent;
             }
         }

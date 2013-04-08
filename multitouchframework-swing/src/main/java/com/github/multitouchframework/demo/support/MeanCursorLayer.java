@@ -29,29 +29,28 @@ import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.RenderingHints;
 import java.util.Collection;
 
-public class MeanCursorLayer implements Layer, TouchListener<CursorUpdateEvent> {
+public class MeanCursorLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
+
+    /**
+     * Generated serial UID.
+     */
+    private static final long serialVersionUID = -1866299857263220891L;
 
     private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
     private static final int MEAN_CURSOR_SIZE = 6;
 
-    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-
-    private final Canvas canvas;
-
     private Cursor meanCursor = null;
-
-    public MeanCursorLayer(final Canvas canvas) {
-        this.canvas = canvas;
-    }
 
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
@@ -70,26 +69,27 @@ public class MeanCursorLayer implements Layer, TouchListener<CursorUpdateEvent> 
         }
 
         // Trigger repaint
-        canvas.repaint();
+        getParent().repaint();
     }
 
     @Override
-    public void paint(final Graphics2D g2d) {
+    public void paintComponent(final Graphics graphics) {
+        ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if (meanCursor != null) {
             // Prepare for painting
-            final Point canvasMeanPoint = convertCursorToCanvas(meanCursor);
+            final Point canvasMeanPoint = convertCursorToComponent(meanCursor);
 
             // Paint mean cursor
-            g2d.setColor(MEAN_CURSOR_COLOR);
-            g2d.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
+            graphics.setColor(MEAN_CURSOR_COLOR);
+            graphics.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
                     MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
         }
     }
 
-    private Point convertCursorToCanvas(final Cursor screenCursor) {
-        final int canvasX = screenCursor.getX() * canvas.getWidth() / SCREEN_SIZE.width;
-        final int canvasY = screenCursor.getY() * canvas.getHeight() / SCREEN_SIZE.height;
-
-        return new Point(canvasX, canvasY);
+    private Point convertCursorToComponent(final Cursor screenCursor) {
+        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
+        SwingUtilities.convertPointFromScreen(point, this);
+        return point;
     }
 }

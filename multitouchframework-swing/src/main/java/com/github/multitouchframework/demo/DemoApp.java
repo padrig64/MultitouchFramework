@@ -52,8 +52,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -77,9 +79,9 @@ public class DemoApp extends JFrame {
             // Search layer by name
             final JCheckBox layerControlCheckBox = (JCheckBox) itemEvent.getSource();
             final String layerName = layerControlCheckBox.getText();
-            for (final LayerProcessor layerProcessor : LayerProcessor.values()) {
-                if (layerProcessor.toString().equals(layerName)) {
-                    canvas.setLayerVisible(layerProcessor.getLayer(), layerControlCheckBox.isSelected());
+            for (final CanvasLayer canvasLayer : CanvasLayer.values()) {
+                if (canvasLayer.toString().equals(layerName)) {
+                    canvas.setLayerVisible(canvasLayer.getLayer(), layerControlCheckBox.isSelected());
                 }
             }
         }
@@ -114,19 +116,44 @@ public class DemoApp extends JFrame {
         }
     }
 
-    private enum LayerProcessor {
+    private enum LayeredPaneLayer {
 
-        FILTERED_MEAN_CURSOR("Filtered mean cursor", new MeanCursorLayer(canvas)),
-        RAW_CURSORS("Raw cursors", new CursorsLayer(canvas)),
-        FILTERED_CURSORS("Filtered cursors", new BoundingBoxFilterOutputLayer(canvas)),
-        FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer(canvas)),
+        RAW_CURSORS("Raw cursors", new CursorsLayer()),
+        FILTERED_MEAN_CURSOR("Filtered mean cursor", new MeanCursorLayer()),
+        FILTERED_CURSORS("Filtered cursors", new BoundingBoxFilterOutputLayer()),
+        FILTERED_MEAN_LINES("Filtered mean lines", new MeanLinesLayer());
+
+        private final String presentationName;
+        private final JComponent component;
+
+        LayeredPaneLayer(final String presentationName, final JComponent component) {
+            this.presentationName = presentationName;
+            this.component = component;
+        }
+
+        public JComponent getComponent() {
+            return component;
+        }
+
+        public JComponent getTouchListener() {
+            return component;
+        }
+
+        @Override
+        public String toString() {
+            return presentationName;
+        }
+    }
+
+    private enum CanvasLayer {
+
         TOUCH_TARGETS("Touch targets", new TouchTargetsLayer(canvas));
 
         private final String presentationName;
         private final Layer layer;
         private final Object processor;
 
-        LayerProcessor(final String presentationName, final Object layer) {
+        CanvasLayer(final String presentationName, final Object layer) {
             this.presentationName = presentationName;
             this.layer = (Layer) layer;
             this.processor = layer;
@@ -149,10 +176,10 @@ public class DemoApp extends JFrame {
     private final LayerControlAdapter layerControlAdapter = new LayerControlAdapter();
 
     public DemoApp() {
-        setTitle("Touch Framework Demo");
+        setTitle("MultitouchFramework Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        initContentPane();
+        initContentPane(getLayeredPane());
         initGestureProfile();
 
         // Set window size and location
@@ -161,7 +188,7 @@ public class DemoApp extends JFrame {
         setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 3);
     }
 
-    private void initContentPane() {
+    private void initContentPane(final JLayeredPane layeredPane) {
         final JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setName("ContentPane");
 
@@ -175,27 +202,28 @@ public class DemoApp extends JFrame {
         contentPane.add(controlScrollPane, BorderLayout.WEST);
 
         controlPanel.add(createGestureListPanel());
-        controlPanel.add(createLayerListPanel());
+        controlPanel.add(createCanvasLayerListPanel());
+        controlPanel.add(createLayeredPaneLayerListPanel(layeredPane));
 
         // Configure canvas
         contentPane.add(canvas, BorderLayout.CENTER);
         setContentPane(contentPane);
 
         // Add layers to canvas
-        final LayerProcessor[] layerProcessors = LayerProcessor.values();
-        for (int i = layerProcessors.length - 1; i >= 0; i--) {
-            canvas.addLayer(layerProcessors[i].getLayer());
+        final CanvasLayer[] canvasLayers = CanvasLayer.values();
+        for (int i = canvasLayers.length - 1; i >= 0; i--) {
+            canvas.addLayer(canvasLayers[i].getLayer());
         }
     }
 
     private Component createGestureListPanel() {
-        final JPanel gestureListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
-        gestureListPanel.setName("GestureListPanel");
+        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        listPanel.setName("GestureListPanel");
 
         final JLabel titleLabel = new JLabel("Gestures");
         titleLabel.setName("GesturesTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
-        gestureListPanel.add(titleLabel);
+        listPanel.add(titleLabel);
 
         // Add gestures to the list
         final GestureProcessor[] gestureProcessors = GestureProcessor.values();
@@ -204,32 +232,58 @@ public class DemoApp extends JFrame {
             gestureControlCheckBox.setName("GestureControlCheckBox");
             // TODO
             gestureControlCheckBox.setSelected(true);
-            gestureListPanel.add(gestureControlCheckBox, "gap 10");
+            listPanel.add(gestureControlCheckBox, "gap 10");
         }
 
-        return gestureListPanel;
+        return listPanel;
     }
 
-    private Component createLayerListPanel() {
-        final JPanel layerListPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
-        layerListPanel.setName("LayerListPanel");
+    private Component createCanvasLayerListPanel() {
+        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        listPanel.setName("CanvasLayerListPanel");
 
-        final JLabel titleLabel = new JLabel("Layers");
-        titleLabel.setName("LayersTitleLabel");
+        final JLabel titleLabel = new JLabel("Canvas Layers");
+        titleLabel.setName("CanvasLayersTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
-        layerListPanel.add(titleLabel);
+        listPanel.add(titleLabel);
 
         // Add layers to the list
-        final LayerProcessor[] layerProcessors = LayerProcessor.values();
-        for (final LayerProcessor layerProcessor : layerProcessors) {
-            final JCheckBox layerControlCheckBox = new JCheckBox(layerProcessor.toString());
-            layerControlCheckBox.setName("LayerControlCheckBox");
+        final CanvasLayer[] layers = CanvasLayer.values();
+        for (final CanvasLayer layer : layers) {
+            final JCheckBox layerControlCheckBox = new JCheckBox(layer.toString());
+            layerControlCheckBox.setName("CanvasLayerControlCheckBox");
             layerControlCheckBox.addItemListener(layerControlAdapter);
             layerControlCheckBox.setSelected(true);
-            layerListPanel.add(layerControlCheckBox, "gap 10");
+            listPanel.add(layerControlCheckBox, "gap 10");
         }
 
-        return layerListPanel;
+        return listPanel;
+    }
+
+    private Component createLayeredPaneLayerListPanel(final JLayeredPane layeredPane) {
+        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        listPanel.setName("LayeredPaneLayerListPanel");
+
+        final JLabel titleLabel = new JLabel("Layered Pane Layers");
+        titleLabel.setName("LayeredPaneLayersTitleLabel");
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
+        listPanel.add(titleLabel);
+
+        // Add layers to the list
+        final LayeredPaneLayer[] layers = LayeredPaneLayer.values();
+        for (int i = 0; i < layers.length; i++) {
+            final JCheckBox layerControlCheckBox = new JCheckBox(layers[i].toString());
+            layerControlCheckBox.setName("LayeredPaneLayerControlCheckBox");
+            layerControlCheckBox.addItemListener(layerControlAdapter);
+            layerControlCheckBox.setSelected(true);
+            listPanel.add(layerControlCheckBox, "gap 10");
+
+            layers[i].getComponent().setOpaque(true);
+            layeredPane.add(layers[i].getComponent(), i + 3000);
+            layers[i].getComponent().setBounds(0, 0, 500, 500);
+        }
+
+        return listPanel;
     }
 
     private void initGestureProfile() {
@@ -239,7 +293,8 @@ public class DemoApp extends JFrame {
         // Configure layers for raw cursors
         final EDTScheduler<CursorUpdateEvent> edtRawCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         inputController.queue(edtRawCursorProcessorBlock);
-        edtRawCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.RAW_CURSORS.getProcessor());
+        edtRawCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayeredPaneLayer.RAW_CURSORS
+                .getTouchListener());
 
         // Configure cursor filtering
         final InputFilter boundingBoxFilter = new BoundingBoxFilter();
@@ -250,12 +305,12 @@ public class DemoApp extends JFrame {
         // Configure layers for filtered cursors
         final EDTScheduler<CursorUpdateEvent> edtFilteredCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         noChangeFilter.queue(edtFilteredCursorProcessorBlock);
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_CURSORS
-                .getProcessor());
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_MEAN_CURSOR
-                .getProcessor());
-        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.FILTERED_MEAN_LINES
-                .getProcessor());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayeredPaneLayer.FILTERED_CURSORS
+                .getTouchListener());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayeredPaneLayer
+                .FILTERED_MEAN_CURSOR.getTouchListener());
+        edtFilteredCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayeredPaneLayer.FILTERED_MEAN_LINES
+                .getTouchListener());
 
         // Configure cursor-to-target dispatcher
         final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTouchTargetDispatcher();
@@ -279,8 +334,8 @@ public class DemoApp extends JFrame {
         // Configure layer for touch targets
         final EDTScheduler<CursorUpdateEvent> edtCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         cursorToTargetDispatcher.queue(edtCursorProcessorBlock);
-        ((TouchTargetsLayer) LayerProcessor.TOUCH_TARGETS.getLayer()).setTouchTargetProvider(cursorToTargetDispatcher);
-        edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) LayerProcessor.TOUCH_TARGETS.getProcessor());
+        ((TouchTargetsLayer) CanvasLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider(cursorToTargetDispatcher);
+        edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) CanvasLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();
