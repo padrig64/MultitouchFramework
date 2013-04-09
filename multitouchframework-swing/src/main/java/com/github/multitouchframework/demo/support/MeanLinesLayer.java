@@ -27,10 +27,7 @@ package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -42,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MeanLinesLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
+public class MeanLinesLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
@@ -53,12 +50,18 @@ public class MeanLinesLayer extends JComponent implements TouchListener<CursorUp
 
     private Collection<Cursor> cursors = null;
 
+    /**
+     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
-        getParent().repaint();
+        triggerRepaint();
     }
 
+    /**
+     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     */
     @Override
     public void paintComponent(final Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -88,11 +91,5 @@ public class MeanLinesLayer extends JComponent implements TouchListener<CursorUp
                 graphics.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
             }
         }
-    }
-
-    private Point convertCursorToComponent(final Cursor screenCursor) {
-        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
-        SwingUtilities.convertPointFromScreen(point, this);
-        return point;
     }
 }

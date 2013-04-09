@@ -27,10 +27,7 @@ package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -42,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class BoundingBoxFilterOutputLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
+public class BoundingBoxFilterOutputLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
@@ -59,12 +56,18 @@ public class BoundingBoxFilterOutputLayer extends JComponent implements TouchLis
 
     private Collection<Cursor> cursors = null;
 
+    /**
+     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         this.cursors = event.getCursors();
-        getParent().repaint();
+        triggerRepaint();
     }
 
+    /**
+     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     */
     @Override
     public void paintComponent(final Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -89,11 +92,5 @@ public class BoundingBoxFilterOutputLayer extends JComponent implements TouchLis
                         FILTERED_CURSOR_SIZE, FILTERED_CURSOR_SIZE);
             }
         }
-    }
-
-    private Point convertCursorToComponent(final Cursor screenCursor) {
-        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
-        SwingUtilities.convertPointFromScreen(point, this);
-        return point;
     }
 }

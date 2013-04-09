@@ -27,10 +27,7 @@ package com.github.multitouchframework.demo.support;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -39,7 +36,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.util.Collection;
 
-public class MeanCursorLayer extends JComponent implements TouchListener<CursorUpdateEvent> {
+public class MeanCursorLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
@@ -52,6 +49,9 @@ public class MeanCursorLayer extends JComponent implements TouchListener<CursorU
 
     private Cursor meanCursor = null;
 
+    /**
+     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         final Collection<Cursor> cursors = event.getCursors();
@@ -68,10 +68,12 @@ public class MeanCursorLayer extends JComponent implements TouchListener<CursorU
             meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
         }
 
-        // Trigger repaint
-        getParent().repaint();
+        triggerRepaint();
     }
 
+    /**
+     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     */
     @Override
     public void paintComponent(final Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -85,11 +87,5 @@ public class MeanCursorLayer extends JComponent implements TouchListener<CursorU
             graphics.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
                     MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
         }
-    }
-
-    private Point convertCursorToComponent(final Cursor screenCursor) {
-        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
-        SwingUtilities.convertPointFromScreen(point, this);
-        return point;
     }
 }
