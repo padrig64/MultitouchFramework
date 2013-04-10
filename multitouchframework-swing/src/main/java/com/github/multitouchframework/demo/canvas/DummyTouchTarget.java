@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.support;
+package com.github.multitouchframework.demo.canvas;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.TouchTarget;

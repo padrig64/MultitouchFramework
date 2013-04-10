@@ -23,11 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.support;
+package com.github.multitouchframework.demo.canvas;
 
 import java.awt.Graphics2D;
 
-public interface Layer {
+public interface CanvasLayer {
 
     public void paint(Graphics2D g2d);
 }

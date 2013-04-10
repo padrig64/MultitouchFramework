@@ -37,14 +37,13 @@ import com.github.multitouchframework.base.gesture.tap.TapEvent;
 import com.github.multitouchframework.base.gesture.tap.TapRecognizer;
 import com.github.multitouchframework.base.source.TuioSource;
 import com.github.multitouchframework.base.touch.ScreenTouchTarget;
-import com.github.multitouchframework.demo.support.BoundingBoxFilterOutputLayer;
-import com.github.multitouchframework.demo.support.Canvas;
-import com.github.multitouchframework.demo.support.CursorsLayer;
-import com.github.multitouchframework.demo.support.DummyTouchTarget;
-import com.github.multitouchframework.demo.support.Layer;
-import com.github.multitouchframework.demo.support.MeanCursorLayer;
-import com.github.multitouchframework.demo.support.MeanLinesLayer;
-import com.github.multitouchframework.demo.support.TouchTargetsLayer;
+import com.github.multitouchframework.demo.layeredpane.BoundingBoxFilterOutputLayer;
+import com.github.multitouchframework.demo.canvas.Canvas;
+import com.github.multitouchframework.demo.layeredpane.CursorsLayer;
+import com.github.multitouchframework.demo.canvas.DummyTouchTarget;
+import com.github.multitouchframework.demo.layeredpane.MeanCursorLayer;
+import com.github.multitouchframework.demo.layeredpane.MeanLinesLayer;
+import com.github.multitouchframework.demo.canvas.TouchTargetsLayer;
 import com.github.multitouchframework.swing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.flow.EDTScheduler;
 import net.miginfocom.swing.MigLayout;
@@ -79,7 +78,7 @@ public class DemoApp extends JFrame {
             // Search layer by name
             final JCheckBox layerControlCheckBox = (JCheckBox) itemEvent.getSource();
             final String layerName = layerControlCheckBox.getText();
-            for (final CanvasLayer canvasLayer : CanvasLayer.values()) {
+            for (final CanvasLayer canvasLayer : DemoApp.CanvasLayer.values()) {
                 if (canvasLayer.toString().equals(layerName)) {
                     canvas.setLayerVisible(canvasLayer.getLayer(), layerControlCheckBox.isSelected());
                 }
@@ -150,16 +149,16 @@ public class DemoApp extends JFrame {
         TOUCH_TARGETS("Touch targets", new TouchTargetsLayer(canvas));
 
         private final String presentationName;
-        private final Layer layer;
+        private final com.github.multitouchframework.demo.canvas.CanvasLayer layer;
         private final Object processor;
 
         CanvasLayer(final String presentationName, final Object layer) {
             this.presentationName = presentationName;
-            this.layer = (Layer) layer;
+            this.layer = (com.github.multitouchframework.demo.canvas.CanvasLayer) layer;
             this.processor = layer;
         }
 
-        public Layer getLayer() {
+        public com.github.multitouchframework.demo.canvas.CanvasLayer getLayer() {
             return layer;
         }
 
@@ -210,7 +209,7 @@ public class DemoApp extends JFrame {
         setContentPane(contentPane);
 
         // Add layers to canvas
-        final CanvasLayer[] canvasLayers = CanvasLayer.values();
+        final CanvasLayer[] canvasLayers = DemoApp.CanvasLayer.values();
         for (int i = canvasLayers.length - 1; i >= 0; i--) {
             canvas.addLayer(canvasLayers[i].getLayer());
         }
@@ -248,7 +247,7 @@ public class DemoApp extends JFrame {
         listPanel.add(titleLabel);
 
         // Add layers to the list
-        final CanvasLayer[] layers = CanvasLayer.values();
+        final CanvasLayer[] layers = DemoApp.CanvasLayer.values();
         for (final CanvasLayer layer : layers) {
             final JCheckBox layerControlCheckBox = new JCheckBox(layer.toString());
             layerControlCheckBox.setName("CanvasLayerControlCheckBox");
@@ -334,8 +333,8 @@ public class DemoApp extends JFrame {
         // Configure layer for touch targets
         final EDTScheduler<CursorUpdateEvent> edtCursorProcessorBlock = new EDTScheduler<CursorUpdateEvent>();
         cursorToTargetDispatcher.queue(edtCursorProcessorBlock);
-        ((TouchTargetsLayer) CanvasLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider(cursorToTargetDispatcher);
-        edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) CanvasLayer.TOUCH_TARGETS.getProcessor());
+        ((TouchTargetsLayer) DemoApp.CanvasLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider(cursorToTargetDispatcher);
+        edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) DemoApp.CanvasLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure gestures
         final DragRecognizer dragRecognizer = new DragRecognizer();

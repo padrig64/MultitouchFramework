@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.support;
+package com.github.multitouchframework.demo.canvas;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -45,32 +45,32 @@ public class Canvas extends JComponent {
 
     private static final Color BACKGROUND_COLOR = Color.WHITE;
 
-    private final List<Layer> layers = new ArrayList<Layer>();
+    private final List<CanvasLayer> layers = new ArrayList<CanvasLayer>();
 
-    private final Set<Layer> visibleLayers = new HashSet<Layer>();
+    private final Set<CanvasLayer> visibleLayers = new HashSet<CanvasLayer>();
 
     public Canvas() {
         super();
         setName("Canvas");
     }
 
-    public void addLayer(final Layer layer) {
+    public void addLayer(final CanvasLayer layer) {
         layers.add(layer);
         visibleLayers.add(layer);
         repaint();
     }
 
-    public void removeLayer(final Layer layer) {
+    public void removeLayer(final CanvasLayer layer) {
         visibleLayers.remove(layer);
         layers.remove(layer);
         repaint();
     }
 
-    public boolean isLayerVisible(final Layer layer) {
+    public boolean isLayerVisible(final CanvasLayer layer) {
         return visibleLayers.contains(layer);
     }
 
-    public void setLayerVisible(final Layer layer, final boolean visible) {
+    public void setLayerVisible(final CanvasLayer layer, final boolean visible) {
         if (visible) {
             visibleLayers.add(layer);
         } else {
@@ -95,7 +95,7 @@ public class Canvas extends JComponent {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Draw all visible layers
-            for (final Layer layer : layers) {
+            for (final CanvasLayer layer : layers) {
                 if (visibleLayers.contains(layer)) {
                     layer.paint(g2d);
                 }

@@ -23,13 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.support;
+package com.github.multitouchframework.demo.canvas;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.demo.canvas.Canvas;
+import com.github.multitouchframework.demo.canvas.CanvasLayer;
+import com.github.multitouchframework.demo.canvas.DummyTouchTarget;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,7 +43,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TouchTargetsLayer implements Layer, TouchListener<CursorUpdateEvent> {
+public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdateEvent> {
 
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
