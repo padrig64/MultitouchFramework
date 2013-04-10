@@ -6,7 +6,8 @@
 
 * Tap gesture with min/max tap count (including delay to make sure there is no more)
 * Fire gesture events only for wanted touch targets
-* "DouleTapAndSlideToZoom" gesture
+* "DoubleTapAndSlideToZoom" gesture
+* Dispatchers should also translate cursors
 * Can dispatch cursors to the REST_TOUCH_TARGET instead of the SCREEN_TOUCH_TARGET
 * Make input cursors already on a touch target => remove CursorProcessor interface & repackage everything
 * Swing-based cursor-to-target dispatcher
