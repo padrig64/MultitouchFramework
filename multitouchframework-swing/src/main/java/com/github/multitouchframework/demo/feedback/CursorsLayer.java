@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.layeredpane;
+package com.github.multitouchframework.demo.feedback;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
@@ -34,58 +34,53 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class MeanCursorLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
+public class CursorsLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
      */
-    private static final long serialVersionUID = -1866299857263220891L;
+    private static final long serialVersionUID = -8344669485004582702L;
 
-    private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
+    private static final Color CURSOR_COLOR = UIManager.getColor("nimbusInfoBlue");
 
-    private static final int MEAN_CURSOR_SIZE = 6;
+    private static final int CURSOR_SIZE = 6;
 
-    private Cursor meanCursor = null;
+    private Collection<Cursor> cursors = null;
 
     /**
-     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
-        final Collection<Cursor> cursors = event.getCursors();
-        if (cursors.isEmpty()) {
-            meanCursor = null;
-        } else {
-            // Calculate mean cursor
-            int meanX = 0;
-            int meanY = 0;
-            for (final Cursor cursor : cursors) {
-                meanX += cursor.getX();
-                meanY += cursor.getY();
-            }
-            meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
-        }
-
+        this.cursors = event.getCursors();
         triggerRepaint();
     }
 
     /**
-     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
-    public void paintComponent(final Graphics graphics) {
+    protected void paintComponent(final Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (meanCursor != null) {
+        if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
-            final Point canvasMeanPoint = convertCursorToComponent(meanCursor);
+            final List<Point> canvasPoints = new ArrayList<Point>();
+            for (final Cursor cursor : cursors) {
+                final Point canvasPoint = convertCursorToComponent(cursor);
+                canvasPoints.add(canvasPoint);
+            }
 
-            // Paint mean cursor
-            graphics.setColor(MEAN_CURSOR_COLOR);
-            graphics.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
-                    MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
+            // Paint cursors
+            graphics.setColor(CURSOR_COLOR);
+            for (final Point canvasPoint : canvasPoints) {
+                graphics.fillOval(canvasPoint.x - CURSOR_SIZE / 2, canvasPoint.y - CURSOR_SIZE / 2, CURSOR_SIZE,
+                        CURSOR_SIZE);
+            }
         }
     }
 }

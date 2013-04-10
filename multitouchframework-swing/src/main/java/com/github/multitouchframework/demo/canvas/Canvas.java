@@ -90,18 +90,16 @@ public class Canvas extends JComponent {
         graphics.fillRect(insets.left, insets.top, contentWidth, contentHeight);
 
         // Set anti-aliasing
-        if (graphics instanceof Graphics2D) {
-            final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Draw all visible layers
-            for (final CanvasLayer layer : layers) {
-                if (visibleLayers.contains(layer)) {
-                    layer.paint(g2d);
-                }
+        // Draw all visible layers
+        for (final CanvasLayer layer : layers) {
+            if (visibleLayers.contains(layer)) {
+                layer.paint(g2d);
             }
-
-            g2d.dispose();
         }
+
+        g2d.dispose();
     }
 }

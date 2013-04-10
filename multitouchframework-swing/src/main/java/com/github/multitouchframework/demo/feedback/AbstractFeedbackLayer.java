@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.layeredpane;
+package com.github.multitouchframework.demo.feedback;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.TouchEvent;
@@ -36,7 +36,7 @@ import javax.swing.event.AncestorListener;
 import java.awt.Container;
 import java.awt.Point;
 
-public abstract class AbstractLayeredPaneLayer<T extends TouchEvent> extends JComponent implements TouchListener<T> {
+public abstract class AbstractFeedbackLayer<T extends TouchEvent> extends JComponent implements TouchListener<T> {
 
     private class LayerBoundsAdapter implements AncestorListener {
 
@@ -68,7 +68,7 @@ public abstract class AbstractLayeredPaneLayer<T extends TouchEvent> extends JCo
      */
     private static final long serialVersionUID = 3231591593056028734L;
 
-    public AbstractLayeredPaneLayer() {
+    public AbstractFeedbackLayer() {
         super();
         addAncestorListener(new LayerBoundsAdapter());
     }

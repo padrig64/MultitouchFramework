@@ -30,9 +30,6 @@ import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
-import com.github.multitouchframework.demo.canvas.Canvas;
-import com.github.multitouchframework.demo.canvas.CanvasLayer;
-import com.github.multitouchframework.demo.canvas.DummyTouchTarget;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -47,16 +44,10 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
 
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
-    private final Canvas canvas;
-
     private SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = null;
 
     private final Map<TouchTarget, Collection<Cursor>> cursorsForTargets = new HashMap<TouchTarget,
             Collection<Cursor>>();
-
-    public TouchTargetsLayer(final Canvas canvas) {
-        this.canvas = canvas;
-    }
 
     public SimpleCursorToTouchTargetDispatcher getTouchTargetProvider() {
         return cursorToTargetDispatcher;
@@ -69,7 +60,7 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
         cursorsForTargets.put(event.getTouchTarget(), event.getCursors());
-        canvas.repaint();
+//        canvas.repaint();
     }
 
     @Override
@@ -79,7 +70,7 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
         // Draw all touch targets
         if (cursorToTargetDispatcher != null) {
             for (final TouchTarget target : cursorToTargetDispatcher.getTouchTargets()) {
-                final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) target).getTouchableBounds());
+                final Rectangle bounds = ((DummyTouchTarget) target).getTouchableBounds();
                 g2d.drawRoundRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 20, 20);
             }
         }
@@ -88,20 +79,10 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
         for (final Map.Entry<TouchTarget, Collection<Cursor>> entry : cursorsForTargets.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 if (!SimpleCursorToTouchTargetDispatcher.SCREEN_TOUCH_TARGET.equals(entry.getKey())) {
-                    final Rectangle bounds = convertScreenBoundsToCanvas(((DummyTouchTarget) entry.getKey())
-                            .getTouchableBounds());
+                    final Rectangle bounds = ((DummyTouchTarget) entry.getKey()).getTouchableBounds();
                     g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 20, 20);
                 }
             }
         }
-    }
-
-    private Rectangle convertScreenBoundsToCanvas(final Rectangle screenBounds) {
-        final int canvasX = screenBounds.x * canvas.getWidth() / SCREEN_SIZE.width;
-        final int canvasY = screenBounds.y * canvas.getHeight() / SCREEN_SIZE.height;
-        final int canvasWidth = screenBounds.width * canvas.getWidth() / SCREEN_SIZE.width;
-        final int canvasHeight = screenBounds.height * canvas.getHeight() / SCREEN_SIZE.height;
-
-        return new Rectangle(canvasX, canvasY, canvasWidth, canvasHeight);
     }
 }

@@ -23,74 +23,69 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.layeredpane;
+package com.github.multitouchframework.demo.feedback;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 
 import javax.swing.UIManager;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-public class BoundingBoxFilterOutputLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
+public class MeanCursorLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
      */
-    private static final long serialVersionUID = 1091004188655662420L;
+    private static final long serialVersionUID = -1866299857263220891L;
 
-    private static final Color BOUNDING_BOX_COLOR = UIManager.getColor("nimbusOrange");
+    private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
 
-    private static final int BOUNDING_BOX_SIZE = 20;
+    private static final int MEAN_CURSOR_SIZE = 6;
 
-    private static final Color FILTERED_CURSOR_COLOR = UIManager.getColor("control").darker().darker();
-
-    private static final int FILTERED_CURSOR_SIZE = 6;
-
-    private Collection<Cursor> cursors = null;
+    private Cursor meanCursor = null;
 
     /**
-     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
-        this.cursors = event.getCursors();
+        final Collection<Cursor> cursors = event.getCursors();
+        if (cursors.isEmpty()) {
+            meanCursor = null;
+        } else {
+            // Calculate mean cursor
+            int meanX = 0;
+            int meanY = 0;
+            for (final Cursor cursor : cursors) {
+                meanX += cursor.getX();
+                meanY += cursor.getY();
+            }
+            meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
+        }
+
         triggerRepaint();
     }
 
     /**
-     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
     public void paintComponent(final Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if ((cursors != null) && !cursors.isEmpty()) {
+        if (meanCursor != null) {
             // Prepare for painting
-            final List<Point> canvasPoints = new ArrayList<Point>();
-            for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToComponent(cursor);
-                canvasPoints.add(canvasPoint);
-            }
+            final Point canvasMeanPoint = convertCursorToComponent(meanCursor);
 
-            // Paint bounding boxes
-            ((Graphics2D) graphics).setStroke(new BasicStroke());
-            for (final Point canvasPoint : canvasPoints) {
-                graphics.setColor(BOUNDING_BOX_COLOR);
-                graphics.drawRect(canvasPoint.x - BOUNDING_BOX_SIZE / 2, canvasPoint.y - BOUNDING_BOX_SIZE / 2,
-                        BOUNDING_BOX_SIZE - 1, BOUNDING_BOX_SIZE - 1);
-
-                graphics.setColor(FILTERED_CURSOR_COLOR);
-                graphics.fillOval(canvasPoint.x - FILTERED_CURSOR_SIZE / 2, canvasPoint.y - FILTERED_CURSOR_SIZE / 2,
-                        FILTERED_CURSOR_SIZE, FILTERED_CURSOR_SIZE);
-            }
+            // Paint mean cursor
+            graphics.setColor(MEAN_CURSOR_COLOR);
+            graphics.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
+                    MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
         }
     }
 }

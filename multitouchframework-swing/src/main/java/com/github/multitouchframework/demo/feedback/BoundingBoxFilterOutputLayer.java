@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.layeredpane;
+package com.github.multitouchframework.demo.feedback;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
@@ -39,19 +39,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MeanLinesLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> {
+public class BoundingBoxFilterOutputLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
 
     /**
      * Generated serial UID.
      */
-    private static final long serialVersionUID = 1540757629897718731L;
+    private static final long serialVersionUID = 1091004188655662420L;
 
-    private static final Color MEAN_LINE_COLOR = UIManager.getColor("control").darker().darker();
+    private static final Color BOUNDING_BOX_COLOR = UIManager.getColor("nimbusOrange");
+
+    private static final int BOUNDING_BOX_SIZE = 20;
+
+    private static final Color FILTERED_CURSOR_COLOR = UIManager.getColor("control").darker().darker();
+
+    private static final int FILTERED_CURSOR_SIZE = 6;
 
     private Collection<Cursor> cursors = null;
 
     /**
-     * @see AbstractLayeredPaneLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
@@ -60,7 +66,7 @@ public class MeanLinesLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> 
     }
 
     /**
-     * @see AbstractLayeredPaneLayer#paintComponent(Graphics)
+     * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
     public void paintComponent(final Graphics graphics) {
@@ -69,26 +75,21 @@ public class MeanLinesLayer extends AbstractLayeredPaneLayer<CursorUpdateEvent> 
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
             final List<Point> canvasPoints = new ArrayList<Point>();
-            int meanX = 0;
-            int meanY = 0;
-
-            // Calculate mean cursor
             for (final Cursor cursor : cursors) {
                 final Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
-
-                meanX += canvasPoint.getX();
-                meanY += canvasPoint.getY();
             }
-            meanX /= canvasPoints.size();
-            meanY /= canvasPoints.size();
 
-            // Paint cursors and lines
-            ((Graphics2D) graphics).setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
-                    0.0f, new float[]{5.0f, 5.0f}, 0.0f));
-            graphics.setColor(MEAN_LINE_COLOR);
+            // Paint bounding boxes
+            ((Graphics2D) graphics).setStroke(new BasicStroke());
             for (final Point canvasPoint : canvasPoints) {
-                graphics.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
+                graphics.setColor(BOUNDING_BOX_COLOR);
+                graphics.drawRect(canvasPoint.x - BOUNDING_BOX_SIZE / 2, canvasPoint.y - BOUNDING_BOX_SIZE / 2,
+                        BOUNDING_BOX_SIZE - 1, BOUNDING_BOX_SIZE - 1);
+
+                graphics.setColor(FILTERED_CURSOR_COLOR);
+                graphics.fillOval(canvasPoint.x - FILTERED_CURSOR_SIZE / 2, canvasPoint.y - FILTERED_CURSOR_SIZE / 2,
+                        FILTERED_CURSOR_SIZE, FILTERED_CURSOR_SIZE);
             }
         }
     }
