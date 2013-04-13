@@ -49,6 +49,7 @@ import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
 import com.github.multitouchframework.swing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.flow.EDTScheduler;
+import com.github.multitouchframework.swingcomplements.LeanScrollBarUI;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class DemoApp extends JFrame {
+public class MultitouchFrameworkDemo extends JFrame {
 
     private static enum GestureProcessor {
 
@@ -166,13 +167,13 @@ public class DemoApp extends JFrame {
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DemoApp.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultitouchFrameworkDemo.class);
 
     private final Canvas canvas = new Canvas();
 
     private final LayerControlAdapter layerControlAdapter = new LayerControlAdapter();
 
-    public DemoApp() {
+    public MultitouchFrameworkDemo() {
         setTitle("MultitouchFramework Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -384,6 +385,7 @@ public class DemoApp extends JFrame {
                     if ("Nimbus".equals(info.getName())) {
                         try {
                             UIManager.setLookAndFeel(info.getClassName());
+                            UIManager.put("ScrollBarUI", LeanScrollBarUI.class.getCanonicalName());
                         } catch (ClassNotFoundException e) {
                             LOGGER.warn("Cannot set Nimbus look-and-feel", e);
                         } catch (InstantiationException e) {
@@ -397,7 +399,7 @@ public class DemoApp extends JFrame {
                     }
                 }
 
-                final JFrame frame = new DemoApp();
+                final JFrame frame = new MultitouchFrameworkDemo();
                 frame.setVisible(true);
             }
         });

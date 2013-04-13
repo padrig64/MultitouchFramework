@@ -39,11 +39,11 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
-public class ScrollDemo extends JFrame {
+public class LeanScrollBarUIDemo extends JFrame {
 
     private static final long serialVersionUID = 1728612871445898398L;
 
-    public ScrollDemo() throws HeadlessException {
+    public LeanScrollBarUIDemo() throws HeadlessException {
         super();
         init();
     }
@@ -95,7 +95,7 @@ public class ScrollDemo extends JFrame {
                 }
 
                 // Show window
-                new ScrollDemo().setVisible(true);
+                new LeanScrollBarUIDemo().setVisible(true);
             }
         });
     }

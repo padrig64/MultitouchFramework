@@ -41,11 +41,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <dependencies>
 
-        <!-- Touch Framework -->
+        <!-- MultitouchFramework -->
 
         <dependency>
             <groupId>multitouchframework</groupId>
             <artifactId>multitouchframework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>multitouchframework</groupId>
+            <artifactId>multitouchframework-swingcomplements</artifactId>
         </dependency>
 
         <!-- Layout -->
