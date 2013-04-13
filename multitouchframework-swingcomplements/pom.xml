@@ -36,16 +36,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>multitouchframework-swing</artifactId>
-    <name>MultitouchFramework Swing Support</name>
+    <artifactId>multitouchframework-swingcomplements</artifactId>
+    <name>MultitouchFramework Swing Complements</name>
 
     <dependencies>
 
-        <!-- Touch Framework -->
+        <!-- Logging -->
 
         <dependency>
-            <groupId>multitouchframework</groupId>
-            <artifactId>multitouchframework-core</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
         </dependency>
 
         <!-- Layout -->
@@ -53,24 +59,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
-        </dependency>
-
-        <!-- Logging -->
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <version>4.2</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.swinglabs.swingx</groupId>
+            <artifactId>swingx-all</artifactId>
+            <version>1.6.3</version>
         </dependency>
 
+        <!-- Animation -->
+
+        <dependency>
+            <groupId>net.java.timingframework</groupId>
+            <artifactId>timingframework-swing</artifactId>
+            <version>4.1.0</version>
+        </dependency>
     </dependencies>
+
 </project>
