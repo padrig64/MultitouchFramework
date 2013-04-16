@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
@@ -49,6 +50,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -129,12 +132,13 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private static class VisibilityAdapter implements MouseListener, MouseMotionListener, ComponentListener,
-            TimingTarget {
+            ActionListener, TimingTarget {
 
-        private final float MIN_ALPHA = 0.0f;
-        private final float MAX_ALPHA = 1.0f;
-        private final float FADE_IN_MAX_DURATION = 125;
-        private final float FADE_OUT_MAX_DURATION = 300;
+        private static final float MIN_ALPHA = 0.0f;
+        private static final float MAX_ALPHA = 1.0f;
+        private static final float FADE_IN_MAX_DURATION = 125; // ms
+        private static final float FADE_OUT_MAX_DURATION = 300; // ms
+        private static final int FADE_OUT_DELAY = 1500; // ms
 
         private static Component sharedScrollingBar = null;
 
@@ -147,6 +151,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
         private float currentAlpha = MIN_ALPHA;
 
         private Animator animator = null;
+
+        private final Timer fadeOutDelayTimer = new Timer(FADE_OUT_DELAY, this);
 
         public VisibilityAdapter(final JScrollBar scrollBar) {
             this.scrollBar = scrollBar;
@@ -270,6 +276,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         private void fadeIn() {
+            fadeOutDelayTimer.stop();
+
             // Stop previous animation
             if ((animator != null) && (animator.isRunning())) {
                 animator.removeTarget(this);
@@ -290,6 +298,10 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         private void fadeOut() {
+            fadeOutDelayTimer.start();
+        }
+
+        private void doFadeOut() {
             // Stop previous animation
             if ((animator != null) && (animator.isRunning())) {
                 animator.removeTarget(this);
@@ -307,6 +319,15 @@ public class LeanScrollBarUI extends ScrollBarUI {
                         SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
                 animator.start();
             }
+        }
+
+        /**
+         * @see ActionListener#actionPerformed(ActionEvent)
+         * @see #fadeOutDelayTimer
+         */
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            doFadeOut();
         }
 
         /**
