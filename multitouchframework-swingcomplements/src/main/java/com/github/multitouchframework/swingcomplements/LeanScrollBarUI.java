@@ -142,6 +142,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
 
         private int visibleRequestCounter = 0;
 
+        private float initialAlpha = MIN_ALPHA;
+        private float targetAlpha = MAX_ALPHA;
         private float currentAlpha = MIN_ALPHA;
 
         private Animator animator = null;
@@ -258,63 +260,93 @@ public class LeanScrollBarUI extends ScrollBarUI {
                 visibleRequestCounter--;
             }
 
-            if (visibleRequestCounter == 0) {
-                // Fade out
-                if ((animator != null) && (animator.isRunning())) {
-                    animator.stop();
-                }
-
-                final long duration = (long) ((MIN_ALPHA - currentAlpha) * FADE_OUT_MAX_DURATION / (MIN_ALPHA -
-                        MAX_ALPHA));
-                if (duration <= 0) {
-                    timingEvent(null, 1.0);
-                } else {
-                    animator = new Animator.Builder().setDuration(duration, TimeUnit.MILLISECONDS).setInterpolator
-                            (new SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
-                    animator.start();
-                }
-            } else if (visibleRequestCounter == 1) {
-                // Fade in
-                if ((animator != null) && (animator.isRunning())) {
-                    animator.stop();
-                }
-                final long duration = (long) ((currentAlpha - MAX_ALPHA) * FADE_IN_MAX_DURATION / (MIN_ALPHA -
-                        MAX_ALPHA));
-                if (duration <= 0) {
-                    timingEvent(null, 0.0);
-                } else {
-                    animator = new Animator.Builder().setDuration(duration, TimeUnit.MILLISECONDS).setInterpolator
-                            (new SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
-                    animator.startReverse();
-                }
+            if (visibleRequestCounter == 1) {
+                fadeIn();
+            } else if (visibleRequestCounter == 0) {
+                fadeOut();
             } else if (visibleRequestCounter < 0) {
                 visibleRequestCounter = 0;
             }
         }
 
+        private void fadeIn() {
+            // Stop previous animation
+            if ((animator != null) && (animator.isRunning())) {
+                animator.removeTarget(this);
+                animator.stop();
+            }
+
+            // Start new animation from where the previous one stopped
+            initialAlpha = currentAlpha;
+            targetAlpha = MAX_ALPHA;
+            final long duration = (long) ((MAX_ALPHA - initialAlpha) * FADE_IN_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
+            if (duration <= 0) {
+                timingEvent(null, 1.0);
+            } else {
+                animator = new Animator.Builder().setDuration(duration, TimeUnit.MILLISECONDS).setInterpolator(new
+                        SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
+                animator.start();
+            }
+        }
+
+        private void fadeOut() {
+            // Stop previous animation
+            if ((animator != null) && (animator.isRunning())) {
+                animator.removeTarget(this);
+                animator.stop();
+            }
+
+            // Start new animation from where the previous one stopped
+            initialAlpha = currentAlpha;
+            targetAlpha = MIN_ALPHA;
+            final long duration = (long) ((initialAlpha - MIN_ALPHA) * FADE_OUT_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
+            if (duration <= 0) {
+                timingEvent(null, 1.0);
+            } else {
+                animator = new Animator.Builder().setDuration(duration, TimeUnit.MILLISECONDS).setInterpolator(new
+                        SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
+                animator.start();
+            }
+        }
+
+        /**
+         * @see TimingTarget#begin(Animator)
+         */
         @Override
         public void begin(final Animator animator) {
             // Nothing to be done because we stop the animation manually
         }
 
+        /**
+         * @see TimingTarget#end(Animator)
+         */
         @Override
         public void end(final Animator animator) {
             // Nothing to be done because we stop the animation manually
         }
 
+        /**
+         * @see TimingTarget#repeat(Animator)
+         */
         @Override
         public void repeat(final Animator animator) {
             // Nothing to be done
         }
 
+        /**
+         * @see TimingTarget#reverse(Animator)
+         */
         @Override
         public void reverse(final Animator animator) {
             // Nothing to be done
         }
 
+        /**
+         * @see TimingTarget#timingEvent(Animator, double)
+         */
         @Override
         public void timingEvent(final Animator animator, final double v) {
-            currentAlpha = (float) (v * (MIN_ALPHA - MAX_ALPHA)) + MAX_ALPHA;
+            currentAlpha = (float) (v * (targetAlpha - initialAlpha) + initialAlpha);
             scrollBar.repaint();
         }
     }
@@ -324,20 +356,27 @@ public class LeanScrollBarUI extends ScrollBarUI {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(LeanScrollBarUI.class);
 
+    private static final Color BASE_COLOR = new Color(64, 64, 64, 192);
+
     private static final int MIN_LENGTH = 50; // Including the heads
+
+    private static final int THICKNESS = 7;
 
     private JScrollBar scrollBar = null;
 
-    private int thickness = 7;
-
-    private Color BASE_COLOR = new Color(64, 64, 64, 192);
+    private VisibilityAdapter visibilityAdapter = null;
 
     private final ModelChangeAdapter modelChangeAdapter = new ModelChangeAdapter();
 
     private final MouseControlAdapter mouseControlAdapter = new MouseControlAdapter();
 
-    private VisibilityAdapter visibilityAdapter = null;
-
+    /**
+     * Creates a UI for the specified component.
+     *
+     * @param c Scrollbar to create the UI for.
+     *
+     * @return UI for the specified component.
+     */
     public static ComponentUI createUI(final JComponent c) {
         return new LeanScrollBarUI();
     }
@@ -433,11 +472,11 @@ public class LeanScrollBarUI extends ScrollBarUI {
         switch (scrollBar.getOrientation()) {
 
             case JScrollBar.VERTICAL:
-                size = new Dimension(insets.left + thickness + insets.right, insets.top + MIN_LENGTH + insets.bottom);
+                size = new Dimension(insets.left + THICKNESS + insets.right, insets.top + MIN_LENGTH + insets.bottom);
                 break;
 
             case JScrollBar.HORIZONTAL:
-                size = new Dimension(insets.left + MIN_LENGTH + insets.right, insets.top + thickness + insets.bottom);
+                size = new Dimension(insets.left + MIN_LENGTH + insets.right, insets.top + THICKNESS + insets.bottom);
                 break;
 
             default:
@@ -459,11 +498,11 @@ public class LeanScrollBarUI extends ScrollBarUI {
         switch (scrollBar.getOrientation()) {
 
             case JScrollBar.VERTICAL:
-                size = new Dimension(insets.left + thickness + insets.right, insets.top + insets.bottom);
+                size = new Dimension(insets.left + THICKNESS + insets.right, insets.top + insets.bottom);
                 break;
 
             case JScrollBar.HORIZONTAL:
-                size = new Dimension(insets.left + insets.right, insets.top + thickness + insets.bottom);
+                size = new Dimension(insets.left + insets.right, insets.top + THICKNESS + insets.bottom);
                 break;
 
             default:
@@ -577,14 +616,14 @@ public class LeanScrollBarUI extends ScrollBarUI {
         final int barY = insets.top + valueInPixels;
 
         // Paint head
-        g2d.fillOval(barX, barY, thickness, thickness);
+        g2d.fillOval(barX, barY, THICKNESS, THICKNESS);
 
         // Paint tail
-        g2d.fillOval(barX, barY + extentInPixels - thickness, thickness, thickness);
+        g2d.fillOval(barX, barY + extentInPixels - THICKNESS, THICKNESS, THICKNESS);
 
         // Paint trunk
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-        g2d.fillRect(barX, barY + thickness / 2, thickness, extentInPixels - thickness / 2 - thickness / 2);
+        g2d.fillRect(barX, barY + THICKNESS / 2, THICKNESS, extentInPixels - THICKNESS / 2 - THICKNESS / 2);
     }
 
     private void paintHorizontal(final Graphics2D g2d, final int valueInPixels, final int extentInPixels) {
@@ -593,13 +632,13 @@ public class LeanScrollBarUI extends ScrollBarUI {
         final int barY = insets.top;
 
         // Paint head
-        g2d.fillOval(barX, barY, thickness, thickness);
+        g2d.fillOval(barX, barY, THICKNESS, THICKNESS);
 
         // Paint tail
-        g2d.fillOval(barX + extentInPixels - thickness, barY, thickness, thickness);
+        g2d.fillOval(barX + extentInPixels - THICKNESS, barY, THICKNESS, THICKNESS);
 
         // Paint trunk
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-        g2d.fillRect(barX + thickness / 2, barY, extentInPixels - thickness / 2 - thickness / 2, thickness);
+        g2d.fillRect(barX + THICKNESS / 2, barY, extentInPixels - THICKNESS / 2 - THICKNESS / 2, THICKNESS);
     }
 }
