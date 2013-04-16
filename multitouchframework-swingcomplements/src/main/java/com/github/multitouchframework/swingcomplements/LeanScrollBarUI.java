@@ -36,13 +36,10 @@ import org.slf4j.LoggerFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.UIResource;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -57,13 +54,15 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Scrollbar UI that makes {@link JScrollBar}s look a bit like the scrollbars on Mac OS X.
+ */
 public class LeanScrollBarUI extends ScrollBarUI {
 
     private class ModelChangeAdapter implements PropertyChangeListener, ChangeListener {
@@ -88,7 +87,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         private Point prevPoint = null;
 
         /**
-         * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+         * @see MouseAdapter#mousePressed(MouseEvent)
          */
         @Override
         public void mousePressed(final MouseEvent e) {
@@ -96,7 +95,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         /**
-         * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+         * @see MouseAdapter#mouseReleased(MouseEvent)
          */
         @Override
         public void mouseReleased(final MouseEvent e) {
@@ -104,7 +103,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         /**
-         * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+         * @see MouseAdapter#mouseDragged(MouseEvent)
          */
         @Override
         public void mouseDragged(final MouseEvent e) {
@@ -129,58 +128,50 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
     }
 
-    private class VisibilityAdapter implements MouseListener, ComponentListener, TimingTarget {
+    private static class VisibilityAdapter implements MouseListener, MouseMotionListener, ComponentListener,
+            TimingTarget {
 
         private final float MIN_ALPHA = 0.0f;
         private final float MAX_ALPHA = 1.0f;
         private final float FADE_IN_MAX_DURATION = 125;
         private final float FADE_OUT_MAX_DURATION = 300;
 
-        private Component exclusionAncestor = null;
-        private int visibleCounter = 0;
+        private static Component sharedScrollingBar = null;
+
+        private final JScrollBar scrollBar;
+
+        private int visibleRequestCounter = 0;
 
         private float currentAlpha = MIN_ALPHA;
 
         private Animator animator = null;
 
-        public VisibilityAdapter() {
+        public VisibilityAdapter(final JScrollBar scrollBar) {
+            this.scrollBar = scrollBar;
             final TimingSource ts = new SwingTimerTimingSource();
             Animator.setDefaultTimingSource(ts);
             ts.init();
         }
 
         /**
-         * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
+         * @see ComponentListener#componentShown(ComponentEvent)
          */
         @Override
         public void componentShown(final ComponentEvent e) {
-            final Component ancestor = getExclusionAncestor(scrollBar);
-            if (ancestor != null) {
-                if (exclusionAncestor != null) {
-                    exclusionAncestor.removeMouseListener(this);
-                }
-                exclusionAncestor = ancestor;
-                exclusionAncestor.addMouseListener(this);
-            }
-
-            setVisible(true);
-            setVisible(false);
+            requestVisible(true);
+            requestVisible(false);
         }
 
         /**
-         * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
+         * @see ComponentListener#componentHidden(ComponentEvent)
          */
         @Override
         public void componentHidden(final ComponentEvent e) {
-            if (exclusionAncestor != null) {
-                exclusionAncestor.removeMouseListener(this);
-                exclusionAncestor = null;
-            }
-            visibleCounter = 0;
+            visibleRequestCounter = 0;
         }
 
         /**
-         * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
+         * @see ComponentListener#componentResized(ComponentEvent)
          */
         @Override
         public void componentResized(final ComponentEvent e) {
@@ -188,7 +179,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         /**
-         * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
+         * @see ComponentListener#componentMoved(ComponentEvent)
          */
         @Override
         public void componentMoved(final ComponentEvent e) {
@@ -196,70 +187,78 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         /**
-         * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+         * @see MouseListener#mouseEntered(MouseEvent)
          */
         @Override
         public void mouseEntered(final MouseEvent e) {
-            // Check whether exclusion ancestor is already locked
-            final Component component = EXCLUSION_ANCESTORS.get(exclusionAncestor);
-            if ((component == null) || component.equals(scrollBar)) {
-                setVisible(true);
+            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) {
+                requestVisible(true);
             }
         }
 
         /**
-         * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+         * @see MouseListener#mouseExited(MouseEvent)
          */
         @Override
         public void mouseExited(final MouseEvent e) {
-            final Component component = EXCLUSION_ANCESTORS.get(exclusionAncestor);
-            if ((component == null) || component.equals(scrollBar)) {
-                setVisible(false);
+            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) {
+                requestVisible(false);
             }
         }
 
         /**
-         * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+         * @see MouseListener#mousePressed(MouseEvent)
          */
         @Override
         public void mousePressed(final MouseEvent e) {
-            if (scrollBar.equals(e.getComponent())) {
-                EXCLUSION_ANCESTORS.put(exclusionAncestor, scrollBar);
-                setVisible(true);
-            }
+            sharedScrollingBar = scrollBar;
+            requestVisible(true);
         }
 
         /**
-         * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+         * @see MouseListener#mouseReleased(MouseEvent)
          */
         @Override
         public void mouseReleased(final MouseEvent e) {
-            if (scrollBar.equals(e.getComponent())) {
-                EXCLUSION_ANCESTORS.remove(exclusionAncestor);
-                setVisible(false);
-            }
+            sharedScrollingBar = null;
+            requestVisible(false);
         }
 
         /**
-         * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+         * @see MouseListener#mouseClicked(MouseEvent)
          */
         @Override
         public void mouseClicked(final MouseEvent e) {
             // Nothing to be done
         }
 
-        public boolean isVisible() {
-            return (visibleCounter != 0);
+        /**
+         * @see MouseMotionListener#mouseMoved(MouseEvent)
+         */
+        @Override
+        public void mouseMoved(final MouseEvent e) {
+            if (visibleRequestCounter == 0) {
+                // This can happen after dragging another scrollbar, releasing on this scrollbar and moving the mouse
+                requestVisible(true); // Simulate a mouse entered
+            }
         }
 
-        public void setVisible(final boolean visible) {
+        /**
+         * @see MouseMotionListener#mouseDragged(MouseEvent)
+         */
+        @Override
+        public void mouseDragged(final MouseEvent e) {
+            mouseMoved(e);
+        }
+
+        private void requestVisible(final boolean visible) {
             if (visible) {
-                visibleCounter++;
+                visibleRequestCounter++;
             } else {
-                visibleCounter--;
+                visibleRequestCounter--;
             }
 
-            if (visibleCounter == 0) {
+            if (visibleRequestCounter == 0) {
                 // Fade out
                 if ((animator != null) && (animator.isRunning())) {
                     animator.stop();
@@ -274,7 +273,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
                             (new SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
                     animator.start();
                 }
-            } else if (visibleCounter == 1) {
+            } else if (visibleRequestCounter == 1) {
                 // Fade in
                 if ((animator != null) && (animator.isRunning())) {
                     animator.stop();
@@ -288,6 +287,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
                             (new SplineInterpolator(0.8, 0.2, 0.2, 0.8)).addTarget(this).build();
                     animator.startReverse();
                 }
+            } else if (visibleRequestCounter < 0) {
+                visibleRequestCounter = 0;
             }
         }
 
@@ -314,15 +315,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         @Override
         public void timingEvent(final Animator animator, final double v) {
             currentAlpha = (float) (v * (MIN_ALPHA - MAX_ALPHA)) + MAX_ALPHA;
-            if (exclusionAncestor == null) {
-                scrollBar.repaint();
-            } else {
-                exclusionAncestor.repaint();
-            }
-        }
-
-        private Component getExclusionAncestor(final Component component) {
-            return component.getParent();
+            scrollBar.repaint();
         }
     }
 
@@ -332,8 +325,6 @@ public class LeanScrollBarUI extends ScrollBarUI {
     private static final Logger LOGGER = LoggerFactory.getLogger(LeanScrollBarUI.class);
 
     private static final int MIN_LENGTH = 50; // Including the heads
-
-    private static final Map<Component, JScrollBar> EXCLUSION_ANCESTORS = new HashMap<Component, JScrollBar>();
 
     private JScrollBar scrollBar = null;
 
@@ -345,7 +336,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
 
     private final MouseControlAdapter mouseControlAdapter = new MouseControlAdapter();
 
-    private final VisibilityAdapter visibilityAdapter = new VisibilityAdapter();
+    private VisibilityAdapter visibilityAdapter = null;
 
     public static ComponentUI createUI(final JComponent c) {
         return new LeanScrollBarUI();
@@ -363,6 +354,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
     public void installUI(final JComponent c) {
         if (c instanceof JScrollBar) {
             scrollBar = (JScrollBar) c;
+            visibilityAdapter = new VisibilityAdapter(scrollBar);
 
             installDefaults();
 //            installComponents();
@@ -378,19 +370,20 @@ public class LeanScrollBarUI extends ScrollBarUI {
         uninstallDefaults();
 
         scrollBar = null;
+        visibilityAdapter = null;
     }
 
     private void installDefaults() {
-        final Border border = scrollBar.getBorder();
-        if ((border == null) || (border instanceof UIResource)) {
-            scrollBar.setBorder(new LineBorder(Color.RED));
-        }
+//        final Border border = scrollBar.getBorder();
+//        if ((border == null) || (border instanceof UIResource)) {
+//            scrollBar.setBorder(new LineBorder(Color.RED));
+//        }
     }
 
     private void uninstallDefaults() {
-        if (scrollBar.getBorder() instanceof UIResource) {
-            scrollBar.setBorder(null);
-        }
+//        if (scrollBar.getBorder() instanceof UIResource) {
+//            scrollBar.setBorder(null);
+//        }
     }
 
     private void installListeners() {
@@ -401,7 +394,21 @@ public class LeanScrollBarUI extends ScrollBarUI {
         scrollBar.addMouseMotionListener(mouseControlAdapter);
 
         scrollBar.addMouseListener(visibilityAdapter);
+        scrollBar.addMouseMotionListener(visibilityAdapter);
         scrollBar.addComponentListener(visibilityAdapter);
+
+//        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+//            @Override
+//            public void eventDispatched(final AWTEvent event) {
+//                if (visibilityAdapter.exclusionAncestor != null) {
+//                    if (event.getID() == MouseEvent.MOUSE_ENTERED) {
+//                        visibilityAdapter.mouseEntered((MouseEvent) event);
+//                    } else if (event.getID() == MouseEvent.MOUSE_EXITED) {
+//                        visibilityAdapter.mouseExited((MouseEvent) event);
+//                    }
+//                }
+//            }
+//        }, MouseEvent.MOUSE_EVENT_MASK);
     }
 
     private void uninstallListeners() {
@@ -473,7 +480,6 @@ public class LeanScrollBarUI extends ScrollBarUI {
     @Override
     public void paint(final Graphics g, final JComponent c) {
 
-//        if (visibilityAdapter.isVisible()) {
         // Paint in image buffer because alpha composite does not seem to work as expected on the given Graphics
         final BufferedImage buffer = new BufferedImage(scrollBar.getWidth(), scrollBar.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
@@ -501,7 +507,6 @@ public class LeanScrollBarUI extends ScrollBarUI {
         g2d.dispose();
 
         g.drawImage(buffer, 0, 0, null);
-//        }
     }
 
     private int getMaxExtentInPixels() {
