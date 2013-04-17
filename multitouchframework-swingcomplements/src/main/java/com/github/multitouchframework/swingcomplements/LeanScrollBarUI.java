@@ -68,25 +68,43 @@ import java.util.concurrent.TimeUnit;
  */
 public class LeanScrollBarUI extends ScrollBarUI {
 
+    /**
+     * Entity responsible of repainting the scrollbar whenever its model changes.
+     */
     private class ModelChangeAdapter implements PropertyChangeListener, ChangeListener {
 
+        /**
+         * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+         */
         @Override
         public void propertyChange(final PropertyChangeEvent event) {
             if ("model".equals(event.getPropertyName())) {
+                // Model replaced, so hook to the new model
                 ((BoundedRangeModel) event.getOldValue()).removeChangeListener(this);
                 ((BoundedRangeModel) event.getNewValue()).addChangeListener(this);
                 scrollBar.repaint();
             }
         }
 
+        /**
+         * @see ChangeListener#stateChanged(ChangeEvent)
+         */
         @Override
         public void stateChanged(final ChangeEvent event) {
+            // Model value changed
             scrollBar.repaint();
         }
     }
 
+    /**
+     * Entity responsible for handling the dragging of the scrollbar using the mouse.
+     */
     private class MouseControlAdapter extends MouseAdapter {
 
+        /**
+         * Last know position of the mouse when dragging the scrollbar.<br>It is used to calculate the amount of scroll
+         * on each mouse movement.
+         */
         private Point prevPoint = null;
 
         /**
@@ -131,6 +149,12 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
     }
 
+    /**
+     * Entity responsibility of making the scrollbar visible/invisible.<br>(1) The scrollbar should be visible on
+     * rollover and invisible when no rollover.<br>(2) The scrollbar should visible when being dragged even when the
+     * mouse is no longer on the scrollbar.<br>(3) The scrollbar should not be visible on rollover if another scrollbar
+     * is being dragged.
+     */
     private static class VisibilityAdapter implements MouseListener, MouseMotionListener, ComponentListener,
             ActionListener, TimingTarget {
 
@@ -199,8 +223,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
          */
         @Override
         public void mouseEntered(final MouseEvent e) {
-            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) {
-                requestVisible(true);
+            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) { // (3)
+                requestVisible(true); // (1)
             }
         }
 
@@ -209,8 +233,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
          */
         @Override
         public void mouseExited(final MouseEvent e) {
-            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) {
-                requestVisible(false);
+            if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) { // (3)
+                requestVisible(false); // (1)
             }
         }
 
@@ -219,8 +243,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
          */
         @Override
         public void mousePressed(final MouseEvent e) {
-            sharedScrollingBar = scrollBar;
-            requestVisible(true);
+            sharedScrollingBar = scrollBar; // (3)
+            requestVisible(true); // (2)
         }
 
         /**
@@ -228,8 +252,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
          */
         @Override
         public void mouseReleased(final MouseEvent e) {
-            sharedScrollingBar = null;
-            requestVisible(false);
+            sharedScrollingBar = null; // (3)
+            requestVisible(false); // (2)
         }
 
         /**
@@ -247,7 +271,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         public void mouseMoved(final MouseEvent e) {
             if (visibleRequestCounter == 0) {
                 // This can happen after dragging another scrollbar, releasing on this scrollbar and moving the mouse
-                requestVisible(true); // Simulate a mouse entered
+                requestVisible(true); // (1) because of (3): Simulate a mouse entered
             }
         }
 
@@ -256,7 +280,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          */
         @Override
         public void mouseDragged(final MouseEvent e) {
-            mouseMoved(e);
+            mouseMoved(e); // (1) because of (3)
         }
 
         private void requestVisible(final boolean visible) {
