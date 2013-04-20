@@ -26,6 +26,7 @@
 package com.github.multitouchframework.swingcomplements;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,7 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
@@ -55,10 +57,12 @@ public class LeanScrollBarUIDemo extends JFrame {
         // Set content pane
         final JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
-        final JPanel scrolledPanel = new JPanel();
-        scrolledPanel.setBorder(new LineBorder(Color.GREEN));
-        scrolledPanel.setPreferredSize(new Dimension(300, 300));
-        contentPane.add(new JScrollPane(scrolledPanel), BorderLayout.CENTER);
+        final JLabel scrollableComponent = new JLabel("Scrollable area");
+        scrollableComponent.setHorizontalAlignment(JLabel.CENTER);
+        scrollableComponent.setFont(scrollableComponent.getFont().deriveFont(25.0f).deriveFont(Font.BOLD));
+        scrollableComponent.setBorder(new LineBorder(Color.GREEN));
+        scrollableComponent.setPreferredSize(new Dimension(300, 300));
+        contentPane.add(new JScrollPane(scrollableComponent), BorderLayout.CENTER);
         setContentPane(contentPane);
 
         // Set size

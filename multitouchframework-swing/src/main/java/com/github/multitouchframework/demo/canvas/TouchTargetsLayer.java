@@ -30,19 +30,15 @@ import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.demo.model.DemoTouchTarget;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdateEvent> {
-
-    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
     private SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = null;
 
@@ -65,12 +61,11 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
 
     @Override
     public void paint(final Graphics2D g2d) {
-        g2d.setColor(new Color(255, 145, 0));
-
         // Draw all touch targets
         if (cursorToTargetDispatcher != null) {
             for (final TouchTarget target : cursorToTargetDispatcher.getTouchTargets()) {
-                final Rectangle bounds = ((DummyTouchTarget) target).getTouchableBounds();
+                g2d.setColor(((DemoTouchTarget) target).getColor());
+                final Rectangle bounds = ((DemoTouchTarget) target).getBounds();
                 g2d.drawRoundRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 20, 20);
             }
         }
@@ -79,7 +74,8 @@ public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdat
         for (final Map.Entry<TouchTarget, Collection<Cursor>> entry : cursorsForTargets.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 if (!SimpleCursorToTouchTargetDispatcher.SCREEN_TOUCH_TARGET.equals(entry.getKey())) {
-                    final Rectangle bounds = ((DummyTouchTarget) entry.getKey()).getTouchableBounds();
+                    g2d.setColor(((DemoTouchTarget) entry.getKey()).getColor());
+                    final Rectangle bounds = ((DemoTouchTarget) entry.getKey()).getBounds();
                     g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 20, 20);
                 }
             }

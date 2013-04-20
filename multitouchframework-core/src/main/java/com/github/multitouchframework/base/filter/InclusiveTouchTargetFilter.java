@@ -28,12 +28,26 @@ package com.github.multitouchframework.base.filter;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchTarget;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class InclusiveTouchTargetFilter extends AbstractInputFilter {
 
     private final Set<TouchTarget> touchTargets = new HashSet<TouchTarget>();
+
+    public InclusiveTouchTargetFilter(final TouchTarget... touchTargets) {
+        if (touchTargets != null) {
+            Collections.addAll(this.touchTargets, touchTargets);
+        }
+    }
+
+    public InclusiveTouchTargetFilter(final Collection<TouchTarget> touchTargets) {
+        if (touchTargets != null) {
+            this.touchTargets.addAll(touchTargets);
+        }
+    }
 
     public void addTouchTarget(final TouchTarget touchTarget) {
         touchTargets.add(touchTarget);

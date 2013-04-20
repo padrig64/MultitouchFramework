@@ -31,7 +31,7 @@ import com.github.multitouchframework.api.touch.TouchTarget;
 /**
  * Event fired when the drag/pan gesture is recognized.
  *
- * @see com.github.multitouchframework.api.touch.TouchEvent
+ * @see TouchEvent
  * @see DragRecognizer
  */
 public class DragEvent implements TouchEvent {
@@ -119,7 +119,7 @@ public class DragEvent implements TouchEvent {
     }
 
     /**
-     * @see com.github.multitouchframework.api.touch.TouchEvent#getUserId()
+     * @see TouchEvent#getUserId()
      */
     @Override
     public long getUserId() {
@@ -127,7 +127,7 @@ public class DragEvent implements TouchEvent {
     }
 
     /**
-     * @see com.github.multitouchframework.api.touch.TouchEvent#getTouchTarget()
+     * @see TouchEvent#getTouchTarget()
      */
     @Override
     public TouchTarget getTouchTarget() {

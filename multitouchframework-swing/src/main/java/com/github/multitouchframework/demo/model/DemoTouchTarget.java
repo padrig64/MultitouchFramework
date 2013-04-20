@@ -23,24 +23,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.canvas;
+package com.github.multitouchframework.demo.model;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.TouchTarget;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 
-public class DummyTouchTarget implements TouchTarget {
+public class DemoTouchTarget implements TouchTarget {
 
     private final String id;
-    private final Rectangle bounds;
+    private final Color color;
+    private Rectangle bounds = null;
 
-    public DummyTouchTarget(final String id, final int x, final int y, final int width, final int height) {
-        this(id, new Rectangle(x, y, width, height));
+    public DemoTouchTarget(final String id, final Color color, final int x, final int y, final int width,
+                           final int height) {
+        this(id, color, new Rectangle(x, y, width, height));
     }
 
-    public DummyTouchTarget(final String id, final Rectangle bounds) {
+    public DemoTouchTarget(final String id, final Color color, final Rectangle bounds) {
         this.id = id;
+        this.color = color;
         this.bounds = bounds;
     }
 
@@ -48,8 +52,16 @@ public class DummyTouchTarget implements TouchTarget {
         return id;
     }
 
-    public Rectangle getTouchableBounds() {
+    public Color getColor() {
+        return color;
+    }
+
+    public Rectangle getBounds() {
         return bounds;
+    }
+
+    public void setBounds(final Rectangle bounds) {
+        this.bounds = bounds;
     }
 
     /**

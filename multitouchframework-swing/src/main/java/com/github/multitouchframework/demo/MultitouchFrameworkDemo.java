@@ -28,24 +28,27 @@ package com.github.multitouchframework.demo;
 import com.github.multitouchframework.api.filter.InputFilter;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.api.touch.TouchTarget;
 import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
+import com.github.multitouchframework.base.filter.InclusiveTouchTargetFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
+import com.github.multitouchframework.base.gesture.drag.DragEvent;
 import com.github.multitouchframework.base.gesture.drag.DragRecognizer;
+import com.github.multitouchframework.base.gesture.pinchspread.PinchSpreadEvent;
 import com.github.multitouchframework.base.gesture.pinchspread.PinchSpreadRecognizer;
-import com.github.multitouchframework.base.gesture.tap.TapEvent;
 import com.github.multitouchframework.base.gesture.tap.TapRecognizer;
 import com.github.multitouchframework.base.source.TuioSource;
 import com.github.multitouchframework.base.touch.ScreenTouchTarget;
 import com.github.multitouchframework.demo.canvas.Canvas;
 import com.github.multitouchframework.demo.canvas.CanvasLayer;
-import com.github.multitouchframework.demo.canvas.DummyTouchTarget;
 import com.github.multitouchframework.demo.canvas.TouchTargetsLayer;
 import com.github.multitouchframework.demo.feedback.AbstractFeedbackLayer;
 import com.github.multitouchframework.demo.feedback.BoundingBoxFilterOutputLayer;
 import com.github.multitouchframework.demo.feedback.CursorsLayer;
 import com.github.multitouchframework.demo.feedback.MeanCursorLayer;
 import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
+import com.github.multitouchframework.demo.model.DemoTouchTarget;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
 import com.github.multitouchframework.swing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.flow.EDTScheduler;
@@ -65,9 +68,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -168,6 +173,11 @@ public class MultitouchFrameworkDemo extends JFrame {
      * Logger for this class.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MultitouchFrameworkDemo.class);
+
+    private static final TouchTarget[] TOUCH_TARGETS = new TouchTarget[]{ //
+            new DemoTouchTarget("TopLeft", new Color(255, 145, 0), new Rectangle(10, 10, 100, 200)), //
+            new DemoTouchTarget("SomewhereElse", new Color(255, 145, 0), new Rectangle(500, 300, 100, 100)) //
+    };
 
     private final Canvas canvas = new Canvas();
 
@@ -317,21 +327,12 @@ public class MultitouchFrameworkDemo extends JFrame {
 
         // Configure cursor-to-target dispatcher
         final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTouchTargetDispatcher();
-        cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("TopLeft", 10, 10, 100, 200));
-        cursorToTargetDispatcher.addTouchTargetOnTop(new DummyTouchTarget("SomewhereElse", 500, 300, 100, 100));
+        for (final TouchTarget touchTarget : TOUCH_TARGETS) {
+            cursorToTargetDispatcher.addTouchTargetOnTop(touchTarget);
+        }
         cursorConverter.queue(cursorToTargetDispatcher);
 
         final CursorToComponentDispatcher componentDispatcher = new CursorToComponentDispatcher();
-        componentDispatcher.queue(new TouchListener<CursorUpdateEvent>() {
-            @Override
-            public void processTouchEvent(final CursorUpdateEvent event) {
-                Object baseObject = event.getTouchTarget().getBaseObject();
-                if (baseObject instanceof Component) {
-                    baseObject = ((Component) baseObject).getName();
-                }
-                System.out.println(baseObject);
-            }
-        });
         noChangeFilter.queue(componentDispatcher);
 
         // Configure layer for touch targets
@@ -342,33 +343,54 @@ public class MultitouchFrameworkDemo extends JFrame {
         edtCursorProcessorBlock.queue((TouchListener<CursorUpdateEvent>) CanvasPresentationLayer.TOUCH_TARGETS
                 .getProcessor());
 
-        // Configure gestures
+        // Configure touch-target filters
+        final InclusiveTouchTargetFilter touchTargetFilter = new InclusiveTouchTargetFilter(TOUCH_TARGETS);
+        cursorToTargetDispatcher.queue(touchTargetFilter);
+
+        // Configure gestures on touch targets
         final DragRecognizer dragRecognizer = new DragRecognizer();
-        cursorToTargetDispatcher.queue(dragRecognizer);
+        touchTargetFilter.queue(dragRecognizer);
         final PinchSpreadRecognizer pinchSpreadRecognizer = new PinchSpreadRecognizer();
-        cursorToTargetDispatcher.queue(pinchSpreadRecognizer);
+        touchTargetFilter.queue(pinchSpreadRecognizer);
         final TapRecognizer tapRecognizer = new TapRecognizer();
-        cursorToTargetDispatcher.queue(tapRecognizer);
+        touchTargetFilter.queue(tapRecognizer);
 
         // Configure gesture listeners
-//		dragRecognizer.queue(new TouchListener<DragEvent>() {
-//
-//			@Override
-//			public void processTouchEvent(final DragEvent event) {
-//				System.out.println(event);
-//			}
-//		});
-//        pinchSpreadRecognizer.queue(new TouchListener<PinchSpreadEvent>() {
-//
-//            @Override
-//            public void processTouchEvent(final PinchSpreadEvent event) {
-//                System.out.println(event);
-//            }
-//        });
-        tapRecognizer.queue(new TouchListener<TapEvent>() {
+        dragRecognizer.queue(new TouchListener<DragEvent>() {
+
             @Override
-            public void processTouchEvent(final TapEvent event) {
-                System.out.println(event);
+            public void processTouchEvent(final DragEvent event) {
+                final Object touchTarget = event.getTouchTarget().getBaseObject();
+                if (touchTarget instanceof DemoTouchTarget) {
+                    final Rectangle bounds = ((DemoTouchTarget) touchTarget).getBounds();
+                    bounds.translate(event.getDiffX(), event.getDiffY());
+                    ((DemoTouchTarget) touchTarget).setBounds(bounds);
+                }
+            }
+        });
+        pinchSpreadRecognizer.queue(new TouchListener<PinchSpreadEvent>() {
+
+            private Rectangle originalBounds = null;
+
+            @Override
+            public void processTouchEvent(final PinchSpreadEvent event) {
+                switch (event.getState()) {
+                    case ARMED:
+                        originalBounds = ((DemoTouchTarget) event.getTouchTarget()).getBounds();
+                        break;
+                    case PERFORMED:
+                        final Object touchTarget = event.getTouchTarget().getBaseObject();
+                        if (touchTarget instanceof DemoTouchTarget) {
+                            final Rectangle bounds = new Rectangle(originalBounds);
+                            bounds.setSize((int) (originalBounds.width * event.getTotalDiffScale()),
+                                    (int) (originalBounds.height * event.getTotalDiffScale()));
+                            ((DemoTouchTarget) touchTarget).setBounds(bounds);
+                        }
+                        break;
+                    case UNARMED:
+                        originalBounds = null;
+                        break;
+                }
             }
         });
 

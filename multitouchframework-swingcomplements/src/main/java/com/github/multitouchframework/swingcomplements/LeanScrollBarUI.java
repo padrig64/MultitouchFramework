@@ -69,34 +69,6 @@ import java.util.concurrent.TimeUnit;
 public class LeanScrollBarUI extends ScrollBarUI {
 
     /**
-     * Entity responsible of repainting the scrollbar whenever its model changes.
-     */
-    private class ModelChangeAdapter implements PropertyChangeListener, ChangeListener {
-
-        /**
-         * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
-         */
-        @Override
-        public void propertyChange(final PropertyChangeEvent event) {
-            if ("model".equals(event.getPropertyName())) {
-                // Model replaced, so hook to the new model
-                ((BoundedRangeModel) event.getOldValue()).removeChangeListener(this);
-                ((BoundedRangeModel) event.getNewValue()).addChangeListener(this);
-                scrollBar.repaint();
-            }
-        }
-
-        /**
-         * @see ChangeListener#stateChanged(ChangeEvent)
-         */
-        @Override
-        public void stateChanged(final ChangeEvent event) {
-            // Model value changed
-            scrollBar.repaint();
-        }
-    }
-
-    /**
      * Entity responsible for handling the dragging of the scrollbar using the mouse.
      */
     private class MouseControlAdapter extends MouseAdapter {
@@ -153,10 +125,10 @@ public class LeanScrollBarUI extends ScrollBarUI {
      * Entity responsibility of making the scrollbar visible/invisible.<br>(1) The scrollbar should be visible on
      * rollover and invisible when no rollover.<br>(2) The scrollbar should visible when being dragged even when the
      * mouse is no longer on the scrollbar.<br>(3) The scrollbar should not be visible on rollover if another scrollbar
-     * is being dragged.
+     * is being dragged.<br>(4) The scrollbar should become visible when the content is scrolled.
      */
-    private static class VisibilityAdapter implements MouseListener, MouseMotionListener, ComponentListener,
-            ActionListener, TimingTarget {
+    private static class VisibilityAdapter implements ComponentListener, MouseListener, MouseMotionListener,
+            PropertyChangeListener, ChangeListener, ActionListener, TimingTarget {
 
         private static final float MIN_ALPHA = 0.0f;
         private static final float MAX_ALPHA = 1.0f;
@@ -283,6 +255,30 @@ public class LeanScrollBarUI extends ScrollBarUI {
             mouseMoved(e); // (1) because of (3)
         }
 
+        /**
+         * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+         */
+        @Override
+        public void propertyChange(final PropertyChangeEvent event) {
+            if ("model".equals(event.getPropertyName())) {
+                // (4) Model replaced, so hook to the new model
+                ((BoundedRangeModel) event.getOldValue()).removeChangeListener(this);
+                ((BoundedRangeModel) event.getNewValue()).addChangeListener(this);
+                requestVisible(true); // (4)
+                requestVisible(false);
+            }
+        }
+
+        /**
+         * @see ChangeListener#stateChanged(ChangeEvent)
+         */
+        @Override
+        public void stateChanged(final ChangeEvent event) {
+            // Model value changed
+            requestVisible(true); // (4)
+            requestVisible(false);
+        }
+
         private void requestVisible(final boolean visible) {
             if (visible) {
                 visibleRequestCounter++;
@@ -300,7 +296,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         private void fadeIn() {
-            fadeOutDelayTimer.stop();
+            if (fadeOutDelayTimer.isRunning()) {
+                fadeOutDelayTimer.stop();
+            }
 
             // Stop previous animation
             if ((animator != null) && (animator.isRunning())) {
@@ -322,7 +320,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
 
         private void fadeOut() {
-            fadeOutDelayTimer.start();
+            if (!fadeOutDelayTimer.isRunning()) {
+                fadeOutDelayTimer.start();
+            }
         }
 
         private void doFadeOut() {
@@ -411,12 +411,11 @@ public class LeanScrollBarUI extends ScrollBarUI {
 
     private VisibilityAdapter visibilityAdapter = null;
 
-    private final ModelChangeAdapter modelChangeAdapter = new ModelChangeAdapter();
-
     private final MouseControlAdapter mouseControlAdapter = new MouseControlAdapter();
 
     /**
-     * Creates a UI for the specified component.
+     * Creates a UI for the specified component.<br>This method is called by the {@link javax.swing.UIManager} via the
+     * {@link javax.swing.UIDefaults}.
      *
      * @param c Scrollbar to create the UI for.
      *
@@ -429,7 +428,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
     /**
      * Protected default constructor.
      *
-     * @see #createUI(javax.swing.JComponent)
+     * @see #createUI(JComponent)
      */
     protected LeanScrollBarUI() {
         super();
@@ -471,15 +470,15 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private void installListeners() {
-        scrollBar.addPropertyChangeListener(modelChangeAdapter);
-        scrollBar.getModel().addChangeListener(modelChangeAdapter);
-
         scrollBar.addMouseListener(mouseControlAdapter);
         scrollBar.addMouseMotionListener(mouseControlAdapter);
 
         scrollBar.addMouseListener(visibilityAdapter);
         scrollBar.addMouseMotionListener(visibilityAdapter);
         scrollBar.addComponentListener(visibilityAdapter);
+
+        scrollBar.addPropertyChangeListener(visibilityAdapter);
+        scrollBar.getModel().addChangeListener(visibilityAdapter);
 
 //        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
 //            @Override
@@ -496,18 +495,18 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private void uninstallListeners() {
-        scrollBar.removePropertyChangeListener(modelChangeAdapter);
-        scrollBar.getModel().removeChangeListener(modelChangeAdapter);
-
         scrollBar.removeMouseListener(mouseControlAdapter);
         scrollBar.removeMouseMotionListener(mouseControlAdapter);
 
         scrollBar.removeMouseListener(visibilityAdapter);
         scrollBar.removeComponentListener(visibilityAdapter);
+
+        scrollBar.removePropertyChangeListener(visibilityAdapter);
+        scrollBar.getModel().removeChangeListener(visibilityAdapter);
     }
 
     /**
-     * @see javax.swing.plaf.ScrollBarUI#getMinimumSize(javax.swing.JComponent)
+     * @see ScrollBarUI#getMinimumSize(JComponent)
      */
     @Override
     public Dimension getMinimumSize(final JComponent c) {
@@ -533,7 +532,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     /**
-     * @see javax.swing.plaf.ScrollBarUI#getPreferredSize(javax.swing.JComponent)
+     * @see ScrollBarUI#getPreferredSize(JComponent)
      */
     @Override
     public Dimension getPreferredSize(final JComponent c) {
@@ -559,7 +558,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     /**
-     * @see javax.swing.plaf.ScrollBarUI#paint(java.awt.Graphics, javax.swing.JComponent)
+     * @see ScrollBarUI#paint(Graphics, JComponent)
      */
     @Override
     public void paint(final Graphics g, final JComponent c) {
