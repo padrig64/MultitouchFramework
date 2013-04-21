@@ -34,7 +34,7 @@ import com.github.multitouchframework.api.touch.TouchTarget;
  * @see TouchEvent
  * @see DragRecognizer
  */
-public class DragEvent implements TouchEvent {
+public class DragEvent implements TouchEvent, Cloneable {
 
     /**
      * Possible states of the gesture.
@@ -95,6 +95,18 @@ public class DragEvent implements TouchEvent {
      * Drag movement on the Y axis relatively to the very beginning of the gesture.
      */
     private final int dyTotal;
+
+    /**
+     * Copy constructor.
+     *
+     * @param event Event to be copied.
+     *
+     * @see DragEvent#DragEvent(long, TouchTarget, State, int, int, int, int)
+     */
+    public DragEvent(final DragEvent event) {
+        this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getDiffX(), event.getDiffY(),
+                event.getTotalDiffX(), event.getTotalDiffY());
+    }
 
     /**
      * Constructor specifying all the information on the gesture.

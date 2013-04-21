@@ -34,7 +34,7 @@ import com.github.multitouchframework.api.touch.TouchTarget;
  * @see com.github.multitouchframework.api.touch.TouchEvent
  * @see TapRecognizer
  */
-public class TapEvent implements TouchEvent {
+public class TapEvent implements TouchEvent, Cloneable {
 
     /**
      * Possible states of the gesture.
@@ -87,6 +87,17 @@ public class TapEvent implements TouchEvent {
     private final int cursorCount;
 
     /**
+     * Copy constructor.
+     *
+     * @param event Event to be copied.
+     *
+     * @see TapEvent#TapEvent(long, TouchTarget, State, int, int)
+     */
+    public TapEvent(final TapEvent event) {
+        this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getTapCount(), event.getCursorCount());
+    }
+
+    /**
      * Constructor specifying all the information on the gesture.
      *
      * @param userId      ID of the user performing the gesture.
@@ -133,7 +144,7 @@ public class TapEvent implements TouchEvent {
      *
      * @return Tap count.
      */
-    public double getTapCount() {
+    public int getTapCount() {
         return tapCount;
     }
 
@@ -142,7 +153,7 @@ public class TapEvent implements TouchEvent {
      *
      * @return Total movement.
      */
-    public double getCursorCount() {
+    public int getCursorCount() {
         return cursorCount;
     }
 

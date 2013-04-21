@@ -34,7 +34,7 @@ import com.github.multitouchframework.api.touch.TouchTarget;
  * @see com.github.multitouchframework.api.touch.TouchEvent
  * @see PinchSpreadRecognizer
  */
-public class PinchSpreadEvent implements TouchEvent {
+public class PinchSpreadEvent implements TouchEvent, Cloneable {
 
     /**
      * Possible states of the gesture.
@@ -85,6 +85,18 @@ public class PinchSpreadEvent implements TouchEvent {
      * Scale movement relatively to the very beginning of the gesture.
      */
     private final double dsTotal;
+
+    /**
+     * Copy constructor.
+     *
+     * @param event Event to be copied
+     *
+     * @see PinchSpreadEvent#PinchSpreadEvent(long, TouchTarget, State, double, double)
+     */
+    public PinchSpreadEvent(final PinchSpreadEvent event) {
+        this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getDiffScale(),
+                event.getTotalDiffScale());
+    }
 
     /**
      * Constructor specifying all the information on the gesture.

@@ -48,6 +48,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <artifactId>javaosc-core</artifactId>
         </dependency>
 
+        <!-- Animation -->
+
+        <dependency>
+            <groupId>net.java.timingframework</groupId>
+            <artifactId>timingframework-core</artifactId>
+        </dependency>
+
         <!-- Logging -->
 
         <dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Patrick Moawad
+ * Copyright (c) 2013, Patrick Moawad
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -381,7 +381,8 @@ public class MultitouchFrameworkDemo extends JFrame {
                     case PERFORMED:
                         final Object touchTarget = event.getTouchTarget().getBaseObject();
                         if (touchTarget instanceof DemoTouchTarget) {
-                            final Rectangle bounds = new Rectangle(originalBounds);
+                            final Rectangle bounds = new Rectangle(((DemoTouchTarget) event.getTouchTarget())
+                                    .getBounds());
                             bounds.setSize((int) (originalBounds.width * event.getTotalDiffScale()),
                                     (int) (originalBounds.height * event.getTotalDiffScale()));
                             ((DemoTouchTarget) touchTarget).setBounds(bounds);
