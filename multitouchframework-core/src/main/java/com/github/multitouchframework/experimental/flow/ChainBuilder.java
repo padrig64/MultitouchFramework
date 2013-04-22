@@ -23,29 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base.filter;
+package com.github.multitouchframework.experimental.flow;
 
-import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-
-import java.util.HashSet;
-import java.util.Set;
-
-public class ExclusiveUserFilter extends AbstractInputFilter {
-
-    private final Set<Long> userIds = new HashSet<Long>();
-
-    public void addUser(final long userId) {
-        userIds.add(userId);
-    }
-
-    public void removeUser(final long userId) {
-        userIds.remove(userId);
-    }
-
-    @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
-        if (!userIds.contains(event.getUserId())) {
-            processWithNextBlocks(event);
-        }
-    }
+public class ChainBuilder {
 }
