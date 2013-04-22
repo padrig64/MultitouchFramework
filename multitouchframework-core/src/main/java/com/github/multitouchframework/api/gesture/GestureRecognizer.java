@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.api.gesture;
 
-import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.chain.Chainable;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;

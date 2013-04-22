@@ -23,9 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.flow;
+package com.github.multitouchframework.swing.chain;
 
-import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.chain.Chainable;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 

@@ -25,12 +25,12 @@
 
 package com.github.multitouchframework.api.source;
 
-import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.chain.Chainable;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 
 /**
- * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole flow of
+ * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole chain of
  * touch input processing. They provide cursors to one or several cursor processors, typically {@link
  * com.github.multitouchframework.api.filter.InputFilter}s or {@link com.github.multitouchframework.api.dispatch
  * .CursorToTouchTargetDispatcher}s.

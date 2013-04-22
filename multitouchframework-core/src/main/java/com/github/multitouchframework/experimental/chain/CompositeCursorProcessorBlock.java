@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.flow;
+package com.github.multitouchframework.experimental.chain;
 
 public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainable<CursorProcessor>*/ {
 
@@ -45,8 +45,8 @@ public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainab
 //	 * List of sub-blocks composing this composite block.<br>The first sub-block is the entry point when processing the
 //	 * data. All sub-blocks will be chained to each other in the order of addition.
 //	 *
-//	 * @see #addSubBlock(com.github.multitouchframework.api.flow.CursorProcessorBlock)
-//	 * @see #removeSubBlock(com.github.multitouchframework.api.flow.CursorProcessorBlock)
+//	 * @see #addSubBlock(com.github.multitouchframework.api.chain.CursorProcessorBlock)
+//	 * @see #removeSubBlock(com.github.multitouchframework.api.chain.CursorProcessorBlock)
 //	 * @see #process(Collection)
 //	 */
 //	private final List<CursorProcessorBlock<CursorProcessor>> subBlocks =
@@ -128,7 +128,7 @@ public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainab
 //	}
 //
 //	/**
-//	 * @see com.github.multitouchframework.api.flow.CursorProcessorBlock#process(Collection)
+//	 * @see com.github.multitouchframework.api.chain.CursorProcessorBlock#process(Collection)
 //	 */
 //	@Override
 //	public void process(final Collection<Cursor> cursors) {
@@ -139,7 +139,7 @@ public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainab
 //	}
 //
 //	/**
-//	 * @see com.github.multitouchframework.api.flow.CursorProcessorBlock#queue(Object)
+//	 * @see com.github.multitouchframework.api.chain.CursorProcessorBlock#queue(Object)
 //	 */
 //	@Override
 //	public void queue(final CursorProcessor nextBlock) {
@@ -154,7 +154,7 @@ public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainab
 //	}
 //
 //	/**
-//	 * @see com.github.multitouchframework.api.flow.CursorProcessorBlock#dequeue(Object)
+//	 * @see com.github.multitouchframework.api.chain.CursorProcessorBlock#dequeue(Object)
 //	 */
 //	@Override
 //	public void dequeue(final CursorProcessor nextBlock) {

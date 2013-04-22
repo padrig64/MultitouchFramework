@@ -31,7 +31,7 @@ import com.github.multitouchframework.api.gesture.GestureRecognizer;
 import com.github.multitouchframework.api.source.InputSource;
 import com.github.multitouchframework.api.touch.TouchEvent;
 import com.github.multitouchframework.api.touch.TouchTarget;
-import com.github.multitouchframework.experimental.flow.CompositeCursorProcessorBlock;
+import com.github.multitouchframework.experimental.chain.CompositeCursorProcessorBlock;
 
 public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkProfile {
 

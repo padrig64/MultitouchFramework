@@ -23,31 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.flow;
+package com.github.multitouchframework.experimental.chain;
 
-/**
- * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
- * blocks can be connected.
- *
- * @param <N> Type of next block that can be connected.
- */
-public interface Chainable<N> {
-
-    /**
-     * Connects the specified block to process the output from this block.
-     *
-     * @param nextBlock Block to be connected.
-     *
-     * @return Block passed as argument.
-     */
-    public <T extends N> T queue(T nextBlock);
-
-    /**
-     * Disconnects the specified block from this block.
-     *
-     * @param nextBlock Block to be disconnected.
-     *
-     * @return Block passed as argument.
-     */
-    public <T extends N> T dequeue(T nextBlock);
+public class ChainBuilder {
 }

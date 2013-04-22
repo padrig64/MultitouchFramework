@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.api.flow.Chainable;
+import com.github.multitouchframework.api.chain.Chainable;
 
 public final class ProfileBuilder {
 
