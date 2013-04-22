@@ -94,16 +94,18 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
      * @see Chainable#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<DragEvent> gestureListener) {
+    public <T extends TouchListener<DragEvent>> T queue(final T gestureListener) {
         gestureListeners.add(gestureListener);
+        return gestureListener;
     }
 
     /**
      * @see Chainable#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<DragEvent> gestureListener) {
+    public <T extends TouchListener<DragEvent>> T dequeue(final T gestureListener) {
         gestureListeners.remove(gestureListener);
+        return gestureListener;
     }
 
     /**

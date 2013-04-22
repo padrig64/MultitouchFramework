@@ -37,13 +37,17 @@ public interface Chainable<N> {
      * Connects the specified block to process the output from this block.
      *
      * @param nextBlock Block to be connected.
+     *
+     * @return Block passed as argument.
      */
-    public void queue(N nextBlock);
+    public <T extends N> T queue(T nextBlock);
 
     /**
      * Disconnects the specified block from this block.
      *
      * @param nextBlock Block to be disconnected.
+     *
+     * @return Block passed as argument.
      */
-    public void dequeue(N nextBlock);
+    public <T extends N> T dequeue(T nextBlock);
 }

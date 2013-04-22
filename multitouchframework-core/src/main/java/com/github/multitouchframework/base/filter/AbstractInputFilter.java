@@ -47,17 +47,21 @@ public abstract class AbstractInputFilter implements InputFilter {
     /**
      * Cursor processors connected and processing the output cursors from this input controller.
      */
-    private final List<TouchListener<CursorUpdateEvent>> nextBlocks = new ArrayList<TouchListener<CursorUpdateEvent>>();
+    private final List<TouchListener<CursorUpdateEvent>> registeredNextBlocks = new
+            ArrayList<TouchListener<CursorUpdateEvent>>();
 
     /**
      * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
      * input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be connected.
+     *
+     * @return Cursor processor passed as argument.
      */
     @Override
-    public void queue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
-        nextBlocks.add(cursorProcessor);
+    public <T extends TouchListener<CursorUpdateEvent>> T queue(final T cursorProcessor) {
+        registeredNextBlocks.add(cursorProcessor);
+        return cursorProcessor;
     }
 
     /**
@@ -65,10 +69,13 @@ public abstract class AbstractInputFilter implements InputFilter {
      * instance, input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be disconnected.
+     *
+     * @return Cursor processor passed as argument.
      */
     @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
-        nextBlocks.remove(cursorProcessor);
+    public <T extends TouchListener<CursorUpdateEvent>> T dequeue(final T cursorProcessor) {
+        registeredNextBlocks.remove(cursorProcessor);
+        return cursorProcessor;
     }
 
     /**
@@ -89,7 +96,7 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param event Cursor update event to be processed by the next blocks.
      */
     protected void processWithNextBlocks(final CursorUpdateEvent event) {
-        for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
+        for (final TouchListener<CursorUpdateEvent> nextBlock : registeredNextBlocks) {
             nextBlock.processTouchEvent(event);
         }
     }

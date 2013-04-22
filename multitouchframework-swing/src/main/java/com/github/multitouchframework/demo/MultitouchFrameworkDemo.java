@@ -294,6 +294,97 @@ public class MultitouchFrameworkDemo extends JFrame {
         return listPanel;
     }
 
+    private void initGestureProfile2() {
+        // Create input source
+        final TuioSource sourceNode = new TuioSource(new ScreenTouchTarget());
+
+        // Configure layers for raw cursors
+        TouchListener<CursorUpdateEvent> feedbackLayer = (TouchListener<CursorUpdateEvent>) FeedbackPresentationLayer
+                .RAW_CURSORS.getFeedbackLayer();
+        sourceNode.queue(new EDTScheduler<CursorUpdateEvent>()).queue(feedbackLayer);
+
+        // Configure cursor filtering
+        final NoChangeFilter noChangeFilterNode = new NoChangeFilter();
+        sourceNode.queue(new BoundingBoxFilter()).queue(noChangeFilterNode);
+
+        // Configure layers for filtered cursors
+        final EDTScheduler<CursorUpdateEvent> edtSchedulerNode = noChangeFilterNode.queue(new
+                EDTScheduler<CursorUpdateEvent>());
+        edtSchedulerNode.queue((TouchListener<CursorUpdateEvent>) FeedbackPresentationLayer.FILTERED_CURSORS
+                .getFeedbackLayer());
+        edtSchedulerNode.queue((TouchListener<CursorUpdateEvent>) FeedbackPresentationLayer.FILTERED_MEAN_CURSOR
+                .getFeedbackLayer());
+        edtSchedulerNode.queue((TouchListener<CursorUpdateEvent>) FeedbackPresentationLayer.FILTERED_MEAN_LINES
+                .getFeedbackLayer());
+
+        // Configure cursor-to-component dispatcher
+        noChangeFilterNode.queue(new CursorToComponentDispatcher());
+
+        // Convert cursors to canvas
+        final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = noChangeFilterNode.queue(new
+                ScreenToComponentConverter(canvas)).queue(new SimpleCursorToTouchTargetDispatcher());
+
+        // Configure cursor-to-target dispatcher
+        for (final TouchTarget touchTarget : TOUCH_TARGETS) {
+            cursorToTargetDispatcherNode.addTouchTargetOnTop(touchTarget);
+        }
+
+        // Configure layer for touch targets
+        ((TouchTargetsLayer) CanvasPresentationLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider
+                (cursorToTargetDispatcherNode);
+        cursorToTargetDispatcherNode.queue(new EDTScheduler<CursorUpdateEvent>()).queue(
+                (TouchListener<CursorUpdateEvent>) CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
+
+        // Configure touch-target filters
+        final InclusiveTouchTargetFilter touchTargetFilterNode = cursorToTargetDispatcherNode.queue(new
+                InclusiveTouchTargetFilter(TOUCH_TARGETS));
+
+        // Configure gestures on touch targets
+        touchTargetFilterNode.queue(new DragRecognizer()).queue(new TouchListener<DragEvent>() {
+
+            @Override
+            public void processTouchEvent(final DragEvent event) {
+                final Object touchTarget = event.getTouchTarget().getBaseObject();
+                if (touchTarget instanceof DemoTouchTarget) {
+                    final Rectangle bounds = ((DemoTouchTarget) touchTarget).getBounds();
+                    bounds.translate(event.getDiffX(), event.getDiffY());
+                    ((DemoTouchTarget) touchTarget).setBounds(bounds);
+                }
+            }
+        });
+        touchTargetFilterNode.queue(new PinchSpreadRecognizer()).queue(new TouchListener<PinchSpreadEvent>() {
+
+            private Rectangle originalBounds = null;
+
+            @Override
+            public void processTouchEvent(final PinchSpreadEvent event) {
+                switch (event.getState()) {
+                    case ARMED:
+                        originalBounds = ((DemoTouchTarget) event.getTouchTarget()).getBounds();
+                        break;
+                    case PERFORMED:
+                        final Object touchTarget = event.getTouchTarget().getBaseObject();
+                        if (touchTarget instanceof DemoTouchTarget) {
+                            final Rectangle bounds = new Rectangle(((DemoTouchTarget) event.getTouchTarget())
+                                    .getBounds());
+                            bounds.setSize((int) (originalBounds.width * event.getTotalDiffScale()),
+                                    (int) (originalBounds.height * event.getTotalDiffScale()));
+                            ((DemoTouchTarget) touchTarget).setBounds(bounds);
+                        }
+                        break;
+                    case UNARMED:
+                        originalBounds = null;
+                        break;
+                }
+            }
+        });
+        ;
+        touchTargetFilterNode.queue(new TapRecognizer());
+
+        // Activate input controller
+        sourceNode.start();
+    }
+
     @SuppressWarnings("unchecked")
     private void initGestureProfile() {
         // Create input source

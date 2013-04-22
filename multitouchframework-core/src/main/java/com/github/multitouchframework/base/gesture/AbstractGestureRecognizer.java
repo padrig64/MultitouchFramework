@@ -144,16 +144,18 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @see GestureRecognizer#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<E> gestureListener) {
+    public <T extends TouchListener<E>> T queue(final T gestureListener) {
         gestureListeners.add(gestureListener);
+        return gestureListener;
     }
 
     /**
      * @see GestureRecognizer#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<E> gestureListener) {
+    public <T extends TouchListener<E>> T dequeue(final T gestureListener) {
         gestureListeners.remove(gestureListener);
+        return gestureListener;
     }
 
     /**

@@ -67,16 +67,18 @@ public abstract class AbstractCursorToTouchTargetDispatcher implements CursorToT
      * @see CursorToTouchTargetDispatcher#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
+    public <T extends TouchListener<CursorUpdateEvent>> T queue(final T cursorTargetProcessor) {
         nextBlocks.add(cursorTargetProcessor);
+        return cursorTargetProcessor;
     }
 
     /**
      * @see CursorToTouchTargetDispatcher#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
+    public <T extends TouchListener<CursorUpdateEvent>> T dequeue(final T cursorTargetProcessor) {
         nextBlocks.remove(cursorTargetProcessor);
+        return cursorTargetProcessor;
     }
 
     /**

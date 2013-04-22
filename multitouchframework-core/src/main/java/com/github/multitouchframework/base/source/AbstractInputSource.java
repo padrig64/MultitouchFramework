@@ -86,10 +86,13 @@ public abstract class AbstractInputSource implements InputSource {
      * input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be connected.
+     *
+     * @return Cursor processor passed as argument.
      */
     @Override
-    public void queue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
+    public <T extends TouchListener<CursorUpdateEvent>> T queue(final T cursorProcessor) {
         nextBlocks.add(cursorProcessor);
+        return cursorProcessor;
     }
 
     /**
@@ -97,10 +100,13 @@ public abstract class AbstractInputSource implements InputSource {
      * instance, input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be disconnected.
+     *
+     * @return Cursor processor passed as argument.
      */
     @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
+    public <T extends TouchListener<CursorUpdateEvent>> T dequeue(final T cursorProcessor) {
         nextBlocks.remove(cursorProcessor);
+        return cursorProcessor;
     }
 
     /**
