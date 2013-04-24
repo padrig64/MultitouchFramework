@@ -25,5 +25,40 @@
 
 package com.github.multitouchframework.experimental.chain;
 
-public class ChainBuilder {
+import com.github.multitouchframework.api.chain.Chainable;
+
+public final class ChainBuilder {
+
+    public static class NextIsChainable<T> {
+
+        private final Chainable<T> block;
+
+        public NextIsChainable(final Chainable<T> block) {
+            this.block = block;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <N> NextIsChainable queue(final Chainable<N> nextBlock) {
+            this.block.queue((T) nextBlock);
+            return new NextIsChainable<N>(nextBlock);
+        }
+
+        @SuppressWarnings("unchecked")
+        public void endWith(final Object... nextBlocks) {
+            for (final Object next : nextBlocks) {
+                this.block.queue((T) next);
+            }
+        }
+    }
+
+    /**
+     * Private constructor for utility class.
+     */
+    private ChainBuilder() {
+        // Nothing to be done
+    }
+
+    public static <N> NextIsChainable startWith(final Chainable<N> block) {
+        return new NextIsChainable<N>(block);
+    }
 }
