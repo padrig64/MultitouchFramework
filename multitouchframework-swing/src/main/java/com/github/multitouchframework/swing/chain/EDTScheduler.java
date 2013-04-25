@@ -56,18 +56,16 @@ public class EDTScheduler<E extends TouchEvent> implements TouchListener<E>, Cha
      * @see Chainable#queue(Object)
      */
     @Override
-    public <T extends TouchListener<E>> T queue(final T gestureListener) {
+    public void queue(final TouchListener<E> gestureListener) {
         gestureListeners.add(gestureListener);
-        return gestureListener;
     }
 
     /**
      * @see Chainable#dequeue(Object)
      */
     @Override
-    public <T extends TouchListener<E>> T dequeue(final T gestureListener) {
+    public void dequeue(final TouchListener<E> gestureListener) {
         gestureListeners.remove(gestureListener);
-        return gestureListener;
     }
 
     /**

@@ -47,15 +47,13 @@ public class ScreenToComponentConverter implements InputFilter {
     }
 
     @Override
-    public <T extends TouchListener<CursorUpdateEvent>> T queue(final T nextBlock) {
+    public void queue(final TouchListener<CursorUpdateEvent> nextBlock) {
         nextBlocks.add(nextBlock);
-        return nextBlock;
     }
 
     @Override
-    public <T extends TouchListener<CursorUpdateEvent>> T dequeue(final T nextBlock) {
+    public void dequeue(final TouchListener<CursorUpdateEvent> nextBlock) {
         nextBlocks.remove(nextBlock);
-        return nextBlock;
     }
 
     @Override
