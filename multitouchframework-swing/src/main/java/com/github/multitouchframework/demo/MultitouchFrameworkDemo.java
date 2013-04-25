@@ -77,7 +77,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import static com.github.multitouchframework.experimental.chain.ChainBuilder.startWith;
+import static com.github.multitouchframework.experimental.chain.ChainBuilder.queue;
 
 public class MultitouchFrameworkDemo extends JFrame {
 
@@ -299,23 +299,23 @@ public class MultitouchFrameworkDemo extends JFrame {
     private void initGestureProfile3() {
         // Create input source
         final TuioSource sourceNode = new TuioSource(new ScreenTouchTarget());
-        startWith(sourceNode).queue(new EDTScheduler<CursorUpdateEvent>()).endWith(FeedbackPresentationLayer
+        queue(sourceNode).queue(new EDTScheduler<CursorUpdateEvent>()).queue(FeedbackPresentationLayer
                 .RAW_CURSORS.getFeedbackLayer());
 
         // Configure cursor filtering and layers for filtered cursors
         final NoChangeFilter noChangeFilterNode = new NoChangeFilter();
-        startWith(sourceNode).queue(new BoundingBoxFilter()).queue(noChangeFilterNode).queue(new
-                EDTScheduler<CursorUpdateEvent>()).endWith(FeedbackPresentationLayer.FILTERED_CURSORS
-                .getFeedbackLayer(), FeedbackPresentationLayer.FILTERED_MEAN_CURSOR.getFeedbackLayer(),
+        queue(sourceNode).queue(new BoundingBoxFilter()).queue(noChangeFilterNode).queue(new
+                EDTScheduler<CursorUpdateEvent>()).queue(FeedbackPresentationLayer.FILTERED_CURSORS.getFeedbackLayer
+                (), FeedbackPresentationLayer.FILTERED_MEAN_CURSOR.getFeedbackLayer(),
                 FeedbackPresentationLayer.FILTERED_MEAN_LINES.getFeedbackLayer());
 
         // Configure cursor-to-component dispatcher
-        startWith(noChangeFilterNode).queue(new CursorToComponentDispatcher());
+        queue(noChangeFilterNode).queue(new CursorToComponentDispatcher());
 
         // Convert cursors to canvas
         final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new
                 SimpleCursorToTouchTargetDispatcher();
-        startWith(noChangeFilterNode).queue(new ScreenToComponentConverter(canvas)).queue(cursorToTargetDispatcherNode);
+        queue(noChangeFilterNode).queue(new ScreenToComponentConverter(canvas)).queue(cursorToTargetDispatcherNode);
 
         // Configure cursor-to-target dispatcher
         for (final TouchTarget touchTarget : TOUCH_TARGETS) {
@@ -325,15 +325,15 @@ public class MultitouchFrameworkDemo extends JFrame {
         // Configure layer for touch targets
         ((TouchTargetsLayer) CanvasPresentationLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider
                 (cursorToTargetDispatcherNode);
-        startWith(cursorToTargetDispatcherNode).queue(new EDTScheduler<CursorUpdateEvent>()).endWith(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
+        queue(cursorToTargetDispatcherNode).queue(new EDTScheduler<CursorUpdateEvent>()).queue
+                (CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure touch-target filters
-        final InclusiveTouchTargetFilter touchTargetFilterNode = new
-                InclusiveTouchTargetFilter(TOUCH_TARGETS);
-        startWith(cursorToTargetDispatcherNode).queue(touchTargetFilterNode);
+        final InclusiveTouchTargetFilter touchTargetFilterNode = new InclusiveTouchTargetFilter(TOUCH_TARGETS);
+        queue(cursorToTargetDispatcherNode).queue(touchTargetFilterNode);
 
         // Configure gestures on touch targets
-        startWith(touchTargetFilterNode).queue(new DragRecognizer()).endWith(new TouchListener<DragEvent>() {
+        queue(touchTargetFilterNode).queue(new DragRecognizer()).queue(new TouchListener<DragEvent>() {
 
             @Override
             public void processTouchEvent(final DragEvent event) {
@@ -345,8 +345,8 @@ public class MultitouchFrameworkDemo extends JFrame {
                 }
             }
         });
-        startWith(touchTargetFilterNode).queue(new PinchSpreadRecognizer()).endWith(new TouchListener
-                <PinchSpreadEvent>() {
+        queue(touchTargetFilterNode).queue(new PinchSpreadRecognizer()).queue(new TouchListener<PinchSpreadEvent>
+                () {
 
             private Rectangle originalBounds = null;
 
@@ -372,7 +372,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                 }
             }
         });
-        startWith(touchTargetFilterNode).queue(new TapRecognizer());
+        queue(touchTargetFilterNode).queue(new TapRecognizer());
 
         // Activate input controller
         sourceNode.start();

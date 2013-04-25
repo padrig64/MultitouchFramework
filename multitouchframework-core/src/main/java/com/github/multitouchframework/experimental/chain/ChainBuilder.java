@@ -44,7 +44,9 @@ public final class ChainBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        public void endWith(final Object... nextBlocks) {
+        public void queue(final Object... nextBlocks) {
+            // TODO Rename endWith() to queue() because it is optional?
+            // TODO If so, rename startWith() as well
             for (final Object next : nextBlocks) {
                 this.block.queue((T) next);
             }
@@ -58,7 +60,7 @@ public final class ChainBuilder {
         // Nothing to be done
     }
 
-    public static <N> NextIsChainable startWith(final Chainable<N> block) {
+    public static <N> NextIsChainable queue(final Chainable<N> block) {
         return new NextIsChainable<N>(block);
     }
 }
