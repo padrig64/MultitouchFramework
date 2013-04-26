@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.chain;
+package com.github.multitouchframework.experimental.profile;
 
 public class CompositeCursorProcessorBlock /*implements CursorProcessor, Chainable<CursorProcessor>*/ {
 

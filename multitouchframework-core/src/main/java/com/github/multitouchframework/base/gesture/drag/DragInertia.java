@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.base.gesture.drag;
 
-import com.github.multitouchframework.api.chain.Chainable;
+import com.github.multitouchframework.api.Chainable;
 import com.github.multitouchframework.api.touch.TouchListener;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;

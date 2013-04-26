@@ -23,27 +23,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.api.chain;
+package com.github.multitouchframework.base;
 
-/**
- * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
- * blocks can be connected.
- *
- * @param <N> Type of next block that can be connected.
- */
-public interface Chainable<N> {
+import com.github.multitouchframework.api.Chainable;
+
+public final class ChainBuilder {
+
+    public static class NextIsChainable<T> {
+
+        private final Chainable<T> block;
+
+        public NextIsChainable(final Chainable<T> block) {
+            this.block = block;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <N> NextIsChainable queue(final Chainable<N> nextBlock) {
+            this.block.queue((T) nextBlock);
+            return new NextIsChainable<N>(nextBlock);
+        }
+
+        @SuppressWarnings("unchecked")
+        public void queue(final Object... nextBlocks) {
+            // TODO Rename endWith() to queue() because it is optional?
+            // TODO If so, rename startWith() as well
+            for (final Object next : nextBlocks) {
+                this.block.queue((T) next);
+            }
+        }
+    }
 
     /**
-     * Connects the specified block to process the output from this block.
-     *
-     * @param nextBlock Block to be connected.
+     * Private constructor for utility class.
      */
-    public void queue(N nextBlock);
+    private ChainBuilder() {
+        // Nothing to be done
+    }
 
-    /**
-     * Disconnects the specified block from this block.
-     *
-     * @param nextBlock Block to be disconnected.
-     */
-    public void dequeue(N nextBlock);
+    public static <N> NextIsChainable queue(final Chainable<N> block) {
+        return new NextIsChainable<N>(block);
+    }
 }

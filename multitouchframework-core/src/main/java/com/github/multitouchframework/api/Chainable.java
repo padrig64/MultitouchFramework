@@ -23,33 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.api;
 
-import com.github.multitouchframework.api.chain.Chainable;
-
-public final class ProfileBuilder {
-
-    public static class Builder<T extends Chainable<N>, N> {
-
-        private final T block;
-
-        private Builder(final T block) {
-            this.block = block;
-        }
-
-//        public <N> Builder<N> queue(final N block) {
-//            return new Builder<N>(block);
-//        }
-    }
+/**
+ * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
+ * blocks can be connected.
+ *
+ * @param <N> Type of next block that can be connected.
+ */
+public interface Chainable<N> {
 
     /**
-     * Private constructor for utility class.
+     * Connects the specified block to process the output from this block.
+     *
+     * @param nextBlock Block to be connected.
      */
-    private ProfileBuilder() {
-        // Nothing to be done
-    }
+    public void queue(N nextBlock);
 
-//    public static <N> Builder<N> startWith(final N block) {
-//        return new Builder<N>(block);
-//    }
+    /**
+     * Disconnects the specified block from this block.
+     *
+     * @param nextBlock Block to be disconnected.
+     */
+    public void dequeue(N nextBlock);
 }

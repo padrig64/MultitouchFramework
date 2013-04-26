@@ -77,7 +77,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import static com.github.multitouchframework.experimental.chain.ChainBuilder.queue;
+import static com.github.multitouchframework.base.ChainBuilder.queue;
 
 public class MultitouchFrameworkDemo extends JFrame {
 
