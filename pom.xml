@@ -75,6 +75,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <module>multitouchframework-core</module>
         <module>multitouchframework-swing</module>
         <module>multitouchframework-swingcomplements</module>
+        <module>multitouchframework-experimental</module>
     </modules>
 
     <dependencyManagement>

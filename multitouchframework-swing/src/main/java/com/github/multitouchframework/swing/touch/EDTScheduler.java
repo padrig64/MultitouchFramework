@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.swing.chain;
+package com.github.multitouchframework.swing.touch;
 
 import com.github.multitouchframework.api.Chainable;
 import com.github.multitouchframework.api.touch.TouchEvent;

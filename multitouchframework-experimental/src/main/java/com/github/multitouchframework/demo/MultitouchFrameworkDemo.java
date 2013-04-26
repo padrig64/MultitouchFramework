@@ -49,7 +49,7 @@ import com.github.multitouchframework.demo.feedback.MeanCursorLayer;
 import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
-import com.github.multitouchframework.swing.chain.EDTScheduler;
+import com.github.multitouchframework.swing.touch.EDTScheduler;
 import com.github.multitouchframework.swing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swingcomplements.LeanScrollBarUI;
 import net.miginfocom.swing.MigLayout;

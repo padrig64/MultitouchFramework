@@ -36,8 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>multitouchframework-swing</artifactId>
-    <name>MultitouchFramework Swing Support</name>
+    <artifactId>multitouchframework-experimental</artifactId>
+    <name>MultitouchFramework Experiments</name>
 
     <dependencies>
 
@@ -47,12 +47,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <groupId>multitouchframework</groupId>
             <artifactId>multitouchframework-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>multitouchframework</groupId>
+            <artifactId>multitouchframework-swing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>multitouchframework</groupId>
+            <artifactId>multitouchframework-swingcomplements</artifactId>
+        </dependency>
+
+        <!-- Layout -->
+
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+        </dependency>
 
         <!-- Logging -->
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>
