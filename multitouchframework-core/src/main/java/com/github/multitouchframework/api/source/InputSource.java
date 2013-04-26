@@ -36,8 +36,8 @@ import com.github.multitouchframework.api.touch.TouchListener;
  * .CursorToTouchTargetDispatcher}s.
  *
  * @see Chainable
- * @see com.github.multitouchframework.api.touch.TouchListener
- * @see com.github.multitouchframework.api.touch.CursorUpdateEvent
+ * @see TouchListener
+ * @see CursorUpdateEvent
  */
 public interface InputSource extends Chainable<TouchListener<CursorUpdateEvent>> {
 

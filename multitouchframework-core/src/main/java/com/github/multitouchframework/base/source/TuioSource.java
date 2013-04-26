@@ -48,6 +48,9 @@ import java.util.Map;
  */
 public class TuioSource extends AbstractInputSource {
 
+    /**
+     * YAJTL TUIO event listener.
+     */
     private class TuioClientAdapter implements TUIOEvent {
 
         /**

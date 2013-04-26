@@ -56,6 +56,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <artifactId>multitouchframework-swingcomplements</artifactId>
         </dependency>
 
+        <!-- Animation -->
+
+        <dependency>
+            <groupId>net.java.timingframework</groupId>
+            <artifactId>timingframework-core</artifactId>
+        </dependency>
+
         <!-- Layout -->
 
         <dependency>

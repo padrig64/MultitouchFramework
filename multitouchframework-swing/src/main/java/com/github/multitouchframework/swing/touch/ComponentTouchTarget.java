@@ -32,10 +32,21 @@ import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Point;
 
+/**
+ * Touch target representing a AWT/Swing component.
+ */
 public class ComponentTouchTarget implements TouchTarget {
 
+    /**
+     * Component represented by this touch target.
+     */
     private final Component component;
 
+    /**
+     * Constructor specifying the component to be represented by this touch target.
+     *
+     * @param component Component to be represented by this touch target.
+     */
     public ComponentTouchTarget(final Component component) {
         this.component = component;
     }

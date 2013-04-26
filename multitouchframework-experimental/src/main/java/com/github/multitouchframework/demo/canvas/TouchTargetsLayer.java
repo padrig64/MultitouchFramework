@@ -29,7 +29,7 @@ import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
-import com.github.multitouchframework.base.dispatch.SimpleCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 
 import java.awt.Graphics2D;

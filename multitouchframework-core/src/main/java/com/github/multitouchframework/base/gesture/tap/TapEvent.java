@@ -116,14 +116,14 @@ public class TapEvent implements TouchEvent, Cloneable {
     }
 
     /**
-     * @see com.github.multitouchframework.api.touch.TouchEvent#getUserId()
+     * @see TouchEvent#getUserId()
      */
     public long getUserId() {
         return userId;
     }
 
     /**
-     * @see com.github.multitouchframework.api.touch.TouchEvent#getTouchTarget()
+     * @see TouchEvent#getTouchTarget()
      */
     @Override
     public TouchTarget getTouchTarget() {

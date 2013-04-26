@@ -64,11 +64,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <!-- Dependencies versions -->
 
-        <javaosc.version>0.1</javaosc.version>
+        <javaosc.version>0.2</javaosc.version>
         <log4j.version>1.2.17</log4j.version>
-        <miglayout.version>4.1</miglayout.version>
+        <miglayout.version>4.2</miglayout.version>
         <timingframework.version>6.1.0</timingframework.version>
-        <slf4j.version>1.6.6</slf4j.version>
+        <slf4j.version>1.7.5</slf4j.version>
     </properties>
 
     <modules>

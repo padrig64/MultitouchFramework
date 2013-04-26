@@ -23,10 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base.gesture.drag;
+package com.github.multitouchframework.experimental.gesture.drag;
 
 import com.github.multitouchframework.api.Chainable;
 import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.base.gesture.drag.DragEvent;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import org.jdesktop.core.animation.timing.interpolators.AccelerationInterpolator;
@@ -35,6 +36,7 @@ import org.jdesktop.core.animation.timing.sources.ScheduledExecutorTimingSource;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO Finish implementation
 public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchListener<DragEvent>> {
 
     private class DeceleratorTarget implements TimingTarget {

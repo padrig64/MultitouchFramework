@@ -63,6 +63,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.TimeUnit;
 
+// TODO Finish implementation
+
 /**
  * Scrollbar UI that makes {@link JScrollBar}s look a bit like the scrollbars on Mac OS X.
  */

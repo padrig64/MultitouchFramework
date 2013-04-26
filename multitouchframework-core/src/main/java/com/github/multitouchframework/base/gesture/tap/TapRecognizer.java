@@ -137,7 +137,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
     }
 
     /**
-     * @see AbstractGestureRecognizer#createContext(long, com.github.multitouchframework.api.touch.TouchTarget)
+     * @see AbstractGestureRecognizer#createContext(long, TouchTarget)
      */
     @Override
     protected TouchTargetContext createContext(final long userId, final TouchTarget target) {
@@ -145,8 +145,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
     }
 
     /**
-     * @see AbstractGestureRecognizer#process(Object, long, com.github.multitouchframework.api.touch.TouchTarget,
-     *      Collection)
+     * @see AbstractGestureRecognizer#process(Object, long, TouchTarget, Collection)
      */
     @Override
     protected void process(final TouchTargetContext context, final long userId, final TouchTarget target,
@@ -196,6 +195,15 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
         }
     }
 
+    /**
+     * Checks whether there is at least one cursor on the specified touch target.<br>If it is the case, it means that
+     * tap is still armed.
+     *
+     * @param target  Touch target to be checked.
+     * @param cursors Cursors to be checked.
+     *
+     * @return True if there is at least one cursor on the touch target, false otherwise.
+     */
     private boolean isGestureStillArmed(final TouchTarget target, final Collection<Cursor> cursors) {
         boolean stillArmed = false;
 

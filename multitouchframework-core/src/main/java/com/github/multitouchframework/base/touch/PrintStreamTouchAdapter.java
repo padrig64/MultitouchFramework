@@ -30,6 +30,11 @@ import com.github.multitouchframework.api.touch.TouchListener;
 
 import java.io.PrintStream;
 
+/**
+ * Touch listener printing the incoming touch events to a specific print stream.
+ *
+ * @param <E> Type of touch event to be printed out.
+ */
 public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListener<E> {
 
     /**

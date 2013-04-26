@@ -23,10 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base.dispatch;
+package com.github.multitouchframework.experimental.dispatch;
 
 import com.github.multitouchframework.api.touch.Cursor;
 import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.dispatch.AbstractCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.touch.ScreenTouchTarget;
 
 import java.util.ArrayList;
