@@ -63,7 +63,7 @@ public final class ChainBuilder {
          * @return Entity allowing to queue more blocks.
          */
         @SuppressWarnings("unchecked")
-        public <N> Chain queue(final Chainable<N> nextBlock) {
+        public <N> Chain<N> queue(final Chainable<N> nextBlock) {
             block.queue((T) nextBlock);
             return new Chain<N>(nextBlock);
         }
@@ -95,7 +95,7 @@ public final class ChainBuilder {
      *
      * @return Entity allowing to queue more blocks.
      */
-    public static <N> Chain queue(final Chainable<N> block) {
+    public static <N> Chain<N> queue(final Chainable<N> block) {
         return new Chain<N>(block);
     }
 }
