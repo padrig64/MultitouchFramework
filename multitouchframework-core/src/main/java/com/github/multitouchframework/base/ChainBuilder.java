@@ -27,28 +27,56 @@ package com.github.multitouchframework.base;
 
 import com.github.multitouchframework.api.Chainable;
 
+/**
+ * Helper class to build chains of blocks more easily.<br>Starting a new chain or branch of a chain is done using the
+ * {@link #queue(Chainable)} method.
+ *
+ * @see Chainable
+ */
 public final class ChainBuilder {
 
-    public static class NextIsChainable<T> {
+    /**
+     * Entity allowing to queue one or several blocks to a block.
+     *
+     * @param <T> Type of next block.
+     */
+    public static class Chain<T> {
 
+        /**
+         * Current block to which additional blocks can be queued.
+         */
         private final Chainable<T> block;
 
-        public NextIsChainable(final Chainable<T> block) {
+        /**
+         * Constructor specifying the current block to which additional blocks can be queued.
+         *
+         * @param block Current block to which additional blocks can be queued.
+         */
+        public Chain(final Chainable<T> block) {
             this.block = block;
         }
 
+        /**
+         * @param nextBlock Next chainable block to be added to the current block.
+         * @param <N>       Type of block following the specified next chainable block.
+         *
+         * @return Entity allowing to queue more blocks.
+         */
         @SuppressWarnings("unchecked")
-        public <N> NextIsChainable queue(final Chainable<N> nextBlock) {
-            this.block.queue((T) nextBlock);
-            return new NextIsChainable<N>(nextBlock);
+        public <N> Chain queue(final Chainable<N> nextBlock) {
+            block.queue((T) nextBlock);
+            return new Chain<N>(nextBlock);
         }
 
+        /**
+         * Ends the chain or branch with the specified block(s).
+         *
+         * @param nextBlocks Next block(s) to be added to the current block.
+         */
         @SuppressWarnings("unchecked")
         public void queue(final Object... nextBlocks) {
-            // TODO Rename endWith() to queue() because it is optional?
-            // TODO If so, rename startWith() as well
             for (final Object next : nextBlocks) {
-                this.block.queue((T) next);
+                block.queue((T) next);
             }
         }
     }
@@ -60,7 +88,14 @@ public final class ChainBuilder {
         // Nothing to be done
     }
 
-    public static <N> NextIsChainable queue(final Chainable<N> block) {
-        return new NextIsChainable<N>(block);
+    /**
+     * @param block First block to start the chain with.<br>It can be the input source at the beginning of the whole
+     *              chain or a block at the beginning of a new branch.
+     * @param <N>   Type of the next block after the specified block.
+     *
+     * @return Entity allowing to queue more blocks.
+     */
+    public static <N> Chain queue(final Chainable<N> block) {
+        return new Chain<N>(block);
     }
 }
