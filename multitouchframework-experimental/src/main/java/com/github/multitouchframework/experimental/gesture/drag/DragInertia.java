@@ -26,8 +26,8 @@
 package com.github.multitouchframework.experimental.gesture.drag;
 
 import com.github.multitouchframework.api.Chainable;
-import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.base.gesture.drag.DragEvent;
+import com.github.multitouchframework.api.TouchListener;
+import com.github.multitouchframework.base.processing.gesture.drag.DragEvent;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import org.jdesktop.core.animation.timing.interpolators.AccelerationInterpolator;
@@ -121,7 +121,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
     }
 
     /**
-     * @see TouchListener#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see TouchListener#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
     public void processTouchEvent(final DragEvent event) {

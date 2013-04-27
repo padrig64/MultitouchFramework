@@ -23,13 +23,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.api;
 
-import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.base.cursor.Cursor;
 
-public interface GestureDefinition<E extends TouchEvent> {
+/**
+ * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
+ * shape, a GUI component, etc.. Note that a touch target may not be rectangle.
+ */
+public interface TouchTarget {
 
-    public String getId();
+    /**
+     * Gets the real base object represented by this touch target.<br>This may be, for instance, a JComponent, the
+     * touch target itself, etc..
+     *
+     * @return Base object represented by this touch target.
+     */
+    public Object getBaseObject();
 
-    public Class<E> getGestureEventClass();
+    /**
+     * Gets the maximum width of the touch target.
+     *
+     * @return Maximum width of the touch target.
+     */
+    public int getMaximumWidth();
+
+    /**
+     * Gets the maximum height of the touch target.
+     *
+     * @return Maximum height of the touch target.
+     */
+    public int getMaximumHeight();
+
+    /**
+     * States whether the touch target is touched by the specified cursor.
+     *
+     * @param cursor Cursor to be checked.
+     *
+     * @return True if the touch target is touched by the cursor, false otherwise.
+     */
+    public boolean isTouched(Cursor cursor);
 }

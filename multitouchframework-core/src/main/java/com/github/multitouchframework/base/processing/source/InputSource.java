@@ -23,13 +23,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.base.processing.source;
 
-import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.Chainable;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.api.TouchListener;
 
-public interface GestureDefinition<E extends TouchEvent> {
+/**
+ * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole chain of
+ * touch input processing. They provide cursors to one or several cursor processors, typically {@link
+ * com.github.multitouchframework.base.processing.filter.InputFilter}s or {@link com.github.multitouchframework.api.dispatch
+ * .CursorToTouchTargetDispatcher}s.
+ *
+ * @see Chainable
+ * @see TouchListener
+ * @see CursorUpdateEvent
+ */
+public interface InputSource extends Chainable<TouchListener<CursorUpdateEvent>> {
 
-    public String getId();
+    /**
+     * States whether the input controller is started and is able to provide cursors or not.
+     *
+     * @return True if the controller is started, false otherwise.
+     */
+    public boolean isStarted();
 
-    public Class<E> getGestureEventClass();
+    /**
+     * Starts the input controller so that it can provide cursors.
+     */
+    public void start();
+
+    /**
+     * Stops the input controller so that it no longer provide cursors.
+     */
+    public void stop();
 }

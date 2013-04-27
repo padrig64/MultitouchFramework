@@ -23,69 +23,52 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.demo.feedback;
+package com.github.multitouchframework.base.processing.filter;
 
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
-import javax.swing.UIManager;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MeanCursorLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
+/**
+ * Simple input filter that inhibits identical consecutive events.<br>This improves performance by reducing the number
+ * of redundant touch events.
+ */
+public class NoChangeFilter extends AbstractInputFilter {
 
     /**
-     * Generated serial UID.
+     * Cursors involved in the last fired event.
      */
-    private static final long serialVersionUID = -1866299857263220891L;
-
-    private static final Color MEAN_CURSOR_COLOR = UIManager.getColor("text");
-
-    private static final int MEAN_CURSOR_SIZE = 6;
-
-    private Cursor meanCursor = null;
+    private Set<Cursor> lastCursors = new HashSet<Cursor>();
 
     /**
-     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
+     * @see AbstractInputFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
+        boolean changed = false;
+
+        // Check if at least one cursor changed since the last event
         final Collection<Cursor> cursors = event.getCursors();
-        if (cursors.isEmpty()) {
-            meanCursor = null;
-        } else {
-            // Calculate mean cursor
-            int meanX = 0;
-            int meanY = 0;
+        if (cursors.size() == lastCursors.size()) {
+            // Same number of cursors as last event, so check if all cursors are the same
             for (final Cursor cursor : cursors) {
-                meanX += cursor.getX();
-                meanY += cursor.getY();
+                if (!lastCursors.contains(cursor)) {
+                    changed = true;
+                    break;
+                }
             }
-            meanCursor = new Cursor(0, meanX / cursors.size(), meanY / cursors.size());
+        } else {
+            // Not the same number of cursors as last event, so process them
+            changed = true;
         }
 
-        triggerRepaint();
-    }
-
-    /**
-     * @see AbstractFeedbackLayer#paintComponent(Graphics)
-     */
-    @Override
-    public void paintComponent(final Graphics graphics) {
-        ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        if (meanCursor != null) {
-            // Prepare for painting
-            final Point canvasMeanPoint = convertCursorToComponent(meanCursor);
-
-            // Paint mean cursor
-            graphics.setColor(MEAN_CURSOR_COLOR);
-            graphics.fillOval(canvasMeanPoint.x - MEAN_CURSOR_SIZE / 2, canvasMeanPoint.y - MEAN_CURSOR_SIZE / 2,
-                    MEAN_CURSOR_SIZE, MEAN_CURSOR_SIZE);
+        // Trigger listeners if at least one cursor changed since the last event
+        if (changed) {
+            lastCursors = new HashSet<Cursor>(cursors);
+            processWithNextBlocks(event.getUserId(), event.getTouchTarget(), cursors);
         }
     }
 }

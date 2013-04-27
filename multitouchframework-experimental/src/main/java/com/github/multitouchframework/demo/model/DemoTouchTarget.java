@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.model;
 
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.api.TouchTarget;
 
 import java.awt.Color;
 import java.awt.Rectangle;

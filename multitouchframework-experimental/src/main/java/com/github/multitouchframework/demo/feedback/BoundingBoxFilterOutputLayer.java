@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.feedback;
 
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.CursorUpdateEvent;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 import javax.swing.UIManager;
 import java.awt.BasicStroke;
@@ -57,7 +57,7 @@ public class BoundingBoxFilterOutputLayer extends AbstractFeedbackLayer<CursorUp
     private Collection<Cursor> cursors = null;
 
     /**
-     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.touch.TouchEvent)
+     * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {

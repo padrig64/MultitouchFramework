@@ -23,13 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.base.processing.dispatch;
 
-import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.Chainable;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.api.TouchListener;
 
-public interface GestureDefinition<E extends TouchEvent> {
-
-    public String getId();
-
-    public Class<E> getGestureEventClass();
+/**
+ * Interface to be implemented by cursor-to-target dispatchers.<br>Cursor-to-target dispatcher are meant to dispatch
+ * cursor points to the touch targets on the touch surface, for instance, in order to the allow gesture recognition
+ * on specific touch targets independently. So, typically, gesture recognizers will be queued to cursor-to-target
+ * dispatchers.
+ *
+ * @see TouchListener
+ * @see CursorUpdateEvent
+ * @see Chainable
+ */
+public interface CursorToTouchTargetDispatcher extends TouchListener<CursorUpdateEvent>,
+        Chainable<TouchListener<CursorUpdateEvent>> {
+    // Nothing more to be done
 }

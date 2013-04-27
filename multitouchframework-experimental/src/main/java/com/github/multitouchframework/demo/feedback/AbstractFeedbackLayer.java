@@ -25,9 +25,9 @@
 
 package com.github.multitouchframework.demo.feedback;
 
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.TouchEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.TouchListener;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;

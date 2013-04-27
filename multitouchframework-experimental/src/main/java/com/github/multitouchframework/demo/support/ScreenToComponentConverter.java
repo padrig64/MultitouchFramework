@@ -25,10 +25,10 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.api.filter.InputFilter;
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
+import com.github.multitouchframework.base.processing.filter.InputFilter;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.api.TouchListener;
 
 import javax.swing.SwingUtilities;
 import java.awt.Component;

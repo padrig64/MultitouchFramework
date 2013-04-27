@@ -23,13 +23,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.base.processing.source;
 
-import com.github.multitouchframework.api.TouchEvent;
+/**
+ * Interface that can be implemented by input controllers that can natively handle only one user.
+ *
+ * @see com.github.multitouchframework.base.processing.source.InputSource
+ */
+public interface SingleUserInputSource extends InputSource {
 
-public interface GestureDefinition<E extends TouchEvent> {
+    /**
+     * Gets the ID of the single user for which the multitouch events are produced.
+     *
+     * @return Single user ID.
+     */
+    public long getUserId();
 
-    public String getId();
-
-    public Class<E> getGestureEventClass();
+    /**
+     * Sets the ID of the single user for which the multitouch events will be produced.
+     *
+     * @param userId Single user ID.
+     */
+    public void setUserId(long userId);
 }

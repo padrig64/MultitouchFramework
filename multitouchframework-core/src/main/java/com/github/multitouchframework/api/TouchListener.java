@@ -23,13 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.api;
 
 import com.github.multitouchframework.api.TouchEvent;
 
-public interface GestureDefinition<E extends TouchEvent> {
+/**
+ * Interfaces to be implemented by touch and gesture listeners to handle touch events.
+ *
+ * @param <E> Type of gesture events to be handled.
+ *
+ * @see com.github.multitouchframework.api.TouchEvent
+ */
+public interface TouchListener<E extends TouchEvent> {
 
-    public String getId();
-
-    public Class<E> getGestureEventClass();
+    /**
+     * Handles the specified touch event.
+     *
+     * @param event Touch event to be processed.
+     */
+    public void processTouchEvent(E event);
 }

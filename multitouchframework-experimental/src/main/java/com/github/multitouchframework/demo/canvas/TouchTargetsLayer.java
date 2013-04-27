@@ -25,10 +25,10 @@
 
 package com.github.multitouchframework.demo.canvas;
 
-import com.github.multitouchframework.api.touch.Cursor;
-import com.github.multitouchframework.api.touch.CursorUpdateEvent;
-import com.github.multitouchframework.api.touch.TouchListener;
-import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.api.TouchListener;
+import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 

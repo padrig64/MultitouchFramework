@@ -23,68 +23,63 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.dispatch;
+package com.github.multitouchframework.swing.processing.dispatch;
 
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.base.processing.dispatch.AbstractCursorToTouchTargetDispatcher;
-import com.github.multitouchframework.base.target.ScreenTouchTarget;
+import com.github.multitouchframework.swing.target.ComponentTouchTarget;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.RootPaneContainer;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Window;
 
-// TODO
-public class SimpleCursorToTouchTargetDispatcher extends AbstractCursorToTouchTargetDispatcher {
-
-    public static final TouchTarget SCREEN_TOUCH_TARGET = new ScreenTouchTarget();
-
-    private final List<TouchTarget> targets = new ArrayList<TouchTarget>();
-
-    public List<TouchTarget> getTouchTargets() {
-        return targets;
-    }
-
-    public void addTouchTargetOnTop(final TouchTarget target) {
-        targets.add(target);
-    }
-
-    public void insertTouchTargetAt(final int i, final TouchTarget target) {
-        targets.add(i, target);
-    }
-
-    public void setTouchTargetAt(final int i, final TouchTarget target) {
-        targets.set(i, target);
-    }
-
-    public void insertTouchTargetAbove(final TouchTarget lowerTarget, final TouchTarget target) {
-        final int i = targets.lastIndexOf(lowerTarget);
-        if (i < 0) {
-            // Add touch target on top of everything
-            targets.add(target);
-        } else {
-            targets.add(i + 1, target);
-        }
-    }
-
-    public void removeTouchTarget(final TouchTarget target) {
-        targets.remove(target);
-    }
+// TODO Finish implementation
+public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDispatcher {
 
     /**
      * @see AbstractCursorToTouchTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
     protected TouchTarget findTouchedTarget(final Cursor cursor) {
-        TouchTarget foundTarget = SCREEN_TOUCH_TARGET;
+        TouchTarget touchTarget = null;
 
-        for (int i = targets.size() - 1; i >= 0; i--) {
-            final TouchTarget target = targets.get(i);
-            if (target.isTouched(cursor)) {
-                foundTarget = target;
+        // TODO Find deepest component of the top most touched window
+        for (final Window window : Window.getWindows()) {
+            // TODO Check if window is touchable
+            final Component component = findDeepestComponent(window, cursor.getX(), cursor.getY());
+            if (component != null) {
+                touchTarget = new ComponentTouchTarget(component);
                 break;
             }
         }
 
-        return foundTarget;
+        return touchTarget;
+    }
+
+    private Component findDeepestComponent(final Component parent, final int x, final int y) {
+        Component deepest = null;
+
+        if (parent.contains(x, y)) {
+            if (parent instanceof RootPaneContainer) {
+                final Container contentPane = ((RootPaneContainer) parent).getContentPane();
+                deepest = findDeepestComponent(contentPane, x - contentPane.getX(), y - contentPane.getY());
+            } else if (parent instanceof Container) {
+                for (final Component child : ((Container) parent).getComponents()) {
+                    deepest = findDeepestComponent(child, x - child.getX(), y - child.getY());
+                    if (deepest != null) {
+                        break;
+                    }
+                }
+            }
+
+            if (deepest == null) {
+                // No child containing the cursor
+                deepest = parent;
+            }
+        }
+
+        return deepest;
     }
 }

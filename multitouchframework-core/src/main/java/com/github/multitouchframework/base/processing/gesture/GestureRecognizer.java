@@ -23,13 +23,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.experimental.profile;
+package com.github.multitouchframework.base.processing.gesture;
 
+import com.github.multitouchframework.api.Chainable;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.TouchListener;
 
-public interface GestureDefinition<E extends TouchEvent> {
-
-    public String getId();
-
-    public Class<E> getGestureEventClass();
+/**
+ * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-target
+ * dispatchers in order to recognize gestures on a specific touch target of the touch surface.
+ *
+ * @param <E> Type of gesture events fired by the gesture recognizer.
+ *
+ * @see TouchListener
+ * @see TouchEvent
+ * @see CursorUpdateEvent
+ * @see Chainable
+ */
+public interface GestureRecognizer<E extends TouchEvent> extends TouchListener<CursorUpdateEvent>,
+        Chainable<TouchListener<E>> {
+    // Nothing more to be done
 }
