@@ -35,7 +35,7 @@ import java.io.PrintStream;
  *
  * @param <E> Type of touch event to be printed out.
  */
-public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListener<E> {
+public class PrintStreamAdapter<E extends TouchEvent> implements TouchListener<E> {
 
     /**
      * Default output print stream.
@@ -71,7 +71,7 @@ public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListe
      * Default constructor making the adapter print the touch events to the standard output, with no prefix and no
      * suffix.
      */
-    public PrintStreamTouchAdapter() {
+    public PrintStreamAdapter() {
         this(DEFAULT_STREAM, DEFAULT_PREFIX, DEFAULT_SUFFIX);
     }
 
@@ -81,7 +81,7 @@ public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListe
      *
      * @param stream Print stream to write the string representation of the touch events to.
      */
-    public PrintStreamTouchAdapter(final PrintStream stream) {
+    public PrintStreamAdapter(final PrintStream stream) {
         this(stream, DEFAULT_PREFIX, DEFAULT_SUFFIX);
     }
 
@@ -91,7 +91,7 @@ public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListe
      *
      * @param prefix Prefix to be prepended to the string representation of the touch events.
      */
-    public PrintStreamTouchAdapter(final String prefix) {
+    public PrintStreamAdapter(final String prefix) {
         this(DEFAULT_STREAM, prefix, DEFAULT_SUFFIX);
     }
 
@@ -103,7 +103,7 @@ public class PrintStreamTouchAdapter<E extends TouchEvent> implements TouchListe
      * @param prefix Prefix to be prepended to the string representation of the touch events.
      * @param suffix Suffix to be appended to the string representation of the touch events.
      */
-    public PrintStreamTouchAdapter(final PrintStream stream, final String prefix, final String suffix) {
+    public PrintStreamAdapter(final PrintStream stream, final String prefix, final String suffix) {
         this.stream = stream;
         this.prefix = prefix;
         this.suffix = suffix;
