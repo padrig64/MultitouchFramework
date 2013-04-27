@@ -27,24 +27,73 @@ package com.github.multitouchframework.base.filter;
 
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExclusiveUserFilter extends AbstractInputFilter {
+/**
+ * Input filter passing the {@link CursorUpdateEvent}s to the following blocks only if the user ID of the events matches
+ * those specified with {@link #addUser(long)}.<br>All events with a user ID not included in this filter will be
+ * blocked.
+ *
+ * @see AbstractInputFilter
+ * @see ExcludeUserFilter
+ */
+public class IncludeUserFilter extends AbstractInputFilter {
 
+    /**
+     * Included user IDs.
+     */
     private final Set<Long> userIds = new HashSet<Long>();
 
+    /**
+     * Constructor specifying the IDs of the users to be included.
+     *
+     * @param userIds IDs of the users to be included.
+     */
+    public IncludeUserFilter(final long... userIds) {
+        if (userIds != null) {
+            for (final long userId : userIds) {
+                this.userIds.add(userId);
+            }
+        }
+    }
+
+    /**
+     * Constructor specifying the IDs of the users to be included.
+     *
+     * @param userIds IDs of the users to be included.
+     */
+    public IncludeUserFilter(final Collection<Long> userIds) {
+        if (userIds != null) {
+            this.userIds.addAll(userIds);
+        }
+    }
+
+    /**
+     * Includes the user of the specified ID.
+     *
+     * @param userId ID of the user to be included.
+     */
     public void addUser(final long userId) {
         userIds.add(userId);
     }
 
+    /**
+     * Excludes the previously included user of the specified ID.
+     *
+     * @param userId ID of the user to be excluded.
+     */
     public void removeUser(final long userId) {
         userIds.remove(userId);
     }
 
+    /**
+     * @see AbstractInputFilter#processWithNextBlocks(CursorUpdateEvent)
+     */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
-        if (!userIds.contains(event.getUserId())) {
+        if (userIds.contains(event.getUserId())) {
             processWithNextBlocks(event);
         }
     }

@@ -33,33 +33,67 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class InclusiveTouchTargetFilter extends AbstractInputFilter {
+/**
+ * Input filter passing the {@link CursorUpdateEvent}s to the following blocks only if the touch target of the events
+ * does not match those specified with {@link #addTouchTarget(TouchTarget)}.<br>All events for a touch target included
+ * in this filter will be blocked.
+ *
+ * @see AbstractInputFilter
+ * @see IncludeTouchTargetFilter
+ */
+public class ExcludeTouchTargetFilter extends AbstractInputFilter {
 
+    /**
+     * Excluded touch targets.
+     */
     private final Set<TouchTarget> touchTargets = new HashSet<TouchTarget>();
 
-    public InclusiveTouchTargetFilter(final TouchTarget... touchTargets) {
+    /**
+     * Constructor specifying the touch targets to be excluded.
+     *
+     * @param touchTargets Touch targets to be excluded.
+     */
+    public ExcludeTouchTargetFilter(final TouchTarget... touchTargets) {
         if (touchTargets != null) {
             Collections.addAll(this.touchTargets, touchTargets);
         }
     }
 
-    public InclusiveTouchTargetFilter(final Collection<TouchTarget> touchTargets) {
+    /**
+     * Constructor specifying the touch targets to be excluded.
+     *
+     * @param touchTargets Touch targets to be excluded.
+     */
+    public ExcludeTouchTargetFilter(final Collection<TouchTarget> touchTargets) {
         if (touchTargets != null) {
             this.touchTargets.addAll(touchTargets);
         }
     }
 
+    /**
+     * Excludes the specified touch target.
+     *
+     * @param touchTarget Touch target to be excluded.
+     */
     public void addTouchTarget(final TouchTarget touchTarget) {
         touchTargets.add(touchTarget);
     }
 
+    /**
+     * Includes the specified previously excluded touch target.
+     *
+     * @param touchTarget Touch target to be included.
+     */
     public void removeTouchTarget(final TouchTarget touchTarget) {
         touchTargets.remove(touchTarget);
     }
 
+    /**
+     * @see AbstractInputFilter#processWithNextBlocks(CursorUpdateEvent)
+     */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
-        if (touchTargets.contains(event.getTouchTarget())) {
+        if (!touchTargets.contains(event.getTouchTarget())) {
             processWithNextBlocks(event);
         }
     }

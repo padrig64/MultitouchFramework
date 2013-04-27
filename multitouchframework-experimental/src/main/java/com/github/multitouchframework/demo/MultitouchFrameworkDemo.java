@@ -28,9 +28,9 @@ package com.github.multitouchframework.demo;
 import com.github.multitouchframework.api.touch.CursorUpdateEvent;
 import com.github.multitouchframework.api.touch.TouchListener;
 import com.github.multitouchframework.api.touch.TouchTarget;
+import com.github.multitouchframework.base.filter.IncludeTouchTargetFilter;
 import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.filter.BoundingBoxFilter;
-import com.github.multitouchframework.base.filter.InclusiveTouchTargetFilter;
 import com.github.multitouchframework.base.filter.NoChangeFilter;
 import com.github.multitouchframework.base.gesture.drag.DragEvent;
 import com.github.multitouchframework.base.gesture.drag.DragRecognizer;
@@ -336,7 +336,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure touch-target filters
-        final InclusiveTouchTargetFilter touchTargetFilterNode = new InclusiveTouchTargetFilter(TOUCH_TARGETS);
+        final IncludeTouchTargetFilter touchTargetFilterNode = new IncludeTouchTargetFilter(TOUCH_TARGETS);
         queue(cursorToTargetDispatcherNode) //
                 .queue(touchTargetFilterNode);
 
