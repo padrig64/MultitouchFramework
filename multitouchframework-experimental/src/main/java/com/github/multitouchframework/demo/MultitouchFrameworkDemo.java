@@ -28,9 +28,9 @@ package com.github.multitouchframework.demo;
 import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
-import com.github.multitouchframework.base.processing.filter.BoundingBoxFilter;
+import com.github.multitouchframework.base.processing.filter.BoundingBoxCursorFilter;
 import com.github.multitouchframework.base.processing.filter.IncludeTouchTargetFilter;
-import com.github.multitouchframework.base.processing.filter.NoChangeFilter;
+import com.github.multitouchframework.base.processing.filter.NoChangeCursorFilter;
 import com.github.multitouchframework.base.processing.gesture.drag.DragEvent;
 import com.github.multitouchframework.base.processing.gesture.drag.DragRecognizer;
 import com.github.multitouchframework.base.processing.gesture.pinchspread.PinchSpreadEvent;
@@ -303,9 +303,9 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(FeedbackPresentationLayer.RAW_CURSORS.getFeedbackLayer());
 
         // Configure cursor filtering and layers for filtered cursors
-        final NoChangeFilter noChangeFilterNode = new NoChangeFilter();
+        final NoChangeCursorFilter noChangeFilterNode = new NoChangeCursorFilter();
         queue(sourceNode) //
-                .queue(new BoundingBoxFilter()) //
+                .queue(new BoundingBoxCursorFilter()) //
                 .queue(noChangeFilterNode) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
                 .queue(FeedbackPresentationLayer.FILTERED_CURSORS.getFeedbackLayer(), //

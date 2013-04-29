@@ -35,10 +35,13 @@ import java.util.Map;
  * Simple input filter meant to reduce the small variations of cursor positions while the user holds still the point of
  * contacts with the touch surface.<br>This is achieved by virtually moving a square bounding boxes by pushing their
  * borders from the inside. The output cursors are the positions of the center of the boxes.<br>Coupled to a {@link
- * NoChangeFilter}, this is a very cheap alternative to low-pass filters, even though high frequencies are not
+ * NoChangeCursorFilter}, this is a very cheap alternative to low-pass filters, even though high frequencies are not
  * filtered out.
+ *
+ * @see AbstractFilter
+ * @see CursorUpdateEvent
  */
-public class BoundingBoxFilter extends AbstractFilter<CursorUpdateEvent> {
+public class BoundingBoxCursorFilter extends AbstractFilter<CursorUpdateEvent> {
 
     /**
      * Half the size of the boxes.

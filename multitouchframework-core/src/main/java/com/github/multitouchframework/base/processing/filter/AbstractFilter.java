@@ -33,7 +33,10 @@ import java.util.List;
 
 /**
  * Abstract implementation of a filter.<br>Sub-classes are meant to make use of the queued blocks to
- * process the filtered touch input, by calling their {@link TouchListener#processTouchEvent(TouchEvent)} method.
+ * process the filtered touch event, by calling their {@link TouchListener#processTouchEvent(TouchEvent)} method.
+ *
+ * @see Filter
+ * @see TouchEvent
  */
 public abstract class AbstractFilter<E extends TouchEvent> implements Filter<E> {
 
