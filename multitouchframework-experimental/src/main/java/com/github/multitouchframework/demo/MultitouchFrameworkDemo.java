@@ -25,12 +25,11 @@
 
 package com.github.multitouchframework.demo;
 
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
-import com.github.multitouchframework.base.processing.filter.IncludeTouchTargetFilter;
-import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.base.processing.filter.BoundingBoxFilter;
+import com.github.multitouchframework.base.processing.filter.IncludeTouchTargetFilter;
 import com.github.multitouchframework.base.processing.filter.NoChangeFilter;
 import com.github.multitouchframework.base.processing.gesture.drag.DragEvent;
 import com.github.multitouchframework.base.processing.gesture.drag.DragRecognizer;
@@ -49,6 +48,7 @@ import com.github.multitouchframework.demo.feedback.MeanCursorLayer;
 import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
+import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.swing.processing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.processing.scheduling.EDTScheduler;
 import com.github.multitouchframework.swingcomplements.LeanScrollBarUI;
@@ -336,7 +336,8 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure touch-target filters
-        final IncludeTouchTargetFilter touchTargetFilterNode = new IncludeTouchTargetFilter(TOUCH_TARGETS);
+        final IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilterNode = new
+                IncludeTouchTargetFilter<CursorUpdateEvent>(TOUCH_TARGETS);
         queue(cursorToTargetDispatcherNode) //
                 .queue(touchTargetFilterNode);
 

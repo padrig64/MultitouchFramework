@@ -25,7 +25,7 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.base.processing.filter.InputFilter;
+import com.github.multitouchframework.base.processing.filter.Filter;
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchListener;
@@ -36,7 +36,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScreenToComponentConverter implements InputFilter {
+public class ScreenToComponentConverter implements Filter<CursorUpdateEvent> {
 
     private final List<TouchListener<CursorUpdateEvent>> nextBlocks = new ArrayList<TouchListener<CursorUpdateEvent>>();
 

@@ -25,8 +25,9 @@
 
 package com.github.multitouchframework.experimental.profile;
 
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.base.processing.dispatch.CursorToTouchTargetDispatcher;
-import com.github.multitouchframework.base.processing.filter.InputFilter;
+import com.github.multitouchframework.base.processing.filter.Filter;
 import com.github.multitouchframework.base.processing.gesture.GestureRecognizer;
 import com.github.multitouchframework.base.processing.source.InputSource;
 import com.github.multitouchframework.api.TouchEvent;
@@ -65,18 +66,18 @@ public class DefaultMultitouchFrameworkProfile implements MultitouchFrameworkPro
     }
 
     /**
-     * @see MultitouchFrameworkProfile#addInputFilter(InputFilter)
+     * @see MultitouchFrameworkProfile#addInputFilter(com.github.multitouchframework.base.processing.filter.Filter)
      */
     @Override
-    public void addInputFilter(final InputFilter inputFilter) {
+    public void addInputFilter(final Filter<CursorUpdateEvent> inputFilter) {
 //		filterComposition.addSubBlock(inputFilter);
     }
 
     /**
-     * @see MultitouchFrameworkProfile#removeInputFilter(InputFilter)
+     * @see MultitouchFrameworkProfile#removeInputFilter(com.github.multitouchframework.base.processing.filter.Filter)
      */
     @Override
-    public void removeInputFilter(final InputFilter inputFilter) {
+    public void removeInputFilter(final Filter<CursorUpdateEvent> inputFilter) {
 //		filterComposition.removeSubBlock(inputFilter);
     }
 

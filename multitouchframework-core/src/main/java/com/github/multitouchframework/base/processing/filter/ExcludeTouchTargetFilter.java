@@ -25,8 +25,9 @@
 
 package com.github.multitouchframework.base.processing.filter;
 
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,10 +39,10 @@ import java.util.Set;
  * does not match those specified with {@link #addTouchTarget(TouchTarget)}.<br>All events for a touch target included
  * in this filter will be blocked.
  *
- * @see AbstractInputFilter
+ * @see AbstractFilter
  * @see IncludeTouchTargetFilter
  */
-public class ExcludeTouchTargetFilter extends AbstractInputFilter {
+public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilter<E> {
 
     /**
      * Excluded touch targets.
@@ -89,10 +90,10 @@ public class ExcludeTouchTargetFilter extends AbstractInputFilter {
     }
 
     /**
-     * @see AbstractInputFilter#processWithNextBlocks(CursorUpdateEvent)
+     * @see AbstractCursorFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(final E event) {
         if (!touchTargets.contains(event.getTouchTarget())) {
             processWithNextBlocks(event);
         }

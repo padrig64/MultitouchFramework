@@ -25,51 +25,22 @@
 
 package com.github.multitouchframework.base.processing.filter;
 
-import com.github.multitouchframework.base.cursor.Cursor;
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
- * Abstract implementation of an input filter.<br>Sub-classes are meant to make use of the connected cursor
- * processors to process the filtered touch input, by calling their
- * {@link TouchListener#processTouchEvent(com.github.multitouchframework.api.TouchEvent)} method.
+ * Abstract implementation of a filter processing cursors.<br>Sub-classes are meant to make use of the queued blocks
+ * to process the filtered cursors, by calling their
+ * {@link TouchListener#processTouchEvent(com.github.multitouchframework.api.TouchEvent)}  method.
  *
- * @see InputFilter
+ * @see AbstractFilter
+ * @see CursorUpdateEvent
  */
-public abstract class AbstractInputFilter implements InputFilter {
-
-    /**
-     * Cursor processors connected and processing the output cursors from this input controller.
-     */
-    private final List<TouchListener<CursorUpdateEvent>> registeredNextBlocks = new
-            ArrayList<TouchListener<CursorUpdateEvent>>();
-
-    /**
-     * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-     * input filters or cursor-to-target dispatchers.
-     *
-     * @param cursorProcessor Cursor processor to be connected.
-     */
-    @Override
-    public void queue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
-        registeredNextBlocks.add(cursorProcessor);
-    }
-
-    /**
-     * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-     * instance, input filters or cursor-to-target dispatchers.
-     *
-     * @param cursorProcessor Cursor processor to be disconnected.
-     */
-    @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> cursorProcessor) {
-        registeredNextBlocks.remove(cursorProcessor);
-    }
+public abstract class AbstractCursorFilter extends AbstractFilter<CursorUpdateEvent> {
 
     /**
      * Processes the specified cursors using the blocks/listeners that are queued/added to this input filter.
@@ -77,20 +48,11 @@ public abstract class AbstractInputFilter implements InputFilter {
      * @param userId  ID of the user touching the surface.
      * @param target  Touch target to process the cursors for.
      * @param cursors Cursors to be processed by the next blocks.
+     *
+     * @see #processWithNextBlocks(com.github.multitouchframework.api.TouchEvent)
      */
     protected void processWithNextBlocks(final long userId, final TouchTarget target,
                                          final Collection<Cursor> cursors) {
         processWithNextBlocks(new CursorUpdateEvent(userId, target, cursors));
-    }
-
-    /**
-     * Processes the specified event using the blocks/listeners that are queued/added to this input filter.
-     *
-     * @param event Cursor update event to be processed by the next blocks.
-     */
-    protected void processWithNextBlocks(final CursorUpdateEvent event) {
-        for (final TouchListener<CursorUpdateEvent> nextBlock : registeredNextBlocks) {
-            nextBlock.processTouchEvent(event);
-        }
     }
 }

@@ -25,6 +25,7 @@
 
 package com.github.multitouchframework.base.processing.filter;
 
+import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 import java.util.Collection;
@@ -36,10 +37,10 @@ import java.util.Set;
  * not match those specified with {@link #addUser(long)}.<br>All events with a user ID included in this filter will be
  * blocked.
  *
- * @see AbstractInputFilter
+ * @see AbstractFilter
  * @see IncludeUserFilter
  */
-public class ExcludeUserFilter extends AbstractInputFilter {
+public class ExcludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
 
     /**
      * Excluded user IDs.
@@ -89,10 +90,10 @@ public class ExcludeUserFilter extends AbstractInputFilter {
     }
 
     /**
-     * @see AbstractInputFilter#processWithNextBlocks(CursorUpdateEvent)
+     * @see AbstractCursorFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(final E event) {
         if (!userIds.contains(event.getUserId())) {
             processWithNextBlocks(event);
         }

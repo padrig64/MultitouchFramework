@@ -57,6 +57,8 @@ public final class ChainBuilder {
         }
 
         /**
+         * Continues the chain or branch with the specified block.
+         *
          * @param nextBlock Next chainable block to be added to the current block.
          * @param <N>       Type of block following the specified next chainable block.
          *
@@ -89,7 +91,9 @@ public final class ChainBuilder {
     }
 
     /**
-     * @param block First block to start the chain with.<br>It can be the input source at the beginning of the whole
+     * Starts a new chain or branch with the specified block.
+     *
+     * @param block First block of the chain or branch.<br>It can be the input source at the beginning of the whole
      *              chain or a block at the beginning of a new branch.
      * @param <N>   Type of the next block after the specified block.
      *

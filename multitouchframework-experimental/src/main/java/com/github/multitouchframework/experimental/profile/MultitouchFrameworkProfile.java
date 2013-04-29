@@ -25,7 +25,8 @@
 
 package com.github.multitouchframework.experimental.profile;
 
-import com.github.multitouchframework.base.processing.filter.InputFilter;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
+import com.github.multitouchframework.base.processing.filter.Filter;
 import com.github.multitouchframework.base.processing.gesture.GestureRecognizer;
 import com.github.multitouchframework.base.processing.source.InputSource;
 import com.github.multitouchframework.api.TouchEvent;
@@ -37,9 +38,9 @@ public interface MultitouchFrameworkProfile {
 
     public void setInputController(InputSource inputController);
 
-    public void addInputFilter(InputFilter inputFilter);
+    public void addInputFilter(Filter<CursorUpdateEvent> inputFilter);
 
-    public void removeInputFilter(InputFilter inputFilter);
+    public void removeInputFilter(Filter<CursorUpdateEvent> inputFilter);
 
     // TODO
 
