@@ -38,7 +38,7 @@ import java.util.Map;
  * NoChangeFilter}, this is a very cheap alternative to low-pass filters, even though high frequencies are not
  * filtered out.
  */
-public class BoundingBoxFilter extends AbstractCursorFilter {
+public class BoundingBoxFilter extends AbstractFilter<CursorUpdateEvent> {
 
     /**
      * Half the size of the boxes.
@@ -51,7 +51,7 @@ public class BoundingBoxFilter extends AbstractCursorFilter {
     private Map<Long, Cursor> filteredCursors = new HashMap<Long, Cursor>();
 
     /**
-     * @see AbstractCursorFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
+     * @see AbstractFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
@@ -71,7 +71,8 @@ public class BoundingBoxFilter extends AbstractCursorFilter {
             }
         }
 
-        processWithNextBlocks(event.getUserId(), event.getTouchTarget(), filteredCursors.values());
+        processWithNextBlocks(new CursorUpdateEvent(event.getUserId(), event.getTouchTarget(),
+                filteredCursors.values()));
     }
 
     /**

@@ -90,7 +90,7 @@ public class ExcludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
     }
 
     /**
-     * @see AbstractCursorFilter#processWithNextBlocks(TouchEvent)
+     * @see AbstractFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
     public void processTouchEvent(final E event) {

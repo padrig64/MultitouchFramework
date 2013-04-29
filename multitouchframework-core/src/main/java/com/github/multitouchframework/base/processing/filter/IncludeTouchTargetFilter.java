@@ -90,7 +90,7 @@ public class IncludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
     }
 
     /**
-     * @see AbstractCursorFilter#processWithNextBlocks(TouchEvent)
+     * @see AbstractFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
     public void processTouchEvent(final E event) {
