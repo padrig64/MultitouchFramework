@@ -76,6 +76,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <module>multitouchframework-swing</module>
         <module>multitouchframework-swingcomplements</module>
         <module>multitouchframework-experimental</module>
+        <module>multitouchframework-demo</module>
     </modules>
 
     <dependencyManagement>
@@ -96,6 +97,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <dependency>
                 <groupId>multitouchframework</groupId>
                 <artifactId>multitouchframework-swingcomplements</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>multitouchframework</groupId>
+                <artifactId>multitouchframework-experimental</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>multitouchframework</groupId>
+                <artifactId>multitouchframework-demo</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -203,5 +214,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </build>
         </profile>
     </profiles>
-
 </project>
