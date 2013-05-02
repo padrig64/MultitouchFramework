@@ -23,33 +23,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.multitouchframework.base.processing.dispatch;
+package com.github.multitouchframework.base.processing.filter;
 
+import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
-import com.github.multitouchframework.api.TouchListener;
-import com.github.multitouchframework.api.TouchTarget;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract implementation of a cursor to touch target dispatcher.<br>It provides implementation of the (de-)queuing of
- * blocks, as well as the basic dispatching of cursors to touch targets and the forwarding of the results to the queued
+ * Abstract implementation of a cursor to touch target dispatcher.<br>Cursor-to-target dispatcher are meant to dispatch
+ * cursor points to the touch targets on the touch surface, for instance, in order to the allow gesture recognition
+ * on specific touch targets independently. So, typically, gesture recognizers will be queued to cursor-to-target
+ * dispatchers.<br>This abstraction provides implementation of the (de-)queuing of blocks,
+ * as well as the basic dispatching of cursors to touch targets and the forwarding of the results to the queued
  * blocks. However, the discovery of a touch target for a single cursor is left to concrete sub-classes.<br>This
  * implementation makes the touch targets catch the cursors on finger down, and release the cursors on finger up only.
  * But the touch targets will hold the cursors even if they leave these touch targets. This makes it more convenient
  * for users working on small touch targets of the screen (for instance, when several users are working on different
  * small maps displayed on the same device).
  *
+ * @see AbstractFilter
+ * @see CursorUpdateEvent
  * @see #findTouchedTarget(Cursor)
  */
-public abstract class AbstractCursorToTouchTargetDispatcher implements CursorToTouchTargetDispatcher {
+public abstract class AbstractCursorToTouchTargetDispatcher extends AbstractFilter<CursorUpdateEvent> {
 
     /**
      * Mapping between cursors and touch targets resulting from the call to {@link #processTouchEvent
@@ -58,28 +60,7 @@ public abstract class AbstractCursorToTouchTargetDispatcher implements CursorToT
     private Map<Long, TouchTarget> oldCursorToTarget = new HashMap<Long, TouchTarget>(); // Initially, no cursor down
 
     /**
-     * Cursor-per-target processors connected and processing the output touch targets and cursors from this dispatcher.
-     */
-    private final List<TouchListener<CursorUpdateEvent>> nextBlocks = new ArrayList<TouchListener<CursorUpdateEvent>>();
-
-    /**
-     * @see CursorToTouchTargetDispatcher#queue(Object)
-     */
-    @Override
-    public void queue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
-        nextBlocks.add(cursorTargetProcessor);
-    }
-
-    /**
-     * @see CursorToTouchTargetDispatcher#dequeue(Object)
-     */
-    @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> cursorTargetProcessor) {
-        nextBlocks.remove(cursorTargetProcessor);
-    }
-
-    /**
-     * @see CursorToTouchTargetDispatcher#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
+     * @see AbstractFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
     public void processTouchEvent(final CursorUpdateEvent event) {
@@ -146,9 +127,6 @@ public abstract class AbstractCursorToTouchTargetDispatcher implements CursorToT
      * @param cursors Cursors for the specified touch target.
      */
     private void forwardToNextBlocks(final long userId, final TouchTarget target, final Collection<Cursor> cursors) {
-        final CursorUpdateEvent event = new CursorUpdateEvent(userId, target, cursors);
-        for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
-            nextBlock.processTouchEvent(event);
-        }
+        processWithNextBlocks(new CursorUpdateEvent(userId, target, cursors));
     }
 }

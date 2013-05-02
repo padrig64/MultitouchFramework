@@ -27,7 +27,7 @@ package com.github.multitouchframework.swing.processing.dispatch;
 
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
-import com.github.multitouchframework.base.processing.dispatch.AbstractCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.base.processing.filter.AbstractCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.swing.target.ComponentTouchTarget;
 
 import javax.swing.RootPaneContainer;

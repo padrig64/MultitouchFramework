@@ -27,7 +27,7 @@ package com.github.multitouchframework.experimental.dispatch;
 
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
-import com.github.multitouchframework.base.processing.dispatch.AbstractCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.base.processing.filter.AbstractCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.target.ScreenTouchTarget;
 
 import java.util.ArrayList;
