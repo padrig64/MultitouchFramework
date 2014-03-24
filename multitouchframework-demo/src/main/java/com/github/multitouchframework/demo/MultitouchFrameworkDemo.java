@@ -49,8 +49,6 @@ import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
 import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
-import com.github.multitouchframework.experimental.gesture.drag.DragInertia;
-import com.github.multitouchframework.swing.processing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.processing.scheduling.EDTScheduler;
 import com.github.multitouchframework.swingcomplements.LeanScrollBarUI;
 import net.miginfocom.swing.MigLayout;
@@ -298,51 +296,51 @@ public class MultitouchFrameworkDemo extends JFrame {
 
     private void initChain() {
         // Create input source
-        TuioSource sourceNode = new TuioSource(new ScreenTouchTarget());
-        queue(sourceNode) //
+        TuioSource source = new TuioSource(new ScreenTouchTarget());
+        queue(source) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
                 .queue(FeedbackPresentationLayer.RAW_CURSORS.getFeedbackLayer());
 
         // Configure cursor filtering and layers for filtered cursors
-        NoChangeCursorFilter noChangeFilterNode = new NoChangeCursorFilter();
-        queue(sourceNode) //
+        NoChangeCursorFilter noChangeFilter = new NoChangeCursorFilter();
+        queue(source) //
                 .queue(new BoundingBoxCursorFilter()) //
-                .queue(noChangeFilterNode) //
+                .queue(noChangeFilter) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
                 .queue(FeedbackPresentationLayer.FILTERED_CURSORS.getFeedbackLayer(), //
                         FeedbackPresentationLayer.FILTERED_MEAN_CURSOR.getFeedbackLayer(), //
                         FeedbackPresentationLayer.FILTERED_MEAN_LINES.getFeedbackLayer());
 
         // Configure cursor-to-component dispatcher
-        queue(noChangeFilterNode) //
-                .queue(new CursorToComponentDispatcher());
+//        queue(noChangeFilter) //
+//                .queue(new CursorToComponentDispatcher());
 
         // Convert cursors to canvas
-        SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new SimpleCursorToTouchTargetDispatcher();
-        queue(noChangeFilterNode) //
+        SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = new SimpleCursorToTouchTargetDispatcher();
+        queue(noChangeFilter) //
                 .queue(new ScreenToComponentConverter(canvas)) //
-                .queue(cursorToTargetDispatcherNode);
+                .queue(cursorToTargetDispatcher);
 
         // Configure cursor-to-target dispatcher
         for (TouchTarget touchTarget : TOUCH_TARGETS) {
-            cursorToTargetDispatcherNode.addTouchTargetOnTop(touchTarget);
+            cursorToTargetDispatcher.addTouchTargetOnTop(touchTarget);
         }
 
         // Configure layer for touch targets
         ((TouchTargetsLayer) CanvasPresentationLayer.TOUCH_TARGETS.getLayer()).setTouchTargetProvider
-                (cursorToTargetDispatcherNode);
-        queue(cursorToTargetDispatcherNode) //
+                (cursorToTargetDispatcher);
+        queue(cursorToTargetDispatcher) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
                 .queue(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure touch-target filters
-        IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilterNode = new
+        IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilter = new
                 IncludeTouchTargetFilter<CursorUpdateEvent>(TOUCH_TARGETS);
-        queue(cursorToTargetDispatcherNode) //
-                .queue(touchTargetFilterNode);
+        queue(cursorToTargetDispatcher) //
+                .queue(touchTargetFilter);
 
         // Configure gestures on touch targets
-        queue(touchTargetFilterNode) //
+        queue(touchTargetFilter) //
                 .queue(new DragRecognizer()) //
                 .queue(new TouchListener<DragEvent>() {
 
@@ -355,8 +353,8 @@ public class MultitouchFrameworkDemo extends JFrame {
                             ((DemoTouchTarget) touchTarget).setBounds(bounds);
                         }
                     }
-                }, new DragInertia());
-        queue(touchTargetFilterNode) //
+                }/*, new DragInertia()*/);
+        queue(touchTargetFilter) //
                 .queue(new PinchSpreadRecognizer()) //
                 .queue(new TouchListener<PinchSpreadEvent>() {
 
@@ -384,11 +382,11 @@ public class MultitouchFrameworkDemo extends JFrame {
                         }
                     }
                 });
-        queue(touchTargetFilterNode) //
+        queue(touchTargetFilter) //
                 .queue(new TapRecognizer());
 
         // Activate input controller
-        sourceNode.start();
+        source.start();
     }
 
     public static void main(String[] args) {
