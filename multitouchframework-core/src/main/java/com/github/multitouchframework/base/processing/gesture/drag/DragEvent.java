@@ -42,21 +42,27 @@ public class DragEvent implements TouchEvent, Cloneable {
     public static enum State {
 
         /**
-         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
-         * two consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         * The current number of cursors honors the minimum and maximum required by the gesture.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of next event will be either PERFORMED or
+         * UNARMED.
          */
         ARMED,
 
         /**
-         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the
-         * next event will be either PERFORMED again or UNARMED.
+         * The gesture has been performed.
+         * <p/>
+         * There can be several consecutive events of this state. The state of the next event will be either PERFORMED
+         * again or UNARMED.
          */
         PERFORMED,
 
         /**
-         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the
-         * previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not
-         * be two consecutive events of this state. The state of the next event will be ARMED.
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.
+         * <p/>
+         * If the previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of the next event will be ARMED.
          */
         UNARMED
     }
@@ -103,7 +109,7 @@ public class DragEvent implements TouchEvent, Cloneable {
      *
      * @see DragEvent#DragEvent(long, TouchTarget, State, int, int, int, int)
      */
-    public DragEvent(final DragEvent event) {
+    public DragEvent(DragEvent event) {
         this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getDiffX(), event.getDiffY(),
                 event.getTotalDiffX(), event.getTotalDiffY());
     }
@@ -119,8 +125,7 @@ public class DragEvent implements TouchEvent, Cloneable {
      * @param dxTotal Drag movement on the X axis relatively to the very beginning of the gesture.
      * @param dyTotal Drag movement on the Y axis relatively to the very beginning of the gesture.
      */
-    public DragEvent(final long userId, final TouchTarget target, final State state, final int dx, final int dy,
-                     final int dxTotal, final int dyTotal) {
+    public DragEvent(long userId, TouchTarget target, State state, int dx, int dy, int dxTotal, int dyTotal) {
         this.userId = userId;
         this.target = target;
         this.state = state;

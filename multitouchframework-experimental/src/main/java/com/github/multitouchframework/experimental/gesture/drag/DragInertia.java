@@ -35,6 +35,7 @@ import org.jdesktop.core.animation.timing.sources.ScheduledExecutorTimingSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 // TODO Finish implementation
 public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchListener<DragEvent>> {
@@ -54,11 +55,13 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         @Override
         public void repeat(final Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.repeat");
+            // Nothing to be done
         }
 
         @Override
         public void reverse(final Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.reverse");
+            // Nothing to be done
         }
 
         @Override
@@ -66,6 +69,8 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
             System.out.println("DragInertia$DeceleratorTarget.timingEvent: " + v);
         }
     }
+
+    private static final int DEFAULT_SAMPLE_COUNT = 4;
 
     private final DragEvent[] samples;
 
@@ -85,7 +90,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
     private final List<TouchListener<DragEvent>> gestureListeners = new ArrayList<TouchListener<DragEvent>>();
 
     public DragInertia() {
-        this(4);
+        this(DEFAULT_SAMPLE_COUNT);
     }
 
     public DragInertia(final int sampleCount) {
@@ -140,8 +145,8 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
 
     private void processDragArmed(final DragEvent event) {
         // TODO Stop current inertia if any, and continue current pane
-        if (animator.isRunning()) {
-            animator.cancel();
+        if ((animator != null) && animator.isRunning()) {
+            animator.stop();
             animator.removeTarget(deceleratorTarget);
         }
 
@@ -150,19 +155,62 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
     }
 
     private void processDragPerformed(final DragEvent event) {
-        samples[sampleIndex++] = new DragEvent(event);
-        if (sampleIndex >= samples.length) {
-            sampleIndex = 0;
-        }
+        pushEvent(event);
         fireGestureEvent(event);
     }
 
     private void processDragUnarmed(final DragEvent event) {
-        animator = new Animator.Builder(new ScheduledExecutorTimingSource()).setInterpolator(new
-                AccelerationInterpolator(1.0, 1.0)).addTarget(deceleratorTarget).build();
+        pushEvent(event);
 
+        final ScheduledExecutorTimingSource timingSource = new ScheduledExecutorTimingSource();
+        timingSource.init();
+        Animator.setDefaultTimingSource(timingSource);
+
+        animator = new Animator.Builder().setInterpolator(new AccelerationInterpolator(0.0, 1.0)).setDuration(1000,
+                TimeUnit.MILLISECONDS).addTarget(deceleratorTarget).build();
         animator.start();
 
+        // TODO Move it to timing target end() method
         fireGestureEvent(event);
+    }
+
+    private void pushEvent(final DragEvent event) {
+        sampleIndex++;
+        if (sampleIndex >= samples.length) {
+            sampleIndex = 0;
+        }
+        samples[sampleIndex] = new DragEvent(event);
+    }
+
+    private double getVelocity() {
+        double velocity = 0;
+
+        DragEvent samplePrev = getSample(0);
+        for (int i = 1; i < samples.length && samplePrev != null; i++) {
+            final DragEvent sampleNext = getSample(i);
+            if (sampleNext != null) {
+                // TODO
+            }
+            samplePrev = sampleNext;
+        }
+
+
+        return velocity;
+    }
+
+    private DragEvent getSample(final int timeIndex) {
+        DragEvent event = null;
+
+//        int readIndex = sampleIndex;
+//        for (int i = 0; i < samples.length; i++) {
+//            readIndex++;
+//            if (readIndex >= samples.length) {
+//                readIndex = 0;
+//            }
+//            DragEvent sample = samples[readIndex];
+//            if (sample)
+//        }
+
+        return event;
     }
 }

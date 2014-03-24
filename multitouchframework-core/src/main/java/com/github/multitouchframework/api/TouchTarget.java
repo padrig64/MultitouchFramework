@@ -28,32 +28,34 @@ package com.github.multitouchframework.api;
 import com.github.multitouchframework.base.cursor.Cursor;
 
 /**
- * Interface to be implemented by touchable areas on the touch-enabled surface.<br>This may represent a figure of any
- * shape, a GUI component, etc.. Note that a touch target may not be rectangle.
+ * Interface to be implemented by touchable areas on the touch-enabled surface.
+ * <p/>
+ * This may represent a figure of any shape, a GUI component, etc.. Note that a touch target may not be rectangle.
  */
 public interface TouchTarget {
 
     /**
-     * Gets the real base object represented by this touch target.<br>This may be, for instance, a JComponent, the
-     * touch target itself, etc..
+     * Gets the real base object represented by this touch target.
+     * <p/>
+     * This may be, for instance, a JComponent, the touch target itself, etc..
      *
      * @return Base object represented by this touch target.
      */
-    public Object getBaseObject();
+    Object getBaseObject();
 
     /**
      * Gets the maximum width of the touch target.
      *
      * @return Maximum width of the touch target.
      */
-    public int getMaximumWidth();
+    int getMaximumWidth();
 
     /**
      * Gets the maximum height of the touch target.
      *
      * @return Maximum height of the touch target.
      */
-    public int getMaximumHeight();
+    int getMaximumHeight();
 
     /**
      * States whether the touch target is touched by the specified cursor.
@@ -62,5 +64,5 @@ public interface TouchTarget {
      *
      * @return True if the touch target is touched by the cursor, false otherwise.
      */
-    public boolean isTouched(Cursor cursor);
+    boolean isTouched(Cursor cursor);
 }

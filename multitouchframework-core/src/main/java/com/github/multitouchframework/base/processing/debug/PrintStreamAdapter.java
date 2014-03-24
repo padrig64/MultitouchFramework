@@ -81,7 +81,7 @@ public class PrintStreamAdapter<E extends TouchEvent> implements TouchListener<E
      *
      * @param stream Print stream to write the string representation of the touch events to.
      */
-    public PrintStreamAdapter(final PrintStream stream) {
+    public PrintStreamAdapter(PrintStream stream) {
         this(stream, DEFAULT_PREFIX, DEFAULT_SUFFIX);
     }
 
@@ -91,7 +91,7 @@ public class PrintStreamAdapter<E extends TouchEvent> implements TouchListener<E
      *
      * @param prefix Prefix to be prepended to the string representation of the touch events.
      */
-    public PrintStreamAdapter(final String prefix) {
+    public PrintStreamAdapter(String prefix) {
         this(DEFAULT_STREAM, prefix, DEFAULT_SUFFIX);
     }
 
@@ -103,7 +103,7 @@ public class PrintStreamAdapter<E extends TouchEvent> implements TouchListener<E
      * @param prefix Prefix to be prepended to the string representation of the touch events.
      * @param suffix Suffix to be appended to the string representation of the touch events.
      */
-    public PrintStreamAdapter(final PrintStream stream, final String prefix, final String suffix) {
+    public PrintStreamAdapter(PrintStream stream, String prefix, String suffix) {
         this.stream = stream;
         this.prefix = prefix;
         this.suffix = suffix;
@@ -113,8 +113,8 @@ public class PrintStreamAdapter<E extends TouchEvent> implements TouchListener<E
      * @see TouchListener#processTouchEvent(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final E event) {
-        final StringBuilder builder = new StringBuilder();
+    public void processTouchEvent(E event) {
+        StringBuilder builder = new StringBuilder();
         builder.append(prefix);
         builder.append(event);
         builder.append(suffix);

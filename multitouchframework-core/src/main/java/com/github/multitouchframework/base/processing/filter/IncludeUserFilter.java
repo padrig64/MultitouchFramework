@@ -34,8 +34,9 @@ import java.util.Set;
 
 /**
  * Input filter passing the {@link CursorUpdateEvent}s to the following blocks only if the user ID of the events matches
- * those specified with {@link #addUser(long)}.<br>All events with a user ID not included in this filter will be
- * blocked.
+ * those specified with {@link #addUser(long)}.
+ * <p/>
+ * All events with a user ID not included in this filter will be blocked.
  *
  * @see AbstractFilter
  * @see ExcludeUserFilter
@@ -52,9 +53,9 @@ public class IncludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
      *
      * @param userIds IDs of the users to be included.
      */
-    public IncludeUserFilter(final long... userIds) {
+    public IncludeUserFilter(long... userIds) {
         if (userIds != null) {
-            for (final long userId : userIds) {
+            for (long userId : userIds) {
                 this.userIds.add(userId);
             }
         }
@@ -65,7 +66,7 @@ public class IncludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
      *
      * @param userIds IDs of the users to be included.
      */
-    public IncludeUserFilter(final Collection<Long> userIds) {
+    public IncludeUserFilter(Collection<Long> userIds) {
         if (userIds != null) {
             this.userIds.addAll(userIds);
         }
@@ -76,7 +77,7 @@ public class IncludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
      *
      * @param userId ID of the user to be included.
      */
-    public void addUser(final long userId) {
+    public void addUser(long userId) {
         userIds.add(userId);
     }
 
@@ -85,7 +86,7 @@ public class IncludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
      *
      * @param userId ID of the user to be excluded.
      */
-    public void removeUser(final long userId) {
+    public void removeUser(long userId) {
         userIds.remove(userId);
     }
 
@@ -93,7 +94,7 @@ public class IncludeUserFilter<E extends TouchEvent> extends AbstractFilter<E> {
      * @see AbstractFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final E event) {
+    public void processTouchEvent(E event) {
         if (userIds.contains(event.getUserId())) {
             processWithNextBlocks(event);
         }

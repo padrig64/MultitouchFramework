@@ -27,14 +27,13 @@ package com.github.multitouchframework.base.cursor;
 
 import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchTarget;
-import com.github.multitouchframework.base.cursor.Cursor;
 
 import java.util.Collection;
 
 /**
  * Event representing updates of cursor positions.
  *
- * @see com.github.multitouchframework.api.TouchEvent
+ * @see TouchEvent
  */
 public class CursorUpdateEvent implements TouchEvent {
 
@@ -61,7 +60,7 @@ public class CursorUpdateEvent implements TouchEvent {
      * @param target  Touch target for which the event is produced.
      * @param cursors Cursors on the associated touch target.
      */
-    public CursorUpdateEvent(final long userId, final TouchTarget target, final Collection<Cursor> cursors) {
+    public CursorUpdateEvent(long userId, TouchTarget target, Collection<Cursor> cursors) {
         this.userId = userId;
         this.target = target;
         this.cursors = cursors;

@@ -25,10 +25,10 @@
 
 package com.github.multitouchframework.base.processing.source;
 
-import com.github.multitouchframework.base.cursor.Cursor;
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.mlawrie.yajtl.TUIOCursor;
 import com.mlawrie.yajtl.TUIOEvent;
 import com.mlawrie.yajtl.TUIOReceiver;
@@ -41,8 +41,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Input controller making use of a TUIO client to provide cursors received from a TUIO server.<br>This implementation
- * is based on the YAJTL library (MIT license) instead of the official TUIO client implementation (GPL license).
+ * Input controller making use of a TUIO client to provide cursors received from a TUIO server.
+ * <p/>
+ * This implementation is based on the YAJTL library (MIT license) instead of the official TUIO client implementation
+ * (GPL license).
  *
  * @see AbstractInputSource
  */
@@ -62,14 +64,14 @@ public class TuioSource extends AbstractInputSource {
          * @see TUIOEvent#newCursorEvent(TUIOCursor)
          */
         @Override
-        public void newCursorEvent(final TUIOCursor tuioCursor) {
+        public void newCursorEvent(TUIOCursor tuioCursor) {
             // Sanity check
             if (currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("+++ Cursor " + tuioCursor.id() + " was already tracked");
             }
 
             // Process cursor addition
-            final Cursor cursor = new Cursor(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
+            Cursor cursor = new Cursor(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
                     Float.valueOf(tuioCursor.y()).intValue());
             currentCursors.put(tuioCursor.id(), cursor);
             processWithNextBlocks();
@@ -79,7 +81,7 @@ public class TuioSource extends AbstractInputSource {
          * @see TUIOEvent#removeCursorEvent(TUIOCursor)
          */
         @Override
-        public void removeCursorEvent(final TUIOCursor tuioCursor) {
+        public void removeCursorEvent(TUIOCursor tuioCursor) {
             // Sanity check
             if (!currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("--- Cursor " + tuioCursor.id() + " was not tracked");
@@ -94,14 +96,14 @@ public class TuioSource extends AbstractInputSource {
          * @see TUIOEvent#moveCursorEvent(TUIOCursor)
          */
         @Override
-        public void moveCursorEvent(final TUIOCursor tuioCursor) {
+        public void moveCursorEvent(TUIOCursor tuioCursor) {
             // Sanity check
             if (!currentCursors.containsKey(tuioCursor.id())) {
                 LOGGER.warn("~~~ Cursor " + tuioCursor.id() + " was not tracked (it will now be tracked)");
             }
 
             // Update by just replacing the cursor
-            final Cursor cursor = new Cursor(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
+            Cursor cursor = new Cursor(tuioCursor.id(), Float.valueOf(tuioCursor.x()).intValue(),
                     Float.valueOf(tuioCursor.y()).intValue());
             currentCursors.put(tuioCursor.id(), cursor);
             processWithNextBlocks();
@@ -111,8 +113,8 @@ public class TuioSource extends AbstractInputSource {
          * Processes the current cursors using the blocks/listeners that are queued/added to this input source.
          */
         private void processWithNextBlocks() {
-            final CursorUpdateEvent event = new CursorUpdateEvent(0, target, currentCursors.values());
-            for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
+            CursorUpdateEvent event = new CursorUpdateEvent(0, target, currentCursors.values());
+            for (TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
                 nextBlock.processTouchEvent(event);
             }
         }
@@ -144,14 +146,15 @@ public class TuioSource extends AbstractInputSource {
     private final TUIOEvent tuioClientAdapter = new TuioClientAdapter();
 
     /**
-     * Constructor specifying the touch target for which the events will be triggered.<br>The default TUIO port number
-     * will be used to connect to the TUIO server.
+     * Constructor specifying the touch target for which the events will be triggered.
+     * <p/>
+     * The default TUIO port number will be used to connect to the TUIO server.
      *
      * @param target Touch target for which the events will be triggered.
      *
      * @see #DEFAULT_TUIO_PORT
      */
-    public TuioSource(final TouchTarget target) {
+    public TuioSource(TouchTarget target) {
         this(DEFAULT_TUIO_PORT, target);
     }
 
@@ -161,7 +164,7 @@ public class TuioSource extends AbstractInputSource {
      * @param tuioPort TUIO port number to connect to the TUIO server.
      * @param target   Touch target for which the events will be triggered.
      */
-    public TuioSource(final short tuioPort, final TouchTarget target) {
+    public TuioSource(short tuioPort, TouchTarget target) {
         super(target);
         this.tuioPort = tuioPort;
     }

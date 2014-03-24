@@ -25,16 +25,18 @@
 
 package com.github.multitouchframework.base.processing.gesture.tap;
 
-import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.processing.gesture.AbstractGestureRecognizer;
 
 import java.util.Collection;
 
 /**
- * Entity responsible for recognizing a single-/multiple-tab gesture.<br>The recognition is made on a per-target
- * basis.<br>Note that this recognizer works best after filtering the input and limiting the number of input touch
- * events.
+ * Entity responsible for recognizing a single-/multiple-tab gesture.
+ * <p/>
+ * The recognition is made on a per-target basis.
+ * <p/>
+ * Note that this recognizer works best after filtering the input and limiting the number of input touch events.
  *
  * @see AbstractGestureRecognizer
  * @see TapEvent
@@ -42,8 +44,9 @@ import java.util.Collection;
 public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.TouchTargetContext, TapEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single touch target.<br>The recognition is based on
-     * the variation of touch points.
+     * Context storing the state of recognition of the gesture for a single touch target.
+     * <p/>
+     * The recognition is based on the variation of touch points.
      */
     protected static class TouchTargetContext {
 
@@ -54,8 +57,10 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
         public int previousCursorCount = 0;
 
         /**
-         * Timestamp of the last recognized tap.<br>It is used to detect whether the next sub-sequent is part of the
-         * same series and the consecutive tap count is to be incremented.
+         * Timestamp of the last recognized tap.
+         * <p/>
+         * It is used to detect whether the next sub-sequent is part of the same series and the consecutive tap count is
+         * to be incremented.
          */
         public long previousTapTimestamp = 0;
 
@@ -87,21 +92,24 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
     private long consecutiveTapTimeout = DEFAULT_CONSECUTIVE_TAP_TIMEOUT;
 
     /**
-     * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
-     * maximum. Also, the default timeout for consecutive taps is 350 ms.
+     * Default constructor.
+     * <p/>
+     * By default, 1 cursor is the minimum required to perform the gesture, and there is no maximum. Also, the default
+     * timeout for consecutive taps is 350 ms.
      */
     public TapRecognizer() {
         this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT);
     }
 
     /**
-     * Constructor specifying the minimum and maximum number of cursors needed to perform the gesture.<br>The default
-     * timeout for consecutive taps is 350 ms.
+     * Constructor specifying the minimum and maximum number of cursors needed to perform the gesture.
+     * <p/>
+     * The default timeout for consecutive taps is 350 ms.
      *
      * @param minCursorCount Minimum number of cursors needed for the gesture.
      * @param maxCursorCount Maximum number of cursors allowed for the gesture.
      */
-    public TapRecognizer(final int minCursorCount, final int maxCursorCount) {
+    public TapRecognizer(int minCursorCount, int maxCursorCount) {
         this(minCursorCount, maxCursorCount, DEFAULT_CONSECUTIVE_TAP_TIMEOUT);
     }
 
@@ -113,7 +121,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
      * @param maxCursorCount        Maximum number of cursors allowed for the gesture.
      * @param consecutiveTapTimeout Consecutive tap timeout in milliseconds.
      */
-    public TapRecognizer(final int minCursorCount, final int maxCursorCount, final long consecutiveTapTimeout) {
+    public TapRecognizer(int minCursorCount, int maxCursorCount, long consecutiveTapTimeout) {
         super(minCursorCount, maxCursorCount);
         setConsecutiveTapTimeout(consecutiveTapTimeout);
     }
@@ -132,7 +140,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
      *
      * @param consecutiveTapTimeout Consecutive tap timeout in milliseconds.
      */
-    public void setConsecutiveTapTimeout(final long consecutiveTapTimeout) {
+    public void setConsecutiveTapTimeout(long consecutiveTapTimeout) {
         this.consecutiveTapTimeout = consecutiveTapTimeout;
     }
 
@@ -140,7 +148,7 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
      * @see AbstractGestureRecognizer#createContext(long, TouchTarget)
      */
     @Override
-    protected TouchTargetContext createContext(final long userId, final TouchTarget target) {
+    protected TouchTargetContext createContext(long userId, TouchTarget target) {
         return new TouchTargetContext();
     }
 
@@ -148,12 +156,11 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
      * @see AbstractGestureRecognizer#process(Object, long, TouchTarget, Collection)
      */
     @Override
-    protected void process(final TouchTargetContext context, final long userId, final TouchTarget target,
-                           final Collection<Cursor> cursors) {
+    protected void process(TouchTargetContext context, long userId, TouchTarget target, Collection<Cursor> cursors) {
         // Check if at least 1 cursor is still on the touch target
         if (isGestureStillArmed(target, cursors)) {
-            final int cursorCount = cursors.size();
-            final long tapTimestamp = System.currentTimeMillis();
+            int cursorCount = cursors.size();
+            long tapTimestamp = System.currentTimeMillis();
 
             if (!isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
                 // Just starting a new tap (e.g. some fingers down)
@@ -196,20 +203,21 @@ public class TapRecognizer extends AbstractGestureRecognizer<TapRecognizer.Touch
     }
 
     /**
-     * Checks whether there is at least one cursor on the specified touch target.<br>If it is the case, it means that
-     * tap is still armed.
+     * Checks whether there is at least one cursor on the specified touch target.
+     * <p/>
+     * If it is the case, it means that tap is still armed.
      *
      * @param target  Touch target to be checked.
      * @param cursors Cursors to be checked.
      *
      * @return True if there is at least one cursor on the touch target, false otherwise.
      */
-    private boolean isGestureStillArmed(final TouchTarget target, final Collection<Cursor> cursors) {
+    private boolean isGestureStillArmed(TouchTarget target, Collection<Cursor> cursors) {
         boolean stillArmed = false;
 
         if (cursors.isEmpty()) {
             stillArmed = true;
-        } else for (final Cursor cursor : cursors) {
+        } else for (Cursor cursor : cursors) {
             if (target.isTouched(cursor)) {
                 stillArmed = true;
                 break;

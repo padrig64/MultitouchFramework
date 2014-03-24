@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract implementation of a filter.<br>Sub-classes are meant to make use of the queued blocks to
- * process the filtered touch event, by calling their {@link TouchListener#processTouchEvent(TouchEvent)} method.
+ * Abstract implementation of a filter.
+ * <p/>
+ * Sub-classes are meant to make use of the queued blocks to process the filtered touch event,
+ * by calling their {@link TouchListener#processTouchEvent(TouchEvent)} method.
  *
  * @see Filter
  * @see TouchEvent
@@ -46,24 +48,26 @@ public abstract class AbstractFilter<E extends TouchEvent> implements Filter<E> 
     private final List<TouchListener<E>> registeredNextBlocks = new ArrayList<TouchListener<E>>();
 
     /**
-     * Connects the specified cursor processor to this input controller block.<br>Cursor processor can be, for instance,
-     * input filters or cursor-to-target dispatchers.
+     * Connects the specified cursor processor to this input controller block.
+     * <p/>
+     * Cursor processor can be, for instance, input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be connected.
      */
     @Override
-    public void queue(final TouchListener<E> cursorProcessor) {
+    public void queue(TouchListener<E> cursorProcessor) {
         registeredNextBlocks.add(cursorProcessor);
     }
 
     /**
-     * Disconnects the specified cursor processor from this input controller block.<br>Cursor processor can be, for
-     * instance, input filters or cursor-to-target dispatchers.
+     * Disconnects the specified cursor processor from this input controller block.
+     * <p/>
+     * Cursor processor can be, for instance, input filters or cursor-to-target dispatchers.
      *
      * @param cursorProcessor Cursor processor to be disconnected.
      */
     @Override
-    public void dequeue(final TouchListener<E> cursorProcessor) {
+    public void dequeue(TouchListener<E> cursorProcessor) {
         registeredNextBlocks.remove(cursorProcessor);
     }
 
@@ -72,8 +76,8 @@ public abstract class AbstractFilter<E extends TouchEvent> implements Filter<E> 
      *
      * @param event Cursor update event to be processed by the next blocks.
      */
-    protected void processWithNextBlocks(final E event) {
-        for (final TouchListener<E> nextBlock : registeredNextBlocks) {
+    protected void processWithNextBlocks(E event) {
+        for (TouchListener<E> nextBlock : registeredNextBlocks) {
             nextBlock.processTouchEvent(event);
         }
     }

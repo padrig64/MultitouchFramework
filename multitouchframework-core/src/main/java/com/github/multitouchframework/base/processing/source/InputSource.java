@@ -30,9 +30,10 @@ import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 /**
- * Interface to be implemented by input controllers.<br>Input controllers are the starting block of the whole chain of
- * touch input processing. They provide cursors to one or several cursor processors, typically {@link
- * com.github.multitouchframework.base.processing.filter.Filter}s.
+ * Interface to be implemented by input controllers.
+ * <p/>
+ * Input controllers are the starting block of the whole chain of touch input processing. They provide cursors to one or
+ * several cursor processors, typically {@link com.github.multitouchframework.base.processing.filter.Filter}s.
  *
  * @see Chainable
  * @see TouchListener
@@ -45,15 +46,15 @@ public interface InputSource extends Chainable<TouchListener<CursorUpdateEvent>>
      *
      * @return True if the controller is started, false otherwise.
      */
-    public boolean isStarted();
+    boolean isStarted();
 
     /**
      * Starts the input controller so that it can provide cursors.
      */
-    public void start();
+    void start();
 
     /**
      * Stops the input controller so that it no longer provide cursors.
      */
-    public void stop();
+    void stop();
 }

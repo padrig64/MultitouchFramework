@@ -76,8 +76,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
     private class MouseControlAdapter extends MouseAdapter {
 
         /**
-         * Last know position of the mouse when dragging the scrollbar.<br>It is used to calculate the amount of scroll
-         * on each mouse movement.
+         * Last know position of the mouse when dragging the scrollbar.
+         * <p/>
+         * It is used to calculate the amount of scroll on each mouse movement.
          */
         private Point prevPoint = null;
 
@@ -85,7 +86,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseAdapter#mousePressed(MouseEvent)
          */
         @Override
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             prevPoint = e.getPoint();
         }
 
@@ -93,7 +94,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseAdapter#mouseReleased(MouseEvent)
          */
         @Override
-        public void mouseReleased(final MouseEvent e) {
+        public void mouseReleased(MouseEvent e) {
             prevPoint = null;
         }
 
@@ -101,17 +102,17 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseAdapter#mouseDragged(MouseEvent)
          */
         @Override
-        public void mouseDragged(final MouseEvent e) {
+        public void mouseDragged(MouseEvent e) {
             if (prevPoint != null) {
                 switch (scrollBar.getOrientation()) {
 
                     case JScrollBar.VERTICAL:
-                        final int diffVerticalValue = diffPixelsToDiffModelValue(e.getY() - prevPoint.y);
+                        int diffVerticalValue = diffPixelsToDiffModelValue(e.getY() - prevPoint.y);
                         scrollBar.getModel().setValue(scrollBar.getModel().getValue() + diffVerticalValue);
                         break;
 
                     case JScrollBar.HORIZONTAL:
-                        final int diffHorizontalValue = diffPixelsToDiffModelValue(e.getX() - prevPoint.x);
+                        int diffHorizontalValue = diffPixelsToDiffModelValue(e.getX() - prevPoint.x);
                         scrollBar.getModel().setValue(scrollBar.getModel().getValue() + diffHorizontalValue);
                         break;
 
@@ -124,10 +125,15 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     /**
-     * Entity responsibility of making the scrollbar visible/invisible.<br>(1) The scrollbar should be visible on
-     * rollover and invisible when no rollover.<br>(2) The scrollbar should visible when being dragged even when the
-     * mouse is no longer on the scrollbar.<br>(3) The scrollbar should not be visible on rollover if another scrollbar
-     * is being dragged.<br>(4) The scrollbar should become visible when the content is scrolled.
+     * Entity responsibility of making the scrollbar visible/invisible.
+     * <p/>
+     * (1) The scrollbar should be visible on rollover and invisible when no rollover.
+     * <p/>
+     * (2) The scrollbar should visible when being dragged even when the mouse is no longer on the scrollbar.
+     * <p/>
+     * (3) The scrollbar should not be visible on rollover if another scrollbar is being dragged.
+     * <p/>
+     * (4) The scrollbar should become visible when the content is scrolled.
      */
     private static class VisibilityAdapter implements ComponentListener, MouseListener, MouseMotionListener,
             PropertyChangeListener, ChangeListener, ActionListener, TimingTarget {
@@ -152,9 +158,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
 
         private final Timer fadeOutDelayTimer = new Timer(FADE_OUT_DELAY, this);
 
-        public VisibilityAdapter(final JScrollBar scrollBar) {
+        public VisibilityAdapter(JScrollBar scrollBar) {
             this.scrollBar = scrollBar;
-            final TimingSource ts = new SwingTimerTimingSource();
+            TimingSource ts = new SwingTimerTimingSource();
             Animator.setDefaultTimingSource(ts);
             ts.init();
         }
@@ -163,7 +169,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see ComponentListener#componentShown(ComponentEvent)
          */
         @Override
-        public void componentShown(final ComponentEvent e) {
+        public void componentShown(ComponentEvent e) {
             requestVisible(true);
             requestVisible(false);
         }
@@ -172,7 +178,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see ComponentListener#componentHidden(ComponentEvent)
          */
         @Override
-        public void componentHidden(final ComponentEvent e) {
+        public void componentHidden(ComponentEvent e) {
             visibleRequestCounter = 0;
         }
 
@@ -180,7 +186,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see ComponentListener#componentResized(ComponentEvent)
          */
         @Override
-        public void componentResized(final ComponentEvent e) {
+        public void componentResized(ComponentEvent e) {
             // Nothing to be done
         }
 
@@ -188,7 +194,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see ComponentListener#componentMoved(ComponentEvent)
          */
         @Override
-        public void componentMoved(final ComponentEvent e) {
+        public void componentMoved(ComponentEvent e) {
             // Nothing to be done
         }
 
@@ -196,7 +202,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseListener#mouseEntered(MouseEvent)
          */
         @Override
-        public void mouseEntered(final MouseEvent e) {
+        public void mouseEntered(MouseEvent e) {
             if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) { // (3)
                 requestVisible(true); // (1)
             }
@@ -206,7 +212,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseListener#mouseExited(MouseEvent)
          */
         @Override
-        public void mouseExited(final MouseEvent e) {
+        public void mouseExited(MouseEvent e) {
             if ((sharedScrollingBar == null) || (sharedScrollingBar.equals(e.getComponent()))) { // (3)
                 requestVisible(false); // (1)
             }
@@ -216,7 +222,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseListener#mousePressed(MouseEvent)
          */
         @Override
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             sharedScrollingBar = scrollBar; // (3)
             requestVisible(true); // (2)
         }
@@ -225,7 +231,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseListener#mouseReleased(MouseEvent)
          */
         @Override
-        public void mouseReleased(final MouseEvent e) {
+        public void mouseReleased(MouseEvent e) {
             sharedScrollingBar = null; // (3)
             requestVisible(false); // (2)
         }
@@ -234,7 +240,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseListener#mouseClicked(MouseEvent)
          */
         @Override
-        public void mouseClicked(final MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
             // Nothing to be done
         }
 
@@ -242,7 +248,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseMotionListener#mouseMoved(MouseEvent)
          */
         @Override
-        public void mouseMoved(final MouseEvent e) {
+        public void mouseMoved(MouseEvent e) {
             if (visibleRequestCounter == 0) {
                 // This can happen after dragging another scrollbar, releasing on this scrollbar and moving the mouse
                 requestVisible(true); // (1) because of (3): Simulate a mouse entered
@@ -253,7 +259,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see MouseMotionListener#mouseDragged(MouseEvent)
          */
         @Override
-        public void mouseDragged(final MouseEvent e) {
+        public void mouseDragged(MouseEvent e) {
             mouseMoved(e); // (1) because of (3)
         }
 
@@ -261,7 +267,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
          */
         @Override
-        public void propertyChange(final PropertyChangeEvent event) {
+        public void propertyChange(PropertyChangeEvent event) {
             if ("model".equals(event.getPropertyName())) {
                 // (4) Model replaced, so hook to the new model
                 ((BoundedRangeModel) event.getOldValue()).removeChangeListener(this);
@@ -275,13 +281,13 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see ChangeListener#stateChanged(ChangeEvent)
          */
         @Override
-        public void stateChanged(final ChangeEvent event) {
+        public void stateChanged(ChangeEvent event) {
             // Model value changed
             requestVisible(true); // (4)
             requestVisible(false);
         }
 
-        private void requestVisible(final boolean visible) {
+        private void requestVisible(boolean visible) {
             if (visible) {
                 visibleRequestCounter++;
             } else {
@@ -311,7 +317,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
             // Start new animation from where the previous one stopped
             initialAlpha = currentAlpha;
             targetAlpha = MAX_ALPHA;
-            final long duration = (long) ((MAX_ALPHA - initialAlpha) * FADE_IN_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
+            long duration = (long) ((MAX_ALPHA - initialAlpha) * FADE_IN_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
             if (duration <= 0) {
                 timingEvent(null, 1.0);
             } else {
@@ -337,7 +343,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
             // Start new animation from where the previous one stopped
             initialAlpha = currentAlpha;
             targetAlpha = MIN_ALPHA;
-            final long duration = (long) ((initialAlpha - MIN_ALPHA) * FADE_OUT_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
+            long duration = (long) ((initialAlpha - MIN_ALPHA) * FADE_OUT_MAX_DURATION / (MAX_ALPHA - MIN_ALPHA));
             if (duration <= 0) {
                 timingEvent(null, 1.0);
             } else {
@@ -352,7 +358,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see #fadeOutDelayTimer
          */
         @Override
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             doFadeOut();
         }
 
@@ -360,7 +366,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see TimingTarget#begin(Animator)
          */
         @Override
-        public void begin(final Animator animator) {
+        public void begin(Animator animator) {
             // Nothing to be done because we stop the animation manually
         }
 
@@ -368,7 +374,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see TimingTarget#end(Animator)
          */
         @Override
-        public void end(final Animator animator) {
+        public void end(Animator animator) {
             // Nothing to be done because we stop the animation manually
         }
 
@@ -376,7 +382,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see TimingTarget#repeat(Animator)
          */
         @Override
-        public void repeat(final Animator animator) {
+        public void repeat(Animator animator) {
             // Nothing to be done
         }
 
@@ -384,7 +390,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see TimingTarget#reverse(Animator)
          */
         @Override
-        public void reverse(final Animator animator) {
+        public void reverse(Animator animator) {
             // Nothing to be done
         }
 
@@ -392,7 +398,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
          * @see TimingTarget#timingEvent(Animator, double)
          */
         @Override
-        public void timingEvent(final Animator animator, final double v) {
+        public void timingEvent(Animator animator, double v) {
             currentAlpha = (float) (v * (targetAlpha - initialAlpha) + initialAlpha);
             scrollBar.repaint();
         }
@@ -423,7 +429,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
      *
      * @return UI for the specified component.
      */
-    public static ComponentUI createUI(final JComponent c) {
+    public static ComponentUI createUI(JComponent c) {
         return new LeanScrollBarUI();
     }
 
@@ -436,7 +442,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         super();
     }
 
-    public void installUI(final JComponent c) {
+    public void installUI(JComponent c) {
         if (c instanceof JScrollBar) {
             scrollBar = (JScrollBar) c;
             visibilityAdapter = new VisibilityAdapter(scrollBar);
@@ -448,7 +454,7 @@ public class LeanScrollBarUI extends ScrollBarUI {
         }
     }
 
-    public void uninstallUI(final JComponent c) {
+    public void uninstallUI(JComponent c) {
 //        uninstallKeyboardActions();
         uninstallListeners();
 //        uninstallComponents();
@@ -511,9 +517,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
      * @see ScrollBarUI#getMinimumSize(JComponent)
      */
     @Override
-    public Dimension getMinimumSize(final JComponent c) {
-        final Dimension size;
-        final Insets insets = scrollBar.getInsets();
+    public Dimension getMinimumSize(JComponent c) {
+        Dimension size;
+        Insets insets = scrollBar.getInsets();
 
         switch (scrollBar.getOrientation()) {
 
@@ -537,9 +543,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
      * @see ScrollBarUI#getPreferredSize(JComponent)
      */
     @Override
-    public Dimension getPreferredSize(final JComponent c) {
-        final Dimension size;
-        final Insets insets = scrollBar.getInsets();
+    public Dimension getPreferredSize(JComponent c) {
+        Dimension size;
+        Insets insets = scrollBar.getInsets();
 
         switch (scrollBar.getOrientation()) {
 
@@ -563,20 +569,20 @@ public class LeanScrollBarUI extends ScrollBarUI {
      * @see ScrollBarUI#paint(Graphics, JComponent)
      */
     @Override
-    public void paint(final Graphics g, final JComponent c) {
+    public void paint(Graphics g, JComponent c) {
 
         // Paint in image buffer because alpha composite does not seem to work as expected on the given Graphics
-        final BufferedImage buffer = new BufferedImage(scrollBar.getWidth(), scrollBar.getHeight(),
+        BufferedImage buffer = new BufferedImage(scrollBar.getWidth(), scrollBar.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
 
-        final Graphics2D g2d = buffer.createGraphics();
+        Graphics2D g2d = buffer.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g2d.setColor(new Color(BASE_COLOR.getRed(), BASE_COLOR.getGreen(), BASE_COLOR.getBlue(),
                 (int) (visibilityAdapter.currentAlpha * 255)));
 
-        final int extentInPixels = getExtentInPixels();
-        final int valueInPixels = getValueInPixels();
+        int extentInPixels = getExtentInPixels();
+        int valueInPixels = getValueInPixels();
 
         switch (scrollBar.getOrientation()) {
             case JScrollBar.VERTICAL:
@@ -595,9 +601,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private int getMaxExtentInPixels() {
-        final int maxExtentInPixels;
+        int maxExtentInPixels;
 
-        final Insets insets = scrollBar.getInsets();
+        Insets insets = scrollBar.getInsets();
 
         switch (scrollBar.getOrientation()) {
             case JScrollBar.VERTICAL:
@@ -615,8 +621,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private int getExtentInPixels() {
-        final int extentInPixels;
-        final BoundedRangeModel model = scrollBar.getModel();
+        int extentInPixels;
+        BoundedRangeModel model = scrollBar.getModel();
 
         /* extentInPixels = f(modelExtent)       */
         /*                                       */
@@ -631,8 +637,8 @@ public class LeanScrollBarUI extends ScrollBarUI {
     }
 
     private int getValueInPixels() {
-        final int valueInPixels;
-        final BoundedRangeModel model = scrollBar.getModel();
+        int valueInPixels;
+        BoundedRangeModel model = scrollBar.getModel();
 
         /* valueInPixels = f(modelValue)                        */
         /*                                                      */
@@ -646,9 +652,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
         return valueInPixels;
     }
 
-    private int diffPixelsToDiffModelValue(final int diffValueInPixels) {
-        final int modelValue;
-        final BoundedRangeModel model = scrollBar.getModel();
+    private int diffPixelsToDiffModelValue(int diffValueInPixels) {
+        int modelValue;
+        BoundedRangeModel model = scrollBar.getModel();
 
         modelValue = diffValueInPixels * (model.getMaximum() - model.getMinimum() - model.getExtent()) /
                 (getMaxExtentInPixels() - getExtentInPixels());
@@ -656,10 +662,10 @@ public class LeanScrollBarUI extends ScrollBarUI {
         return modelValue;
     }
 
-    private void paintVertical(final Graphics2D g2d, final int valueInPixels, final int extentInPixels) {
-        final Insets insets = scrollBar.getInsets();
-        final int barX = insets.left;
-        final int barY = insets.top + valueInPixels;
+    private void paintVertical(Graphics2D g2d, int valueInPixels, int extentInPixels) {
+        Insets insets = scrollBar.getInsets();
+        int barX = insets.left;
+        int barY = insets.top + valueInPixels;
 
         // Paint head
         g2d.fillOval(barX, barY, THICKNESS, THICKNESS);
@@ -672,10 +678,10 @@ public class LeanScrollBarUI extends ScrollBarUI {
         g2d.fillRect(barX, barY + THICKNESS / 2, THICKNESS, extentInPixels - THICKNESS / 2 - THICKNESS / 2);
     }
 
-    private void paintHorizontal(final Graphics2D g2d, final int valueInPixels, final int extentInPixels) {
-        final Insets insets = scrollBar.getInsets();
-        final int barX = insets.left + valueInPixels;
-        final int barY = insets.top;
+    private void paintHorizontal(Graphics2D g2d, int valueInPixels, int extentInPixels) {
+        Insets insets = scrollBar.getInsets();
+        int barX = insets.left + valueInPixels;
+        int barY = insets.top;
 
         // Paint head
         g2d.fillOval(barX, barY, THICKNESS, THICKNESS);

@@ -42,13 +42,13 @@ public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDisp
      * @see AbstractCursorToTouchTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
-    protected TouchTarget findTouchedTarget(final Cursor cursor) {
+    protected TouchTarget findTouchedTarget(Cursor cursor) {
         TouchTarget touchTarget = null;
 
         // TODO Find deepest component of the top most touched window
-        for (final Window window : Window.getWindows()) {
+        for (Window window : Window.getWindows()) {
             // TODO Check if window is touchable
-            final Component component = findDeepestComponent(window, cursor.getX(), cursor.getY());
+            Component component = findDeepestComponent(window, cursor.getX(), cursor.getY());
             if (component != null) {
                 touchTarget = new ComponentTouchTarget(component);
                 break;
@@ -58,15 +58,15 @@ public class CursorToComponentDispatcher extends AbstractCursorToTouchTargetDisp
         return touchTarget;
     }
 
-    private Component findDeepestComponent(final Component parent, final int x, final int y) {
+    private Component findDeepestComponent(Component parent, int x, int y) {
         Component deepest = null;
 
         if (parent.contains(x, y)) {
             if (parent instanceof RootPaneContainer) {
-                final Container contentPane = ((RootPaneContainer) parent).getContentPane();
+                Container contentPane = ((RootPaneContainer) parent).getContentPane();
                 deepest = findDeepestComponent(contentPane, x - contentPane.getX(), y - contentPane.getY());
             } else if (parent instanceof Container) {
-                for (final Component child : ((Container) parent).getComponents()) {
+                for (Component child : ((Container) parent).getComponents()) {
                     deepest = findDeepestComponent(child, x - child.getX(), y - child.getY());
                     if (deepest != null) {
                         break;

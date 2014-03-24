@@ -26,8 +26,9 @@
 package com.github.multitouchframework.api;
 
 /**
- * Interface to be implemented by touch events.<br>Events are always triggered by a specific user and on a specific
- * touch target.
+ * Interface to be implemented by touch events.
+ * <p/>
+ * Events are always triggered by a specific user and on a specific touch target.
  */
 public interface TouchEvent {
 
@@ -36,12 +37,12 @@ public interface TouchEvent {
      *
      * @return ID of the user touching the surface.
      */
-    public long getUserId();
+    long getUserId();
 
     /**
      * Gets the touch target for which the event is produced.
      *
      * @return Touch target for which the event is produced.
      */
-    public TouchTarget getTouchTarget();
+    TouchTarget getTouchTarget();
 }

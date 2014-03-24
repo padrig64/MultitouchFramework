@@ -33,8 +33,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Simple input filter that inhibits identical consecutive events.<br>This improves performance by reducing the number
- * of redundant touch events.
+ * Simple input filter that inhibits identical consecutive events.
+ * <p/>
+ * This improves performance by reducing the number of redundant touch events.
  *
  * @see Filter
  * @see CursorUpdateEvent
@@ -50,14 +51,14 @@ public class NoChangeCursorFilter extends AbstractFilter<CursorUpdateEvent> {
      * @see AbstractFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         boolean changed = false;
 
         // Check if at least one cursor changed since the last event
-        final Collection<Cursor> cursors = event.getCursors();
+        Collection<Cursor> cursors = event.getCursors();
         if (cursors.size() == lastCursors.size()) {
             // Same number of cursors as last event, so check if all cursors are the same
-            for (final Cursor cursor : cursors) {
+            for (Cursor cursor : cursors) {
                 if (!lastCursors.contains(cursor)) {
                     changed = true;
                     break;

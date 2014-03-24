@@ -28,8 +28,9 @@ package com.github.multitouchframework.base;
 import com.github.multitouchframework.api.Chainable;
 
 /**
- * Helper class to build chains of blocks more easily.<br>Starting a new chain or branch of a chain is done using the
- * {@link #queue(Chainable)} method.
+ * Helper class to build chains of blocks more easily.
+ * <p/>
+ * Starting a new chain or branch of a chain is done using the {@link #queue(Chainable)} method.
  *
  * @see Chainable
  */
@@ -52,7 +53,7 @@ public final class ChainBuilder {
          *
          * @param block Current block to which additional blocks can be queued.
          */
-        public Chain(final Chainable<T> block) {
+        public Chain(Chainable<T> block) {
             this.block = block;
         }
 
@@ -65,7 +66,7 @@ public final class ChainBuilder {
          * @return Entity allowing to queue more blocks.
          */
         @SuppressWarnings("unchecked")
-        public <N> Chain<N> queue(final Chainable<N> nextBlock) {
+        public <N> Chain<N> queue(Chainable<N> nextBlock) {
             block.queue((T) nextBlock);
             return new Chain<N>(nextBlock);
         }
@@ -76,8 +77,8 @@ public final class ChainBuilder {
          * @param nextBlocks Next block(s) to be added to the current block.
          */
         @SuppressWarnings("unchecked")
-        public void queue(final Object... nextBlocks) {
-            for (final Object next : nextBlocks) {
+        public void queue(Object... nextBlocks) {
+            for (Object next : nextBlocks) {
                 block.queue((T) next);
             }
         }
@@ -93,13 +94,14 @@ public final class ChainBuilder {
     /**
      * Starts a new chain or branch with the specified block.
      *
-     * @param block First block of the chain or branch.<br>It can be the input source at the beginning of the whole
-     *              chain or a block at the beginning of a new branch.
+     * @param block First block of the chain or branch.<br>
+     *              It can be the input source at the beginning of the whole chain or a block at the beginning of a new
+     *              branch.
      * @param <N>   Type of the next block after the specified block.
      *
      * @return Entity allowing to queue more blocks.
      */
-    public static <N> Chain<N> queue(final Chainable<N> block) {
+    public static <N> Chain<N> queue(Chainable<N> block) {
         return new Chain<N>(block);
     }
 }

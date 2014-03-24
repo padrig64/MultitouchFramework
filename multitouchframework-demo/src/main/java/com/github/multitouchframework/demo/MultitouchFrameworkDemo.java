@@ -49,6 +49,7 @@ import com.github.multitouchframework.demo.feedback.MeanLinesLayer;
 import com.github.multitouchframework.demo.model.DemoTouchTarget;
 import com.github.multitouchframework.demo.support.ScreenToComponentConverter;
 import com.github.multitouchframework.experimental.dispatch.SimpleCursorToTouchTargetDispatcher;
+import com.github.multitouchframework.experimental.gesture.drag.DragInertia;
 import com.github.multitouchframework.swing.processing.dispatch.CursorToComponentDispatcher;
 import com.github.multitouchframework.swing.processing.scheduling.EDTScheduler;
 import com.github.multitouchframework.swingcomplements.LeanScrollBarUI;
@@ -87,7 +88,7 @@ public class MultitouchFrameworkDemo extends JFrame {
 
         private final String presentationName;
 
-        GestureProcessor(final String presentationName) {
+        GestureProcessor(String presentationName) {
             this.presentationName = presentationName;
         }
 
@@ -107,7 +108,7 @@ public class MultitouchFrameworkDemo extends JFrame {
         private final String presentationName;
         private final AbstractFeedbackLayer<?> layer;
 
-        FeedbackPresentationLayer(final String presentationName, final AbstractFeedbackLayer<?> layer) {
+        FeedbackPresentationLayer(String presentationName, AbstractFeedbackLayer<?> layer) {
             this.presentationName = presentationName;
             this.layer = layer;
         }
@@ -130,7 +131,7 @@ public class MultitouchFrameworkDemo extends JFrame {
         private final CanvasLayer layer;
         private final TouchListener<?> processor;
 
-        CanvasPresentationLayer(final String presentationName, final TouchListener<?> layer) {
+        CanvasPresentationLayer(String presentationName, TouchListener<?> layer) {
             this.presentationName = presentationName;
             this.layer = (CanvasLayer) layer;
             this.processor = layer;
@@ -153,11 +154,11 @@ public class MultitouchFrameworkDemo extends JFrame {
     private class LayerControlAdapter implements ItemListener {
 
         @Override
-        public void itemStateChanged(final ItemEvent itemEvent) {
+        public void itemStateChanged(ItemEvent itemEvent) {
             // Search layer by name
-            final JCheckBox layerControlCheckBox = (JCheckBox) itemEvent.getSource();
-            final String layerName = layerControlCheckBox.getText();
-            for (final CanvasPresentationLayer canvasLayer : CanvasPresentationLayer.values()) {
+            JCheckBox layerControlCheckBox = (JCheckBox) itemEvent.getSource();
+            String layerName = layerControlCheckBox.getText();
+            for (CanvasPresentationLayer canvasLayer : CanvasPresentationLayer.values()) {
                 if (canvasLayer.toString().equals(layerName)) {
                     canvas.setLayerVisible(canvasLayer.getLayer(), layerControlCheckBox.isSelected());
                 }
@@ -193,19 +194,19 @@ public class MultitouchFrameworkDemo extends JFrame {
 
         // Set window size and location
         setSize(1024, 768);
-        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 3);
     }
 
     private void initContentPane() {
-        final JPanel contentPane = new JPanel(new BorderLayout());
+        JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setName("ContentPane");
 
         // Create layer list
-        final JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
+        JPanel controlPanel = new JPanel(new MigLayout("wrap 1", "[]", "[]unrelated[]"));
         controlPanel.setName("ControlPanel");
         controlPanel.setBorder(new MatteBorder(0, 0, 0, 1, UIManager.getColor("nimbusBorder")));
-        final JScrollPane controlScrollPane = new JScrollPane(controlPanel);
+        JScrollPane controlScrollPane = new JScrollPane(controlPanel);
         controlScrollPane.setName("ControlScrollPane");
         controlScrollPane.setBorder(null);
         contentPane.add(controlScrollPane, BorderLayout.WEST);
@@ -219,25 +220,25 @@ public class MultitouchFrameworkDemo extends JFrame {
         setContentPane(contentPane);
 
         // Add layers to canvas
-        final CanvasPresentationLayer[] canvasLayers = CanvasPresentationLayer.values();
+        CanvasPresentationLayer[] canvasLayers = CanvasPresentationLayer.values();
         for (int i = canvasLayers.length - 1; i >= 0; i--) {
             canvas.addLayer(canvasLayers[i].getLayer());
         }
     }
 
     private Component createGestureListPanel() {
-        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
         listPanel.setName("GestureListPanel");
 
-        final JLabel titleLabel = new JLabel("Gestures");
+        JLabel titleLabel = new JLabel("Gestures");
         titleLabel.setName("GesturesTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         listPanel.add(titleLabel);
 
         // Add gestures to the list
-        final GestureProcessor[] gestureProcessors = GestureProcessor.values();
-        for (final GestureProcessor gestureProcessor : gestureProcessors) {
-            final JCheckBox gestureControlCheckBox = new JCheckBox(gestureProcessor.toString());
+        GestureProcessor[] gestureProcessors = GestureProcessor.values();
+        for (GestureProcessor gestureProcessor : gestureProcessors) {
+            JCheckBox gestureControlCheckBox = new JCheckBox(gestureProcessor.toString());
             gestureControlCheckBox.setName("GestureControlCheckBox");
             // TODO
             gestureControlCheckBox.setSelected(true);
@@ -248,18 +249,18 @@ public class MultitouchFrameworkDemo extends JFrame {
     }
 
     private Component createCanvasLayerListPanel() {
-        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+        JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
         listPanel.setName("CanvasLayerListPanel");
 
-        final JLabel titleLabel = new JLabel("Canvas Layers");
+        JLabel titleLabel = new JLabel("Canvas Layers");
         titleLabel.setName("CanvasLayersTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         listPanel.add(titleLabel);
 
         // Add layers to the list
-        final CanvasPresentationLayer[] layers = CanvasPresentationLayer.values();
-        for (final CanvasPresentationLayer layer : layers) {
-            final JCheckBox layerControlCheckBox = new JCheckBox(layer.toString());
+        CanvasPresentationLayer[] layers = CanvasPresentationLayer.values();
+        for (CanvasPresentationLayer layer : layers) {
+            JCheckBox layerControlCheckBox = new JCheckBox(layer.toString());
             layerControlCheckBox.setName("CanvasLayerControlCheckBox");
             layerControlCheckBox.addItemListener(layerControlAdapter);
             layerControlCheckBox.setSelected(true);
@@ -269,19 +270,19 @@ public class MultitouchFrameworkDemo extends JFrame {
         return listPanel;
     }
 
-    private Component createLayeredPaneLayerListPanel(final JLayeredPane layeredPane) {
-        final JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
+    private Component createLayeredPaneLayerListPanel(JLayeredPane layeredPane) {
+        JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
         listPanel.setName("LayeredPaneLayerListPanel");
 
-        final JLabel titleLabel = new JLabel("Layered Pane Layers");
+        JLabel titleLabel = new JLabel("Layered Pane Layers");
         titleLabel.setName("LayeredPaneLayersTitleLabel");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         listPanel.add(titleLabel);
 
         // Add layers to the list
-        final FeedbackPresentationLayer[] layers = FeedbackPresentationLayer.values();
+        FeedbackPresentationLayer[] layers = FeedbackPresentationLayer.values();
         for (int i = 0; i < layers.length; i++) {
-            final JCheckBox layerControlCheckBox = new JCheckBox(layers[i].toString());
+            JCheckBox layerControlCheckBox = new JCheckBox(layers[i].toString());
             layerControlCheckBox.setName("LayeredPaneLayerControlCheckBox");
             layerControlCheckBox.addItemListener(layerControlAdapter);
             layerControlCheckBox.setSelected(true);
@@ -297,13 +298,13 @@ public class MultitouchFrameworkDemo extends JFrame {
 
     private void initChain() {
         // Create input source
-        final TuioSource sourceNode = new TuioSource(new ScreenTouchTarget());
+        TuioSource sourceNode = new TuioSource(new ScreenTouchTarget());
         queue(sourceNode) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
                 .queue(FeedbackPresentationLayer.RAW_CURSORS.getFeedbackLayer());
 
         // Configure cursor filtering and layers for filtered cursors
-        final NoChangeCursorFilter noChangeFilterNode = new NoChangeCursorFilter();
+        NoChangeCursorFilter noChangeFilterNode = new NoChangeCursorFilter();
         queue(sourceNode) //
                 .queue(new BoundingBoxCursorFilter()) //
                 .queue(noChangeFilterNode) //
@@ -317,14 +318,14 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(new CursorToComponentDispatcher());
 
         // Convert cursors to canvas
-        final SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new
+        SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new
                 SimpleCursorToTouchTargetDispatcher();
         queue(noChangeFilterNode) //
                 .queue(new ScreenToComponentConverter(canvas)) //
                 .queue(cursorToTargetDispatcherNode);
 
         // Configure cursor-to-target dispatcher
-        for (final TouchTarget touchTarget : TOUCH_TARGETS) {
+        for (TouchTarget touchTarget : TOUCH_TARGETS) {
             cursorToTargetDispatcherNode.addTouchTargetOnTop(touchTarget);
         }
 
@@ -336,7 +337,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
 
         // Configure touch-target filters
-        final IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilterNode = new
+        IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilterNode = new
                 IncludeTouchTargetFilter<CursorUpdateEvent>(TOUCH_TARGETS);
         queue(cursorToTargetDispatcherNode) //
                 .queue(touchTargetFilterNode);
@@ -347,15 +348,15 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(new TouchListener<DragEvent>() {
 
                     @Override
-                    public void processTouchEvent(final DragEvent event) {
-                        final Object touchTarget = event.getTouchTarget().getBaseObject();
+                    public void processTouchEvent(DragEvent event) {
+                        Object touchTarget = event.getTouchTarget().getBaseObject();
                         if (touchTarget instanceof DemoTouchTarget) {
-                            final Rectangle bounds = ((DemoTouchTarget) touchTarget).getBounds();
+                            Rectangle bounds = ((DemoTouchTarget) touchTarget).getBounds();
                             bounds.translate(event.getDiffX(), event.getDiffY());
                             ((DemoTouchTarget) touchTarget).setBounds(bounds);
                         }
                     }
-                });
+                }, new DragInertia());
         queue(touchTargetFilterNode) //
                 .queue(new PinchSpreadRecognizer()) //
                 .queue(new TouchListener<PinchSpreadEvent>() {
@@ -363,15 +364,15 @@ public class MultitouchFrameworkDemo extends JFrame {
                     private Rectangle originalBounds = null;
 
                     @Override
-                    public void processTouchEvent(final PinchSpreadEvent event) {
+                    public void processTouchEvent(PinchSpreadEvent event) {
                         switch (event.getState()) {
                             case ARMED:
                                 originalBounds = ((DemoTouchTarget) event.getTouchTarget()).getBounds();
                                 break;
                             case PERFORMED:
-                                final Object touchTarget = event.getTouchTarget().getBaseObject();
+                                Object touchTarget = event.getTouchTarget().getBaseObject();
                                 if (touchTarget instanceof DemoTouchTarget) {
-                                    final Rectangle bounds = new Rectangle(((DemoTouchTarget) event.getTouchTarget())
+                                    Rectangle bounds = new Rectangle(((DemoTouchTarget) event.getTouchTarget())
                                             .getBounds());
                                     bounds.setSize((int) (originalBounds.width * event.getTotalDiffScale()),
                                             (int) (originalBounds.height * event.getTotalDiffScale()));
@@ -391,12 +392,12 @@ public class MultitouchFrameworkDemo extends JFrame {
         sourceNode.start();
     }
 
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                for (final UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                     if ("Nimbus".equals(info.getName())) {
                         try {
                             UIManager.setLookAndFeel(info.getClassName());
@@ -414,7 +415,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                     }
                 }
 
-                final JFrame frame = new MultitouchFrameworkDemo();
+                JFrame frame = new MultitouchFrameworkDemo();
                 frame.setVisible(true);
             }
         });

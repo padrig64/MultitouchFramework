@@ -25,16 +25,19 @@
 
 package com.github.multitouchframework.base.processing.gesture.drag;
 
-import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.processing.gesture.AbstractGestureRecognizer;
 
 import java.util.Collection;
 
 /**
- * Entity responsible for recognizing a drag/pan/etc. gesture.<br>The recognition is made on a per-target basis and is
- * based on the location of the mean cursor (average of all the cursors).<br>Note that this recognizer works best after
- * filtering the input and limiting the number of input touch events.
+ * Entity responsible for recognizing a drag/pan/etc. gesture.
+ * <p/>
+ * The recognition is made on a per-target basis and is based on the location of the mean cursor (average of all the
+ * cursors).
+ * <p/>
+ * Note that this recognizer works best after filtering the input and limiting the number of input touch events.
  *
  * @see AbstractGestureRecognizer
  * @see DragEvent
@@ -42,9 +45,10 @@ import java.util.Collection;
 public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.TouchTargetContext, DragEvent> {
 
     /**
-     * Context storing the state of recognition of the gesture for a single touch target.<br>The recognition is based on
-     * the movement of the mean point of all cursors on the touched surface, but making sure that changing the number of
-     * cursors has no influence on the gesture.
+     * Context storing the state of recognition of the gesture for a single touch target.
+     * <p/>
+     * The recognition is based on the movement of the mean point of all cursors on the touched surface, but making sure
+     * that changing the number of cursors has no influence on the gesture.
      */
     protected static class TouchTargetContext {
 
@@ -54,8 +58,9 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
         public long userId = -1;
 
         /**
-         * Strong reference to the touch target when the gesture is not unarmed to prevent garbage collection.<br>This
-         * makes sure that we will get the complete set of events.
+         * Strong reference to the touch target when the gesture is not unarmed to prevent garbage collection.
+         * <p/>
+         * This makes sure that we will get the complete set of events.
          */
         public TouchTarget activeTarget = null;
 
@@ -103,8 +108,9 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
     public static final int DEFAULT_MAX_CURSOR_COUNT = Integer.MAX_VALUE; // No maximum
 
     /**
-     * Default constructor.<br>By default, 1 cursor is the minimum required to perform the gesture, and there is no
-     * maximum.
+     * Default constructor.
+     * <p/>
+     * By default, 1 cursor is the minimum required to perform the gesture, and there is no maximum.
      */
     public DragRecognizer() {
         this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT);
@@ -113,14 +119,14 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
     /**
      * @see AbstractGestureRecognizer#AbstractGestureRecognizer(int, int)
      */
-    public DragRecognizer(final int minCursorCount, final int maxCursorCount) {
+    public DragRecognizer(int minCursorCount, int maxCursorCount) {
         super(minCursorCount, maxCursorCount);
     }
 
     /**
      * @see AbstractGestureRecognizer#createContext(long, TouchTarget)
      */
-    protected TouchTargetContext createContext(final long userId, final TouchTarget target) {
+    protected TouchTargetContext createContext(long userId, TouchTarget target) {
         return new TouchTargetContext();
     }
 
@@ -128,9 +134,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
      * @see AbstractGestureRecognizer#process(Object, long, TouchTarget, Collection)
      */
     @Override
-    protected void process(final TouchTargetContext context, final long userId, final TouchTarget target,
-                           final Collection<Cursor> cursors) {
-        final int cursorCount = cursors.size();
+    protected void process(TouchTargetContext context, long userId, TouchTarget target, Collection<Cursor> cursors) {
+        int cursorCount = cursors.size();
 
         // Test this first because it is the most likely to happen
         if (isCursorCountValid(context.previousCursorCount) && isCursorCountValid(cursorCount)) {
@@ -156,17 +161,17 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
      * @param target  Touch target to which the cursors are associated.
      * @param cursors New input cursors.
      */
-    private void processDragArmed(final TouchTargetContext context, final long userId, final TouchTarget target,
-                                  final Collection<Cursor> cursors) {
+    private void processDragArmed(TouchTargetContext context, long userId, TouchTarget target,
+                                  Collection<Cursor> cursors) {
         // Trigger listeners
-        final DragEvent event = new DragEvent(userId, target, DragEvent.State.ARMED, 0, 0, 0, 0);
+        DragEvent event = new DragEvent(userId, target, DragEvent.State.ARMED, 0, 0, 0, 0);
         fireGestureEvent(event);
 
         // Calculate mean point
-        final int cursorCount = cursors.size();
+        int cursorCount = cursors.size();
         int meanX = 0;
         int meanY = 0;
-        for (final Cursor cursor : cursors) {
+        for (Cursor cursor : cursors) {
             meanX += cursor.getX();
             meanY += cursor.getY();
         }
@@ -190,12 +195,12 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
      * @param context Target context to be used and updated.
      * @param cursors New input cursors.
      */
-    private void processDragPerformed(final TouchTargetContext context, final Collection<Cursor> cursors) {
+    private void processDragPerformed(TouchTargetContext context, Collection<Cursor> cursors) {
         // Calculate mean point
-        final int cursorCount = cursors.size();
+        int cursorCount = cursors.size();
         int meanX = 0;
         int meanY = 0;
-        for (final Cursor cursor : cursors) {
+        for (Cursor cursor : cursors) {
             meanX += cursor.getX();
             meanY += cursor.getY();
         }
@@ -203,12 +208,12 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
         meanY /= cursorCount;
 
         // Determine change
-        final int offsetX = meanX - context.previousMeanX;
-        final int offsetY = meanY - context.previousMeanY;
+        int offsetX = meanX - context.previousMeanX;
+        int offsetY = meanY - context.previousMeanY;
 
         // Trigger listeners
-        final DragEvent event = new DragEvent(context.userId, context.activeTarget, DragEvent.State.PERFORMED,
-                offsetX, offsetY, meanX - context.referenceX, meanY - context.referenceY);
+        DragEvent event = new DragEvent(context.userId, context.activeTarget, DragEvent.State.PERFORMED, offsetX,
+                offsetY, meanX - context.referenceX, meanY - context.referenceY);
         fireGestureEvent(event);
 
         // Save context (no change of reference point or active touch target)
@@ -219,18 +224,19 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
     }
 
     /**
-     * Handles the fact that the number of cursors changed.<br>Note that it is expected here that the validity of the
-     * cursor count has already been checked before.
+     * Handles the fact that the number of cursors changed.
+     * <p/>
+     * Note that it is expected here that the validity of the cursor count has already been checked before.
      *
      * @param context Touch target context to be used and updated.
      * @param cursors New input cursors.
      */
-    private void processValidCursorCountChanged(final TouchTargetContext context, final Collection<Cursor> cursors) {
+    private void processValidCursorCountChanged(TouchTargetContext context, Collection<Cursor> cursors) {
         // Calculate mean point
-        final int cursorCount = cursors.size();
+        int cursorCount = cursors.size();
         int meanX = 0;
         int meanY = 0;
-        for (final Cursor cursor : cursors) {
+        for (Cursor cursor : cursors) {
             meanX += cursor.getX();
             meanY += cursor.getY();
         }
@@ -240,8 +246,8 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
         // No need to trigger any listener
 
         // Calculate new reference point to have the same total difference
-        final int newReferenceX = meanX - context.previousMeanX + context.referenceX;
-        final int newReferenceY = meanY - context.previousMeanY + context.referenceY;
+        int newReferenceX = meanX - context.previousMeanX + context.referenceX;
+        int newReferenceY = meanY - context.previousMeanY + context.referenceY;
 
         // Save context (no change of state or active touch target)
         context.previousCursorCount = cursorCount;
@@ -256,9 +262,9 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
      *
      * @param context Target context to be updated.
      */
-    private void processDragUnarmed(final TouchTargetContext context) {
+    private void processDragUnarmed(TouchTargetContext context) {
         // Trigger listeners
-        final DragEvent event = new DragEvent(context.userId, context.activeTarget, DragEvent.State.UNARMED, 0, 0,
+        DragEvent event = new DragEvent(context.userId, context.activeTarget, DragEvent.State.UNARMED, 0, 0,
                 context.previousMeanX - context.referenceX, context.previousMeanY - context.referenceY);
         fireGestureEvent(event);
 
@@ -278,7 +284,7 @@ public class DragRecognizer extends AbstractGestureRecognizer<DragRecognizer.Tou
      *
      * @param context Touch target context to be updated.
      */
-    private void processNothingHappened(final TouchTargetContext context) {
+    private void processNothingHappened(TouchTargetContext context) {
         // Clear context
         context.userId = -1;
         context.activeTarget = null;

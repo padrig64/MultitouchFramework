@@ -28,7 +28,7 @@ package com.github.multitouchframework.base.processing.source;
 /**
  * Interface that can be implemented by input controllers that can natively handle only one user.
  *
- * @see com.github.multitouchframework.base.processing.source.InputSource
+ * @see InputSource
  */
 public interface SingleUserInputSource extends InputSource {
 

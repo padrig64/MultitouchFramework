@@ -31,7 +31,7 @@ import com.github.multitouchframework.api.TouchTarget;
 /**
  * Event fired when pinch/spread/zoom gesture is recognized.
  *
- * @see com.github.multitouchframework.api.TouchEvent
+ * @see TouchEvent
  * @see PinchSpreadRecognizer
  */
 public class PinchSpreadEvent implements TouchEvent, Cloneable {
@@ -42,21 +42,27 @@ public class PinchSpreadEvent implements TouchEvent, Cloneable {
     public static enum State {
 
         /**
-         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
-         * two consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         * The current number of cursors honors the minimum and maximum required by the gesture.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of next event will be either PERFORMED or
+         * UNARMED.
          */
         ARMED,
 
         /**
-         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the
-         * next event will be either PERFORMED again or UNARMED.
+         * The gesture has been performed.
+         * <p/>
+         * There can be several consecutive events of this state. The state of the next event will be either PERFORMED
+         * again or UNARMED.
          */
         PERFORMED,
 
         /**
-         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the
-         * previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not
-         * be two consecutive events of this state. The state of the next event will be ARMED.
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.
+         * <p/>
+         * If the previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of the next event will be ARMED.
          */
         UNARMED
     }
@@ -93,7 +99,7 @@ public class PinchSpreadEvent implements TouchEvent, Cloneable {
      *
      * @see PinchSpreadEvent#PinchSpreadEvent(long, TouchTarget, State, double, double)
      */
-    public PinchSpreadEvent(final PinchSpreadEvent event) {
+    public PinchSpreadEvent(PinchSpreadEvent event) {
         this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getDiffScale(),
                 event.getTotalDiffScale());
     }
@@ -107,8 +113,7 @@ public class PinchSpreadEvent implements TouchEvent, Cloneable {
      * @param ds      Scale movement relatively to the previous event.
      * @param dsTotal Scale movement relatively to the very beginning of the gesture.
      */
-    public PinchSpreadEvent(final long userId, final TouchTarget target, final State state, final double ds,
-                            final double dsTotal) {
+    public PinchSpreadEvent(long userId, TouchTarget target, State state, double ds, double dsTotal) {
         this.userId = userId;
         this.target = target;
         this.state = state;
@@ -117,14 +122,14 @@ public class PinchSpreadEvent implements TouchEvent, Cloneable {
     }
 
     /**
-     * @see com.github.multitouchframework.api.TouchEvent#getUserId()
+     * @see TouchEvent#getUserId()
      */
     public long getUserId() {
         return userId;
     }
 
     /**
-     * @see com.github.multitouchframework.api.TouchEvent#getTouchTarget()
+     * @see TouchEvent#getTouchTarget()
      */
     @Override
     public TouchTarget getTouchTarget() {

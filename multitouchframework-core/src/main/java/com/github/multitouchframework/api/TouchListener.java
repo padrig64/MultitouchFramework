@@ -25,14 +25,12 @@
 
 package com.github.multitouchframework.api;
 
-import com.github.multitouchframework.api.TouchEvent;
-
 /**
  * Interfaces to be implemented by touch and gesture listeners to handle touch events.
  *
  * @param <E> Type of gesture events to be handled.
  *
- * @see com.github.multitouchframework.api.TouchEvent
+ * @see TouchEvent
  */
 public interface TouchListener<E extends TouchEvent> {
 
@@ -41,5 +39,5 @@ public interface TouchListener<E extends TouchEvent> {
      *
      * @param event Touch event to be processed.
      */
-    public void processTouchEvent(E event);
+    void processTouchEvent(E event);
 }

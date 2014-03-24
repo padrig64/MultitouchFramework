@@ -26,14 +26,20 @@
 package com.github.multitouchframework.base.cursor;
 
 /**
- * Entity representing a touch point.<br>This is a point of contact with the touch-enabled surface.<br>Typically, The
- * coordinates of the cursor correspond to the location on the touch screen, and cursors are typically created by input
- * controllers.
+ * Entity representing a touch point.
+ * <p/>
+ * This is a point of contact with the touch-enabled surface.
+ * <p/>
+ * Typically, The coordinates of the cursor correspond to the location on the touch screen, and cursors are typically
+ * created by input controllers.
  */
 public class Cursor {
 
     /**
-     * Cursor ID.<br>All cursors that are simultaneously in contact with the touch-enabled surface have unique IDs.<br>
+     * Cursor ID.
+     * <p/>
+     * All cursors that are simultaneously in contact with the touch-enabled surface have unique IDs.
+     * <p/>
      * However, a same ID may be re-used by sub-sequent cursors.
      */
     private final long id;
@@ -53,21 +59,24 @@ public class Cursor {
      *
      * @param cursor Cursor to be duplicated.
      */
-    public Cursor(final Cursor cursor) {
+    public Cursor(Cursor cursor) {
         this(cursor.id, cursor.x, cursor.y);
     }
 
     /**
-     * Constructor specifying all the ID and the coordinates of the cursor.<br>The meaning of the coordinates is left
-     * to the application logic and generally depends on the {@link com.github.multitouchframework.api.source
-     * .InputSource}.<br>You may refer to the {@link com.github.multitouchframework.base.processing.source.InputSource}
-     * implementation in use in the application.
+     * Constructor specifying all the ID and the coordinates of the cursor.
+     * <p/>
+     * The meaning of the coordinates is left to the application logic and generally depends on the {@link com.github
+     * .multitouchframework.base.processing.source.InputSource}.
+     * <p/>
+     * You may refer to the {@link com.github.multitouchframework.base.processing.source.InputSource} implementation
+     * in use in the application.
      *
      * @param id Cursor ID.
      * @param x  X coordinate of the cursor.
      * @param y  Y coordinate of the cursor.
      */
-    public Cursor(final long id, final int x, final int y) {
+    public Cursor(long id, int x, int y) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -83,8 +92,10 @@ public class Cursor {
     }
 
     /**
-     * Gets the X coordinate.<br>The meaning of the coordinates is left to the application logic and generally depends
-     * on the {@link com.github.multitouchframework.base.processing.source.InputSource}.
+     * Gets the X coordinate.
+     * <p/>
+     * The meaning of the coordinates is left to the application logic and generally depends on the {@link com.github
+     * .multitouchframework.base.processing.source.InputSource}.
      *
      * @return X coordinate of the cursor.
      */
@@ -93,8 +104,10 @@ public class Cursor {
     }
 
     /**
-     * Gets the Y coordinate.<br>The meaning of the coordinates is left to the application logic and generally depends
-     * on the {@link com.github.multitouchframework.base.processing.source.InputSource}.
+     * Gets the Y coordinate.
+     * <p/>
+     * The meaning of the coordinates is left to the application logic and generally depends on the {@link com.github
+     * .multitouchframework.base.processing.source.InputSource}.
      *
      * @return Y coordinate of the cursor.
      */
@@ -117,8 +130,8 @@ public class Cursor {
      * @see Object#equals(Object)
      */
     @Override
-    public boolean equals(final Object o) {
-        final boolean equal;
+    public boolean equals(Object o) {
+        boolean equal;
 
         if (this == o) {
             // Same instance
@@ -128,7 +141,7 @@ public class Cursor {
             equal = false;
         } else {
             // Same class, so check attributes
-            final Cursor that = (Cursor) o;
+            Cursor that = (Cursor) o;
             equal = (id == that.id) && (x == that.x) && (y == that.y);
         }
 

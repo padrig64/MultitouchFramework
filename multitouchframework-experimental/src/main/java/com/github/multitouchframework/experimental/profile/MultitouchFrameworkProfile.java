@@ -25,12 +25,12 @@
 
 package com.github.multitouchframework.experimental.profile;
 
+import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.base.processing.filter.Filter;
 import com.github.multitouchframework.base.processing.gesture.GestureRecognizer;
 import com.github.multitouchframework.base.processing.source.InputSource;
-import com.github.multitouchframework.api.TouchEvent;
-import com.github.multitouchframework.api.TouchTarget;
 
 public interface MultitouchFrameworkProfile {
 

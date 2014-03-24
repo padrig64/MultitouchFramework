@@ -33,10 +33,11 @@ import java.util.Map;
 
 /**
  * Simple input filter meant to reduce the small variations of cursor positions while the user holds still the point of
- * contacts with the touch surface.<br>This is achieved by virtually moving a square bounding boxes by pushing their
- * borders from the inside. The output cursors are the positions of the center of the boxes.<br>Coupled to a {@link
- * NoChangeCursorFilter}, this is a very cheap alternative to low-pass filters, even though high frequencies are not
- * filtered out.
+ * contacts with the touch surface.
+ * <p/>
+ * This is achieved by virtually moving a square bounding boxes by pushing their borders from the inside. The output
+ * cursors are the positions of the center of the boxes.<br>Coupled to a {@link NoChangeCursorFilter}, this is a very
+ * cheap alternative to low-pass filters, even though high frequencies are not filtered out.
  *
  * @see AbstractFilter
  * @see CursorUpdateEvent
@@ -57,19 +58,19 @@ public class BoundingBoxCursorFilter extends AbstractFilter<CursorUpdateEvent> {
      * @see AbstractFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         // Quick way to remove the cursors that are no longer there
-        final Map<Long, Cursor> oldFilteredCursors = filteredCursors;
+        Map<Long, Cursor> oldFilteredCursors = filteredCursors;
         filteredCursors = new HashMap<Long, Cursor>();
 
-        for (final Cursor rawCursor : event.getCursors()) {
-            final Cursor oldFilteredCursor = oldFilteredCursors.get(rawCursor.getId());
+        for (Cursor rawCursor : event.getCursors()) {
+            Cursor oldFilteredCursor = oldFilteredCursors.get(rawCursor.getId());
             if (oldFilteredCursor == null) {
                 // Cursor was not yet filtered, so just added it now to the list
                 filteredCursors.put(rawCursor.getId(), rawCursor);
             } else {
                 // Cursor was already filtered
-                final Cursor newFilteredCursor = filterCursor(rawCursor, oldFilteredCursor);
+                Cursor newFilteredCursor = filterCursor(rawCursor, oldFilteredCursor);
                 filteredCursors.put(rawCursor.getId(), newFilteredCursor);
             }
         }
@@ -86,9 +87,9 @@ public class BoundingBoxCursorFilter extends AbstractFilter<CursorUpdateEvent> {
      *
      * @return Filtered cursor.
      */
-    private Cursor filterCursor(final Cursor rawCursor, final Cursor oldFilteredCursor) {
-        final int filteredX;
-        final int filteredY;
+    private Cursor filterCursor(Cursor rawCursor, Cursor oldFilteredCursor) {
+        int filteredX;
+        int filteredY;
 
         // Filter on the X axis
         if (rawCursor.getX() < (oldFilteredCursor.getX() - MAX_DIFF)) {

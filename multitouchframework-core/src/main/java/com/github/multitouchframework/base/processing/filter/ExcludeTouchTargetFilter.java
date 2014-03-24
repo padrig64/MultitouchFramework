@@ -36,8 +36,9 @@ import java.util.Set;
 
 /**
  * Input filter passing the {@link CursorUpdateEvent}s to the following blocks only if the touch target of the events
- * does not match those specified with {@link #addTouchTarget(TouchTarget)}.<br>All events for a touch target included
- * in this filter will be blocked.
+ * does not match those specified with {@link #addTouchTarget(TouchTarget)}.
+ * <p/>
+ * All events for a touch target included in this filter will be blocked.
  *
  * @see AbstractFilter
  * @see IncludeTouchTargetFilter
@@ -54,7 +55,7 @@ public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
      *
      * @param touchTargets Touch targets to be excluded.
      */
-    public ExcludeTouchTargetFilter(final TouchTarget... touchTargets) {
+    public ExcludeTouchTargetFilter(TouchTarget... touchTargets) {
         if (touchTargets != null) {
             Collections.addAll(this.touchTargets, touchTargets);
         }
@@ -65,7 +66,7 @@ public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
      *
      * @param touchTargets Touch targets to be excluded.
      */
-    public ExcludeTouchTargetFilter(final Collection<TouchTarget> touchTargets) {
+    public ExcludeTouchTargetFilter(Collection<TouchTarget> touchTargets) {
         if (touchTargets != null) {
             this.touchTargets.addAll(touchTargets);
         }
@@ -76,7 +77,7 @@ public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
      *
      * @param touchTarget Touch target to be excluded.
      */
-    public void addTouchTarget(final TouchTarget touchTarget) {
+    public void addTouchTarget(TouchTarget touchTarget) {
         touchTargets.add(touchTarget);
     }
 
@@ -85,7 +86,7 @@ public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
      *
      * @param touchTarget Touch target to be included.
      */
-    public void removeTouchTarget(final TouchTarget touchTarget) {
+    public void removeTouchTarget(TouchTarget touchTarget) {
         touchTargets.remove(touchTarget);
     }
 
@@ -93,7 +94,7 @@ public class ExcludeTouchTargetFilter<E extends TouchEvent> extends AbstractFilt
      * @see AbstractFilter#processWithNextBlocks(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final E event) {
+    public void processTouchEvent(E event) {
         if (!touchTargets.contains(event.getTouchTarget())) {
             processWithNextBlocks(event);
         }

@@ -30,9 +30,11 @@ import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchListener;
 
 /**
- * Interface to be implemented by filters.<br>Filters are touch event processors consuming and producing the same
- * kind of touch event. Filters can be used, for instance to reduce the number of events, to alter cursor positions,
- * to re-schedule the processing to another thread, to generate more events for inertia, etc.
+ * Interface to be implemented by filters.
+ * <p/>
+ * Filters are touch event processors consuming and producing the same kind of touch event. Filters can be used, for
+ * instance to reduce the number of events, to alter cursor positions, to re-schedule the processing to another thread,
+ * to generate more events for inertia, etc.
  *
  * @see TouchListener
  * @see Chainable

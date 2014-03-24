@@ -31,7 +31,7 @@ import com.github.multitouchframework.api.TouchTarget;
 /**
  * Event fired when the tap gesture is recognized.
  *
- * @see com.github.multitouchframework.api.TouchEvent
+ * @see TouchEvent
  * @see TapRecognizer
  */
 public class TapEvent implements TouchEvent, Cloneable {
@@ -42,21 +42,27 @@ public class TapEvent implements TouchEvent, Cloneable {
     public static enum State {
 
         /**
-         * The current number of cursors honors the minimum and maximum required by the gesture.<br>There will not be
-         * two consecutive events of this state. The state of next event will be either PERFORMED or UNARMED.
+         * The current number of cursors honors the minimum and maximum required by the gesture.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of next event will be either PERFORMED or
+         * UNARMED.
          */
         ARMED,
 
         /**
-         * The gesture has been performed.<br>There can be several consecutive events of this state. The state of the
-         * next event will be either PERFORMED again or UNARMED.
+         * The gesture has been performed.
+         * <p/>
+         * There can be several consecutive events of this state. The state of the next event will be either PERFORMED
+         * again or UNARMED.
          */
         PERFORMED,
 
         /**
-         * The current number of cursors does not honor the minimum and maximum required by the gesture.<br>If the
-         * previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.<br>There will not
-         * be two consecutive events of this state. The state of the next event will be ARMED.
+         * The current number of cursors does not honor the minimum and maximum required by the gesture.
+         * <p/>
+         * If the previous event was ARMED or PERFORMED, it can be considered that the gesture has ended.
+         * <p/>
+         * There will not be two consecutive events of this state. The state of the next event will be ARMED.
          */
         UNARMED
     }
@@ -93,7 +99,7 @@ public class TapEvent implements TouchEvent, Cloneable {
      *
      * @see TapEvent#TapEvent(long, TouchTarget, State, int, int)
      */
-    public TapEvent(final TapEvent event) {
+    public TapEvent(TapEvent event) {
         this(event.getUserId(), event.getTouchTarget(), event.getState(), event.getTapCount(), event.getCursorCount());
     }
 
@@ -106,8 +112,7 @@ public class TapEvent implements TouchEvent, Cloneable {
      * @param tapCount    Number of consecutive taps that have been performed, including this one.
      * @param cursorCount Number of cursors involved for this tap.
      */
-    public TapEvent(final long userId, final TouchTarget target, final State state, final int tapCount,
-                    final int cursorCount) {
+    public TapEvent(long userId, TouchTarget target, State state, int tapCount, int cursorCount) {
         this.userId = userId;
         this.target = target;
         this.state = state;

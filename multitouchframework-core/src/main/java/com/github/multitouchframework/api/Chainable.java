@@ -26,8 +26,9 @@
 package com.github.multitouchframework.api;
 
 /**
- * Interface to be implemented by chainable blocks.<br>Chainable blocks are individual blocks to which other individual
- * blocks can be connected.
+ * Interface to be implemented by chainable blocks.
+ * <p/>
+ * Chainable blocks are individual blocks to which other individual blocks can be connected.
  *
  * @param <N> Type of next block that can be connected.
  */
@@ -38,12 +39,12 @@ public interface Chainable<N> {
      *
      * @param nextBlock Block to be connected.
      */
-    public void queue(N nextBlock);
+    void queue(N nextBlock);
 
     /**
      * Disconnects the specified block from this block.
      *
      * @param nextBlock Block to be disconnected.
      */
-    public void dequeue(N nextBlock);
+    void dequeue(N nextBlock);
 }

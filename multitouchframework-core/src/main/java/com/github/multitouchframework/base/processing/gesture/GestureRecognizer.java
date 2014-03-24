@@ -26,13 +26,15 @@
 package com.github.multitouchframework.base.processing.gesture;
 
 import com.github.multitouchframework.api.Chainable;
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchListener;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 /**
- * Interface to be implemented by gesture recognizers.<br>Gesture recognizers are typically queued to cursor-to-target
- * dispatchers in order to recognize gestures on a specific touch target of the touch surface.
+ * Interface to be implemented by gesture recognizers.
+ * <p/>
+ * Gesture recognizers are typically queued to cursor-to-target dispatchers in order to recognize gestures on a specific
+ * touch target of the touch surface.
  *
  * @param <E> Type of gesture events fired by the gesture recognizer.
  *

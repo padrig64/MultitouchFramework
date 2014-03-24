@@ -25,11 +25,11 @@
 
 package com.github.multitouchframework.base.processing.gesture;
 
-import com.github.multitouchframework.base.cursor.Cursor;
-import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
+import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,10 +38,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Abstract implementation of a gesture recognizer.<br>It provides basic support for a per-target gesture recognition
- * and for notifying gesture listeners.<br>Implementing sub-classes are meant to create context objects that will hold
- * all the metadata associated to the recognition of the gesture for a specific touch target, and to process the cursors
- * for this context and touch target.
+ * Abstract implementation of a gesture recognizer.
+ * <p/>
+ * It provides basic support for a per-target gesture recognition and for notifying gesture listeners.
+ * <p/>
+ * Implementing sub-classes are meant to create context objects that will hold all the metadata associated to the
+ * recognition of the gesture for a specific touch target, and to process the cursors for this context and touch target.
  *
  * @param <C> Type of context holding the recognition metadata associated to a touch target.
  * @param <E> Type of gesture events fired by the gesture recognizer.
@@ -86,7 +88,7 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @param minCursorCount Minimum number of cursors required to perform the gesture.
      * @param maxCursorCount Maximum number of cursors required to perform the gesture.
      */
-    public AbstractGestureRecognizer(final int minCursorCount, final int maxCursorCount) {
+    public AbstractGestureRecognizer(int minCursorCount, int maxCursorCount) {
         setMinCursorCount(minCursorCount);
         setMaxCursorCount(maxCursorCount);
     }
@@ -105,7 +107,7 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      *
      * @param count Minimum cursor count.
      */
-    public void setMinCursorCount(final int count) {
+    public void setMinCursorCount(int count) {
         minCursorCount = count;
     }
 
@@ -123,19 +125,20 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      *
      * @param count Maximum cursor count.
      */
-    public void setMaxCursorCount(final int count) {
+    public void setMaxCursorCount(int count) {
         maxCursorCount = count;
     }
 
     /**
-     * States whether the number of input cursors matches the minimum and maximum required by the gesture.<br>This is a
-     * convenience that may be used by sub-classes.
+     * States whether the number of input cursors matches the minimum and maximum required by the gesture.
+     * <p/>
+     * This is a convenience that may be used by sub-classes.
      *
      * @param cursorCount Input cursor count.
      *
      * @return True if the minimum and maximum are honored, false otherwise.
      */
-    protected boolean isCursorCountValid(final int cursorCount) {
+    protected boolean isCursorCountValid(int cursorCount) {
         return (minCursorCount <= cursorCount) && (cursorCount <= maxCursorCount);
     }
 
@@ -143,7 +146,7 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @see GestureRecognizer#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<E> gestureListener) {
+    public void queue(TouchListener<E> gestureListener) {
         gestureListeners.add(gestureListener);
     }
 
@@ -151,18 +154,19 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @see GestureRecognizer#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<E> gestureListener) {
+    public void dequeue(TouchListener<E> gestureListener) {
         gestureListeners.remove(gestureListener);
     }
 
     /**
-     * Fires the specified event to the registered gesture listeners.<br>This method is to be called by sub-classes to
-     * notify gesture listeners.
+     * Fires the specified event to the registered gesture listeners.
+     * <p/>
+     * This method is to be called by sub-classes to notify gesture listeners.
      *
      * @param event Gesture event to be fired.
      */
-    protected void fireGestureEvent(final E event) {
-        for (final TouchListener<E> listener : gestureListeners) {
+    protected void fireGestureEvent(E event) {
+        for (TouchListener<E> listener : gestureListeners) {
             listener.processTouchEvent(event);
         }
     }
@@ -171,14 +175,15 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      * @see GestureRecognizer#processTouchEvent(TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         process(getContext(event.getUserId(), event.getTouchTarget()), event.getUserId(), event.getTouchTarget(),
                 event.getCursors());
     }
 
     /**
-     * Gets a context for the specified touch target.<br>This method will create a new context for the touch target
-     * if it does not exist.
+     * Gets a context for the specified touch target.
+     * <p/>
+     * This method will create a new context for the touch target if it does not exist.
      *
      * @param userId ID of the user performing the gesture.
      * @param target Touch target to get a context for.
@@ -187,7 +192,7 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
      *
      * @see #createContext(long, TouchTarget)
      */
-    protected C getContext(final long userId, final TouchTarget target) {
+    protected C getContext(long userId, TouchTarget target) {
         C context = targetContexts.get(target);
         if (context == null) {
             context = createContext(userId, target);
@@ -197,8 +202,9 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
     }
 
     /**
-     * Creates a new context for the specified user and touch target.<br>This method is to be implemented by
-     * sub-classes.
+     * Creates a new context for the specified user and touch target.
+     * <p/>
+     * This method is to be implemented by sub-classes.
      *
      * @param userId ID of the user performing the gesture.
      * @param target Touch target to create a context for.
@@ -208,8 +214,9 @@ public abstract class AbstractGestureRecognizer<C, E extends TouchEvent> impleme
     protected abstract C createContext(long userId, TouchTarget target);
 
     /**
-     * Processes the specified cursors for the specified touch target and target context.<br>This method is to be
-     * implemented by sub-classes.
+     * Processes the specified cursors for the specified touch target and target context.
+     * <p/>
+     * This method is to be implemented by sub-classes.
      *
      * @param context Context associated to the touch target to which the cursors apply.
      * @param userId  ID of the user performing the gesture.

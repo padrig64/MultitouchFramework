@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.experimental.dispatch;
 
-import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.processing.filter.AbstractCursorToTouchTargetDispatcher;
 import com.github.multitouchframework.base.target.ScreenTouchTarget;
 
@@ -44,20 +44,20 @@ public class SimpleCursorToTouchTargetDispatcher extends AbstractCursorToTouchTa
         return targets;
     }
 
-    public void addTouchTargetOnTop(final TouchTarget target) {
+    public void addTouchTargetOnTop(TouchTarget target) {
         targets.add(target);
     }
 
-    public void insertTouchTargetAt(final int i, final TouchTarget target) {
+    public void insertTouchTargetAt(int i, TouchTarget target) {
         targets.add(i, target);
     }
 
-    public void setTouchTargetAt(final int i, final TouchTarget target) {
+    public void setTouchTargetAt(int i, TouchTarget target) {
         targets.set(i, target);
     }
 
-    public void insertTouchTargetAbove(final TouchTarget lowerTarget, final TouchTarget target) {
-        final int i = targets.lastIndexOf(lowerTarget);
+    public void insertTouchTargetAbove(TouchTarget lowerTarget, TouchTarget target) {
+        int i = targets.lastIndexOf(lowerTarget);
         if (i < 0) {
             // Add touch target on top of everything
             targets.add(target);
@@ -66,7 +66,7 @@ public class SimpleCursorToTouchTargetDispatcher extends AbstractCursorToTouchTa
         }
     }
 
-    public void removeTouchTarget(final TouchTarget target) {
+    public void removeTouchTarget(TouchTarget target) {
         targets.remove(target);
     }
 
@@ -74,11 +74,11 @@ public class SimpleCursorToTouchTargetDispatcher extends AbstractCursorToTouchTa
      * @see AbstractCursorToTouchTargetDispatcher#findTouchedTarget(Cursor)
      */
     @Override
-    protected TouchTarget findTouchedTarget(final Cursor cursor) {
+    protected TouchTarget findTouchedTarget(Cursor cursor) {
         TouchTarget foundTarget = SCREEN_TOUCH_TARGET;
 
         for (int i = targets.size() - 1; i >= 0; i--) {
-            final TouchTarget target = targets.get(i);
+            TouchTarget target = targets.get(i);
             if (target.isTouched(cursor)) {
                 foundTarget = target;
                 break;

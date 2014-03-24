@@ -55,9 +55,9 @@ public class LeanScrollBarUIDemo extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Set content pane
-        final JPanel contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
-        final JLabel scrollableComponent = new JLabel("Scrollable area");
+        JLabel scrollableComponent = new JLabel("Scrollable area");
         scrollableComponent.setHorizontalAlignment(JLabel.CENTER);
         scrollableComponent.setFont(scrollableComponent.getFont().deriveFont(25.0f).deriveFont(Font.BOLD));
         scrollableComponent.setBorder(new LineBorder(Color.GREEN));
@@ -70,18 +70,18 @@ public class LeanScrollBarUIDemo extends JFrame {
         setSize(new Dimension(300, 300));
 
         // Set location
-        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 3);
     }
 
-    public static void main(final String... args) {
+    public static void main(String... args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
 
                 // Set look-and-feel
                 try {
-                    for (final UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
                             UIManager.setLookAndFeel(info.getClassName());
                             UIManager.put("ScrollBarUI", LeanScrollBarUI.class.getCanonicalName());

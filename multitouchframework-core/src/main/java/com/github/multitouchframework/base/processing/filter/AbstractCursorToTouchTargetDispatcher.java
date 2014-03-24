@@ -36,16 +36,20 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Abstract implementation of a cursor to touch target dispatcher.<br>Cursor-to-target dispatcher are meant to dispatch
- * cursor points to the touch targets on the touch surface, for instance, in order to the allow gesture recognition
- * on specific touch targets independently. So, typically, gesture recognizers will be queued to cursor-to-target
- * dispatchers.<br>This abstraction provides implementation of the (de-)queuing of blocks,
- * as well as the basic dispatching of cursors to touch targets and the forwarding of the results to the queued
- * blocks. However, the discovery of a touch target for a single cursor is left to concrete sub-classes.<br>This
- * implementation makes the touch targets catch the cursors on finger down, and release the cursors on finger up only.
- * But the touch targets will hold the cursors even if they leave these touch targets. This makes it more convenient
- * for users working on small touch targets of the screen (for instance, when several users are working on different
- * small maps displayed on the same device).
+ * Abstract implementation of a cursor to touch target dispatcher.
+ * <p/>
+ * Cursor-to-target dispatcher are meant to dispatch cursor points to the touch targets on the touch surface, for
+ * instance, in order to the allow gesture recognition on specific touch targets independently. So, typically, gesture
+ * recognizers will be queued to cursor-to-target dispatchers.
+ * <p/>
+ * This abstraction provides implementation of the (de-)queuing of blocks, as well as the basic dispatching of cursors
+ * to touch targets and the forwarding of the results to the queued blocks. However, the discovery of a touch target for
+ * a single cursor is left to concrete sub-classes.
+ * <p/>
+ * This implementation makes the touch targets catch the cursors on finger down, and release the cursors on finger up
+ * only. But the touch targets will hold the cursors even if they leave these touch targets. This makes it more
+ * convenient for users working on small touch targets of the screen (for instance, when several users are working on
+ * different small maps displayed on the same device).
  *
  * @see AbstractFilter
  * @see CursorUpdateEvent
@@ -63,12 +67,11 @@ public abstract class AbstractCursorToTouchTargetDispatcher extends AbstractFilt
      * @see AbstractFilter#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
-        final Map<Long, TouchTarget> newCursorToTarget = new HashMap<Long, TouchTarget>();
-        final Map<TouchTarget, Collection<Cursor>> updatesToBeForwarded = new HashMap<TouchTarget,
-                Collection<Cursor>>();
+    public void processTouchEvent(CursorUpdateEvent event) {
+        Map<Long, TouchTarget> newCursorToTarget = new HashMap<Long, TouchTarget>();
+        Map<TouchTarget, Collection<Cursor>> updatesToBeForwarded = new HashMap<TouchTarget, Collection<Cursor>>();
 
-        for (final Cursor cursor : event.getCursors()) {
+        for (Cursor cursor : event.getCursors()) {
             // Find the touch target holding the cursor
             TouchTarget assignedTarget = oldCursorToTarget.get(cursor.getId());
             if (assignedTarget == null) {
@@ -93,14 +96,14 @@ public abstract class AbstractCursorToTouchTargetDispatcher extends AbstractFilt
         }
 
         // Clean up old mapping to notify for touch targets that have no more cursor
-        for (final TouchTarget oldTarget : oldCursorToTarget.values()) {
+        for (TouchTarget oldTarget : oldCursorToTarget.values()) {
             if (!updatesToBeForwarded.containsKey(oldTarget)) {
                 updatesToBeForwarded.put(oldTarget, Collections.<Cursor>emptySet());
             }
         }
 
         // Forward updated touch targets and cursors to next blocks
-        for (final Map.Entry<TouchTarget, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
+        for (Map.Entry<TouchTarget, Collection<Cursor>> entry : updatesToBeForwarded.entrySet()) {
             forwardToNextBlocks(event.getUserId(), entry.getKey(), entry.getValue());
         }
 
@@ -115,18 +118,19 @@ public abstract class AbstractCursorToTouchTargetDispatcher extends AbstractFilt
      *
      * @return Touched target if found, null otherwise.
      */
-    protected abstract TouchTarget findTouchedTarget(final Cursor cursor);
+    protected abstract TouchTarget findTouchedTarget(Cursor cursor);
 
     /**
-     * Forwards the specified touch target with its cursors to the next blocks.<br>Typically,
-     * this method is called for each touch target touched by the cursors processed in {@link #processTouchEvent
-     * (CursorUpdateEvent)}.
+     * Forwards the specified touch target with its cursors to the next blocks.
+     * <p/>
+     * Typically, this method is called for each touch target touched by the cursors processed in {@link
+     * #processTouchEvent(CursorUpdateEvent)}.
      *
      * @param userId  ID of the user touching the surface.
      * @param target  Touch target holding the specified cursors.
      * @param cursors Cursors for the specified touch target.
      */
-    private void forwardToNextBlocks(final long userId, final TouchTarget target, final Collection<Cursor> cursors) {
+    private void forwardToNextBlocks(long userId, TouchTarget target, Collection<Cursor> cursors) {
         processWithNextBlocks(new CursorUpdateEvent(userId, target, cursors));
     }
 }

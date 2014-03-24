@@ -29,7 +29,7 @@ import com.github.multitouchframework.api.TouchEvent;
 
 public interface GestureDefinition<E extends TouchEvent> {
 
-    public String getId();
+    String getId();
 
-    public Class<E> getGestureEventClass();
+    Class<E> getGestureEventClass();
 }
