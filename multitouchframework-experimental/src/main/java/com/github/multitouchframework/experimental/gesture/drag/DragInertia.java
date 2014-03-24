@@ -43,29 +43,29 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
     private class DeceleratorTarget implements TimingTarget {
 
         @Override
-        public void begin(final Animator animator) {
+        public void begin(Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.begin");
         }
 
         @Override
-        public void end(final Animator animator) {
+        public void end(Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.end");
         }
 
         @Override
-        public void repeat(final Animator animator) {
+        public void repeat(Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.repeat");
             // Nothing to be done
         }
 
         @Override
-        public void reverse(final Animator animator) {
+        public void reverse(Animator animator) {
             System.out.println("DragInertia$DeceleratorTarget.reverse");
             // Nothing to be done
         }
 
         @Override
-        public void timingEvent(final Animator animator, final double v) {
+        public void timingEvent(Animator animator, double v) {
             System.out.println("DragInertia$DeceleratorTarget.timingEvent: " + v);
         }
     }
@@ -93,7 +93,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         this(DEFAULT_SAMPLE_COUNT);
     }
 
-    public DragInertia(final int sampleCount) {
+    public DragInertia(int sampleCount) {
         samples = new DragEvent[sampleCount];
     }
 
@@ -101,7 +101,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
      * @see Chainable#queue(Object)
      */
     @Override
-    public void queue(final TouchListener<DragEvent> gestureListener) {
+    public void queue(TouchListener<DragEvent> gestureListener) {
         gestureListeners.add(gestureListener);
     }
 
@@ -109,18 +109,19 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
      * @see Chainable#dequeue(Object)
      */
     @Override
-    public void dequeue(final TouchListener<DragEvent> gestureListener) {
+    public void dequeue(TouchListener<DragEvent> gestureListener) {
         gestureListeners.remove(gestureListener);
     }
 
     /**
-     * Fires the specified event to the registered gesture listeners.<br>This method is to be called by sub-classes to
-     * notify gesture listeners.
+     * Fires the specified event to the registered gesture listeners.
+     * <p/>
+     * This method is to be called by sub-classes to notify gesture listeners.
      *
      * @param event Gesture event to be fired.
      */
-    protected void fireGestureEvent(final DragEvent event) {
-        for (final TouchListener<DragEvent> listener : gestureListeners) {
+    protected void fireGestureEvent(DragEvent event) {
+        for (TouchListener<DragEvent> listener : gestureListeners) {
             listener.processTouchEvent(event);
         }
     }
@@ -129,7 +130,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
      * @see TouchListener#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final DragEvent event) {
+    public void processTouchEvent(DragEvent event) {
         switch (event.getState()) {
             case ARMED:
                 processDragArmed(event);
@@ -143,7 +144,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         }
     }
 
-    private void processDragArmed(final DragEvent event) {
+    private void processDragArmed(DragEvent event) {
         // TODO Stop current inertia if any, and continue current pane
         if ((animator != null) && animator.isRunning()) {
             animator.stop();
@@ -154,15 +155,15 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         fireGestureEvent(event);
     }
 
-    private void processDragPerformed(final DragEvent event) {
+    private void processDragPerformed(DragEvent event) {
         pushEvent(event);
         fireGestureEvent(event);
     }
 
-    private void processDragUnarmed(final DragEvent event) {
+    private void processDragUnarmed(DragEvent event) {
         pushEvent(event);
 
-        final ScheduledExecutorTimingSource timingSource = new ScheduledExecutorTimingSource();
+        ScheduledExecutorTimingSource timingSource = new ScheduledExecutorTimingSource();
         timingSource.init();
         Animator.setDefaultTimingSource(timingSource);
 
@@ -174,7 +175,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         fireGestureEvent(event);
     }
 
-    private void pushEvent(final DragEvent event) {
+    private void pushEvent(DragEvent event) {
         sampleIndex++;
         if (sampleIndex >= samples.length) {
             sampleIndex = 0;
@@ -187,7 +188,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
 
         DragEvent samplePrev = getSample(0);
         for (int i = 1; i < samples.length && samplePrev != null; i++) {
-            final DragEvent sampleNext = getSample(i);
+            DragEvent sampleNext = getSample(i);
             if (sampleNext != null) {
                 // TODO
             }
@@ -198,7 +199,7 @@ public class DragInertia implements TouchListener<DragEvent>, Chainable<TouchLis
         return velocity;
     }
 
-    private DragEvent getSample(final int timeIndex) {
+    private DragEvent getSample(int timeIndex) {
         DragEvent event = null;
 
 //        int readIndex = sampleIndex;

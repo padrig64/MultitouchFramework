@@ -422,8 +422,9 @@ public class LeanScrollBarUI extends ScrollBarUI {
     private final MouseControlAdapter mouseControlAdapter = new MouseControlAdapter();
 
     /**
-     * Creates a UI for the specified component.<br>This method is called by the {@link javax.swing.UIManager} via the
-     * {@link javax.swing.UIDefaults}.
+     * Creates a UI for the specified component.
+     * <p/>
+     * This method is called by the {@link javax.swing.UIManager} via the {@link javax.swing.UIDefaults}.
      *
      * @param c Scrollbar to create the UI for.
      *

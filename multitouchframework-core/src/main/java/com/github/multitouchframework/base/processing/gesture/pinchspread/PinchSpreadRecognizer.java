@@ -98,8 +98,9 @@ public class PinchSpreadRecognizer extends AbstractGestureRecognizer<PinchSpread
     public static final int DEFAULT_MAX_CURSOR_COUNT = Integer.MAX_VALUE; // No maximum
 
     /**
-     * Default constructor.<br>By default, 2 cursors is the minimum required to perform the gesture, and there is no
-     * maximum.
+     * Default constructor.
+     *
+     * By default, 2 cursors is the minimum required to perform the gesture, and there is no maximum.
      */
     public PinchSpreadRecognizer() {
         this(DEFAULT_MIN_CURSOR_COUNT, DEFAULT_MAX_CURSOR_COUNT);

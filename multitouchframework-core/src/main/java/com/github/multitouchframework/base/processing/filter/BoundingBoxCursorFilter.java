@@ -36,8 +36,10 @@ import java.util.Map;
  * contacts with the touch surface.
  * <p/>
  * This is achieved by virtually moving a square bounding boxes by pushing their borders from the inside. The output
- * cursors are the positions of the center of the boxes.<br>Coupled to a {@link NoChangeCursorFilter}, this is a very
- * cheap alternative to low-pass filters, even though high frequencies are not filtered out.
+ * cursors are the positions of the center of the boxes.
+ * <p/>
+ * Coupled to a {@link NoChangeCursorFilter}, this is a very cheap alternative to low-pass filters, even though high
+ * frequencies are not filtered out.
  *
  * @see AbstractFilter
  * @see CursorUpdateEvent
