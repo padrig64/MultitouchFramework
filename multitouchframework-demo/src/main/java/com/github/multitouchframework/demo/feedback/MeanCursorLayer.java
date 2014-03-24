@@ -53,15 +53,15 @@ public class MeanCursorLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
-        final Collection<Cursor> cursors = event.getCursors();
+    public void processTouchEvent(CursorUpdateEvent event) {
+        Collection<Cursor> cursors = event.getCursors();
         if (cursors.isEmpty()) {
             meanCursor = null;
         } else {
             // Calculate mean cursor
             int meanX = 0;
             int meanY = 0;
-            for (final Cursor cursor : cursors) {
+            for (Cursor cursor : cursors) {
                 meanX += cursor.getX();
                 meanY += cursor.getY();
             }
@@ -75,12 +75,12 @@ public class MeanCursorLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
-    public void paintComponent(final Graphics graphics) {
+    public void paintComponent(Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (meanCursor != null) {
             // Prepare for painting
-            final Point canvasMeanPoint = convertCursorToComponent(meanCursor);
+            Point canvasMeanPoint = convertCursorToComponent(meanCursor);
 
             // Paint mean cursor
             graphics.setColor(MEAN_CURSOR_COLOR);

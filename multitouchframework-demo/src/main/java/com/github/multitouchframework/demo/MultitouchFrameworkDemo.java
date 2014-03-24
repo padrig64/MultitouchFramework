@@ -178,7 +178,7 @@ public class MultitouchFrameworkDemo extends JFrame {
 
     private static final TouchTarget[] TOUCH_TARGETS = new TouchTarget[]{ //
             new DemoTouchTarget("TopLeft", new Color(255, 145, 0), new Rectangle(10, 10, 100, 200)), //
-            new DemoTouchTarget("SomewhereElse", new Color(255, 145, 0), new Rectangle(500, 300, 100, 100)) //
+            new DemoTouchTarget("SomewhereElse", new Color(145, 255, 145), new Rectangle(500, 300, 100, 100)) //
     };
 
     private final Canvas canvas = new Canvas();
@@ -318,8 +318,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                 .queue(new CursorToComponentDispatcher());
 
         // Convert cursors to canvas
-        SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new
-                SimpleCursorToTouchTargetDispatcher();
+        SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcherNode = new SimpleCursorToTouchTargetDispatcher();
         queue(noChangeFilterNode) //
                 .queue(new ScreenToComponentConverter(canvas)) //
                 .queue(cursorToTargetDispatcherNode);

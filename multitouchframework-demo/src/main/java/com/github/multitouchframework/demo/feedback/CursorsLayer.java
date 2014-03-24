@@ -55,7 +55,7 @@ public class CursorsLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         triggerRepaint();
     }
@@ -64,20 +64,20 @@ public class CursorsLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
-    protected void paintComponent(final Graphics graphics) {
+    protected void paintComponent(Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
-            final List<Point> canvasPoints = new ArrayList<Point>();
-            for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToComponent(cursor);
+            List<Point> canvasPoints = new ArrayList<Point>();
+            for (Cursor cursor : cursors) {
+                Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
             }
 
             // Paint cursors
             graphics.setColor(CURSOR_COLOR);
-            for (final Point canvasPoint : canvasPoints) {
+            for (Point canvasPoint : canvasPoints) {
                 graphics.fillOval(canvasPoint.x - CURSOR_SIZE / 2, canvasPoint.y - CURSOR_SIZE / 2, CURSOR_SIZE,
                         CURSOR_SIZE);
             }

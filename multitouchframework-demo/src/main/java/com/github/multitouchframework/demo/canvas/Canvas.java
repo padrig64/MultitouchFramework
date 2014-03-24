@@ -54,23 +54,23 @@ public class Canvas extends JComponent {
         setName("Canvas");
     }
 
-    public void addLayer(final CanvasLayer layer) {
+    public void addLayer(CanvasLayer layer) {
         layers.add(layer);
         visibleLayers.add(layer);
         repaint();
     }
 
-    public void removeLayer(final CanvasLayer layer) {
+    public void removeLayer(CanvasLayer layer) {
         visibleLayers.remove(layer);
         layers.remove(layer);
         repaint();
     }
 
-    public boolean isLayerVisible(final CanvasLayer layer) {
+    public boolean isLayerVisible(CanvasLayer layer) {
         return visibleLayers.contains(layer);
     }
 
-    public void setLayerVisible(final CanvasLayer layer, final boolean visible) {
+    public void setLayerVisible(CanvasLayer layer, boolean visible) {
         if (visible) {
             visibleLayers.add(layer);
         } else {
@@ -80,21 +80,21 @@ public class Canvas extends JComponent {
     }
 
     @Override
-    protected void paintComponent(final Graphics graphics) {
-        final Insets insets = getInsets();
-        final int contentWidth = getWidth() - insets.left - insets.right;
-        final int contentHeight = getHeight() - insets.top - insets.bottom;
+    protected void paintComponent(Graphics graphics) {
+        Insets insets = getInsets();
+        int contentWidth = getWidth() - insets.left - insets.right;
+        int contentHeight = getHeight() - insets.top - insets.bottom;
 
         // Clear background
         graphics.setColor(BACKGROUND_COLOR);
         graphics.fillRect(insets.left, insets.top, contentWidth, contentHeight);
 
         // Set anti-aliasing
-        final Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
+        Graphics2D g2d = (Graphics2D) graphics.create(insets.left, insets.top, contentWidth, contentHeight);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw all visible layers
-        for (final CanvasLayer layer : layers) {
+        for (CanvasLayer layer : layers) {
             if (visibleLayers.contains(layer)) {
                 layer.paint(g2d);
             }

@@ -25,9 +25,9 @@
 
 package com.github.multitouchframework.demo.feedback;
 
-import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchEvent;
 import com.github.multitouchframework.api.TouchListener;
+import com.github.multitouchframework.base.cursor.Cursor;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -41,22 +41,22 @@ public abstract class AbstractFeedbackLayer<T extends TouchEvent> extends JCompo
     private class LayerBoundsAdapter implements AncestorListener {
 
         @Override
-        public void ancestorAdded(final AncestorEvent ancestorEvent) {
+        public void ancestorAdded(AncestorEvent ancestorEvent) {
             updateLayerBounds();
         }
 
         @Override
-        public void ancestorRemoved(final AncestorEvent ancestorEvent) {
+        public void ancestorRemoved(AncestorEvent ancestorEvent) {
             updateLayerBounds();
         }
 
         @Override
-        public void ancestorMoved(final AncestorEvent ancestorEvent) {
+        public void ancestorMoved(AncestorEvent ancestorEvent) {
             updateLayerBounds();
         }
 
         private void updateLayerBounds() {
-            final Container parent = getParent();
+            Container parent = getParent();
             if (parent != null) {
                 setBounds(0, 0, parent.getWidth(), parent.getHeight());
             }
@@ -79,8 +79,8 @@ public abstract class AbstractFeedbackLayer<T extends TouchEvent> extends JCompo
         }
     }
 
-    protected Point convertCursorToComponent(final Cursor screenCursor) {
-        final Point point = new Point(screenCursor.getX(), screenCursor.getY());
+    protected Point convertCursorToComponent(Cursor screenCursor) {
+        Point point = new Point(screenCursor.getX(), screenCursor.getY());
         SwingUtilities.convertPointFromScreen(point, this);
         return point;
     }

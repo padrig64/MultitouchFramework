@@ -25,8 +25,8 @@
 
 package com.github.multitouchframework.demo.model;
 
-import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.api.TouchTarget;
+import com.github.multitouchframework.base.cursor.Cursor;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -37,12 +37,11 @@ public class DemoTouchTarget implements TouchTarget {
     private final Color color;
     private Rectangle bounds = null;
 
-    public DemoTouchTarget(final String id, final Color color, final int x, final int y, final int width,
-                           final int height) {
+    public DemoTouchTarget(String id, Color color, int x, int y, int width, int height) {
         this(id, color, new Rectangle(x, y, width, height));
     }
 
-    public DemoTouchTarget(final String id, final Color color, final Rectangle bounds) {
+    public DemoTouchTarget(String id, Color color, Rectangle bounds) {
         this.id = id;
         this.color = color;
         this.bounds = bounds;
@@ -60,7 +59,7 @@ public class DemoTouchTarget implements TouchTarget {
         return bounds;
     }
 
-    public void setBounds(final Rectangle bounds) {
+    public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
     }
 
@@ -83,7 +82,7 @@ public class DemoTouchTarget implements TouchTarget {
     }
 
     @Override
-    public boolean isTouched(final Cursor cursor) {
+    public boolean isTouched(Cursor cursor) {
         return bounds.contains(cursor.getX(), cursor.getY());
     }
 

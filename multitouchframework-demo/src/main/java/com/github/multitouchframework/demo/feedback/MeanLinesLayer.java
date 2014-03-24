@@ -54,7 +54,7 @@ public class MeanLinesLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         triggerRepaint();
     }
@@ -63,18 +63,18 @@ public class MeanLinesLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
      * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
-    public void paintComponent(final Graphics graphics) {
+    public void paintComponent(Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
-            final List<Point> canvasPoints = new ArrayList<Point>();
+            List<Point> canvasPoints = new ArrayList<Point>();
             int meanX = 0;
             int meanY = 0;
 
             // Calculate mean cursor
-            for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToComponent(cursor);
+            for (Cursor cursor : cursors) {
+                Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
 
                 meanX += canvasPoint.getX();
@@ -87,7 +87,7 @@ public class MeanLinesLayer extends AbstractFeedbackLayer<CursorUpdateEvent> {
             ((Graphics2D) graphics).setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
                     0.0f, new float[]{5.0f, 5.0f}, 0.0f));
             graphics.setColor(MEAN_LINE_COLOR);
-            for (final Point canvasPoint : canvasPoints) {
+            for (Point canvasPoint : canvasPoints) {
                 graphics.drawLine(meanX, meanY, canvasPoint.x, canvasPoint.y);
             }
         }

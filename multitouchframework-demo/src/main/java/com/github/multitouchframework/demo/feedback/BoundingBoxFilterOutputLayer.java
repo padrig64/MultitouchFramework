@@ -60,7 +60,7 @@ public class BoundingBoxFilterOutputLayer extends AbstractFeedbackLayer<CursorUp
      * @see AbstractFeedbackLayer#processTouchEvent(com.github.multitouchframework.api.TouchEvent)
      */
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         this.cursors = event.getCursors();
         triggerRepaint();
     }
@@ -69,20 +69,20 @@ public class BoundingBoxFilterOutputLayer extends AbstractFeedbackLayer<CursorUp
      * @see AbstractFeedbackLayer#paintComponent(Graphics)
      */
     @Override
-    public void paintComponent(final Graphics graphics) {
+    public void paintComponent(Graphics graphics) {
         ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if ((cursors != null) && !cursors.isEmpty()) {
             // Prepare for painting
-            final List<Point> canvasPoints = new ArrayList<Point>();
-            for (final Cursor cursor : cursors) {
-                final Point canvasPoint = convertCursorToComponent(cursor);
+            List<Point> canvasPoints = new ArrayList<Point>();
+            for (Cursor cursor : cursors) {
+                Point canvasPoint = convertCursorToComponent(cursor);
                 canvasPoints.add(canvasPoint);
             }
 
             // Paint bounding boxes
             ((Graphics2D) graphics).setStroke(new BasicStroke());
-            for (final Point canvasPoint : canvasPoints) {
+            for (Point canvasPoint : canvasPoints) {
                 graphics.setColor(BOUNDING_BOX_COLOR);
                 graphics.drawRect(canvasPoint.x - BOUNDING_BOX_SIZE / 2, canvasPoint.y - BOUNDING_BOX_SIZE / 2,
                         BOUNDING_BOX_SIZE - 1, BOUNDING_BOX_SIZE - 1);

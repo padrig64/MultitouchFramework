@@ -25,10 +25,10 @@
 
 package com.github.multitouchframework.demo.support;
 
-import com.github.multitouchframework.base.processing.filter.Filter;
+import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
-import com.github.multitouchframework.api.TouchListener;
+import com.github.multitouchframework.base.processing.filter.Filter;
 
 import javax.swing.SwingUtilities;
 import java.awt.Component;
@@ -42,33 +42,33 @@ public class ScreenToComponentConverter implements Filter<CursorUpdateEvent> {
 
     private final Component referenceComponent;
 
-    public ScreenToComponentConverter(final Component referenceComponent) {
+    public ScreenToComponentConverter(Component referenceComponent) {
         this.referenceComponent = referenceComponent;
     }
 
     @Override
-    public void queue(final TouchListener<CursorUpdateEvent> nextBlock) {
+    public void queue(TouchListener<CursorUpdateEvent> nextBlock) {
         nextBlocks.add(nextBlock);
     }
 
     @Override
-    public void dequeue(final TouchListener<CursorUpdateEvent> nextBlock) {
+    public void dequeue(TouchListener<CursorUpdateEvent> nextBlock) {
         nextBlocks.remove(nextBlock);
     }
 
     @Override
-    public void processTouchEvent(final CursorUpdateEvent event) {
+    public void processTouchEvent(CursorUpdateEvent event) {
         // Convert all cursors
-        final List<Cursor> newCursors = new ArrayList<Cursor>();
-        for (final Cursor cursor : event.getCursors()) {
-            final Point cursorLocation = new Point(cursor.getX(), cursor.getY());
+        List<Cursor> newCursors = new ArrayList<Cursor>();
+        for (Cursor cursor : event.getCursors()) {
+            Point cursorLocation = new Point(cursor.getX(), cursor.getY());
             SwingUtilities.convertPointFromScreen(cursorLocation, referenceComponent);
             newCursors.add(new Cursor(cursor.getId(), cursorLocation.x, cursorLocation.y));
         }
 
         // Notify listeners
-        final CursorUpdateEvent newEvent = new CursorUpdateEvent(event.getUserId(), event.getTouchTarget(), newCursors);
-        for (final TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
+        CursorUpdateEvent newEvent = new CursorUpdateEvent(event.getUserId(), event.getTouchTarget(), newCursors);
+        for (TouchListener<CursorUpdateEvent> nextBlock : nextBlocks) {
             nextBlock.processTouchEvent(newEvent);
         }
     }
