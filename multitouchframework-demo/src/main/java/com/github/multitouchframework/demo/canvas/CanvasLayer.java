@@ -25,9 +25,12 @@
 
 package com.github.multitouchframework.demo.canvas;
 
+import com.github.multitouchframework.api.TouchEvent;
+import com.github.multitouchframework.api.TouchListener;
+
 import java.awt.Graphics2D;
 
-public interface CanvasLayer {
+public interface CanvasLayer<T extends TouchEvent> extends TouchListener<T> {
 
     void paint(Graphics2D g2d);
 }

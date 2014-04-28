@@ -35,6 +35,7 @@ import com.github.multitouchframework.base.processing.gesture.drag.DragEvent;
 import com.github.multitouchframework.base.processing.gesture.drag.DragRecognizer;
 import com.github.multitouchframework.base.processing.gesture.pinchspread.PinchSpreadEvent;
 import com.github.multitouchframework.base.processing.gesture.pinchspread.PinchSpreadRecognizer;
+import com.github.multitouchframework.base.processing.gesture.tap.TapEvent;
 import com.github.multitouchframework.base.processing.gesture.tap.TapRecognizer;
 import com.github.multitouchframework.base.processing.source.TuioSource;
 import com.github.multitouchframework.base.target.ScreenTouchTarget;
@@ -79,23 +80,12 @@ import static com.github.multitouchframework.base.ChainBuilder.queue;
 
 public class MultitouchFrameworkDemo extends JFrame {
 
-    private static enum GestureProcessor {
-
-        PAN("Drag"),
-        PINCH_SPREAD("Pinch/Spread");
-
-        private final String presentationName;
-
-        GestureProcessor(String presentationName) {
-            this.presentationName = presentationName;
-        }
-
-        @Override
-        public String toString() {
-            return presentationName;
-        }
-    }
-
+    /**
+     * Layers showing the feedback on touch events.
+     * <p/>
+     * They are painted in the layered pane of the demo window and are used only for demonstration of the different
+     * levels of filtering.
+     */
     private static enum FeedbackPresentationLayer {
 
         RAW_CURSORS("Raw cursors", new CursorsLayer()),
@@ -121,26 +111,25 @@ public class MultitouchFrameworkDemo extends JFrame {
         }
     }
 
+    /**
+     * Layers showing the touch targets on the canvas.
+     * <p/>
+     * They are painted in the component and are used to demonstrate the dispatching of touch events to touch targets.
+     */
     private static enum CanvasPresentationLayer {
 
         TOUCH_TARGETS("Touch targets", new TouchTargetsLayer());
 
         private final String presentationName;
-        private final CanvasLayer layer;
-        private final TouchListener<?> processor;
+        private final CanvasLayer<?> layer;
 
-        CanvasPresentationLayer(String presentationName, TouchListener<?> layer) {
+        CanvasPresentationLayer(String presentationName, CanvasLayer<?> layer) {
             this.presentationName = presentationName;
-            this.layer = (CanvasLayer) layer;
-            this.processor = layer;
+            this.layer = layer;
         }
 
         public CanvasLayer getLayer() {
             return layer;
-        }
-
-        public Object getProcessor() {
-            return processor;
         }
 
         @Override
@@ -149,6 +138,9 @@ public class MultitouchFrameworkDemo extends JFrame {
         }
     }
 
+    /**
+     * Entity responsible of making the layers visible/invisible depending on the selected state of the checkboxes.
+     */
     private class LayerControlAdapter implements ItemListener {
 
         @Override
@@ -156,6 +148,11 @@ public class MultitouchFrameworkDemo extends JFrame {
             // Search layer by name
             JCheckBox layerControlCheckBox = (JCheckBox) itemEvent.getSource();
             String layerName = layerControlCheckBox.getText();
+            for (FeedbackPresentationLayer feedbackLayer : FeedbackPresentationLayer.values()) {
+                if (feedbackLayer.toString().equals(layerName)) {
+                    feedbackLayer.getFeedbackLayer().setVisible(layerControlCheckBox.isSelected());
+                }
+            }
             for (CanvasPresentationLayer canvasLayer : CanvasPresentationLayer.values()) {
                 if (canvasLayer.toString().equals(layerName)) {
                     canvas.setLayerVisible(canvasLayer.getLayer(), layerControlCheckBox.isSelected());
@@ -174,15 +171,24 @@ public class MultitouchFrameworkDemo extends JFrame {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MultitouchFrameworkDemo.class);
 
+    /**
+     * Demo touch targets to be displayed on the canvas and reacting to touch events.
+     */
     private static final TouchTarget[] TOUCH_TARGETS = new TouchTarget[]{ //
             new DemoTouchTarget("TopLeft", new Color(255, 145, 0), new Rectangle(10, 10, 100, 200)), //
             new DemoTouchTarget("SomewhereElse", new Color(145, 255, 145), new Rectangle(500, 300, 100, 100)) //
     };
 
+    /**
+     * Demo canvas component holding the touch targets.
+     */
     private final Canvas canvas = new Canvas();
 
-    private final LayerControlAdapter layerControlAdapter = new LayerControlAdapter();
+    private final ItemListener layerControlAdapter = new LayerControlAdapter();
 
+    /**
+     * Default constructor.
+     */
     public MultitouchFrameworkDemo() {
         setTitle("MultitouchFramework Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -209,7 +215,6 @@ public class MultitouchFrameworkDemo extends JFrame {
         controlScrollPane.setBorder(null);
         contentPane.add(controlScrollPane, BorderLayout.WEST);
 
-        controlPanel.add(createGestureListPanel());
         controlPanel.add(createCanvasLayerListPanel());
         controlPanel.add(createLayeredPaneLayerListPanel(getLayeredPane()));
 
@@ -222,28 +227,6 @@ public class MultitouchFrameworkDemo extends JFrame {
         for (int i = canvasLayers.length - 1; i >= 0; i--) {
             canvas.addLayer(canvasLayers[i].getLayer());
         }
-    }
-
-    private Component createGestureListPanel() {
-        JPanel listPanel = new JPanel(new MigLayout("insets 0, wrap 1", "[]", "[]unrelated[]related[]"));
-        listPanel.setName("GestureListPanel");
-
-        JLabel titleLabel = new JLabel("Gestures");
-        titleLabel.setName("GesturesTitleLabel");
-        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
-        listPanel.add(titleLabel);
-
-        // Add gestures to the list
-        GestureProcessor[] gestureProcessors = GestureProcessor.values();
-        for (GestureProcessor gestureProcessor : gestureProcessors) {
-            JCheckBox gestureControlCheckBox = new JCheckBox(gestureProcessor.toString());
-            gestureControlCheckBox.setName("GestureControlCheckBox");
-            // TODO
-            gestureControlCheckBox.setSelected(true);
-            listPanel.add(gestureControlCheckBox, "gap 10");
-        }
-
-        return listPanel;
     }
 
     private Component createCanvasLayerListPanel() {
@@ -294,6 +277,39 @@ public class MultitouchFrameworkDemo extends JFrame {
         return listPanel;
     }
 
+    /*
+     * TuioSource                                => Produces CursorUpdateEvents for the touch target "screen"
+     *   |
+     *   |_ EDTScheduler                         => Schedules further processing on the EDT
+     *   |    |_ RAW_CURSORS layer               => Displays the unfiltered cursors with blue dots (lots of events)
+     *   |
+     * BoundingBoxCursorFilter                   => Filters the cursors of the CursorUpdateEvents
+     *   |
+     * NoChangeFilter                            => Removes redundant CursorUpdateEvents
+     *   |
+     *   |_ EDTScheduler                         => Schedules further processing on the EDT
+     *   |    |_ FILTERED_CURSORS layer          => Displays the (now filtered) cursors with gray dots
+     *   |    |_ FILTERED_MEAN_CURSOR layer      => Displays the center of all cursors with a black dot
+     *   |    |_ FILTERED_MEAN_LINES layer       => Displays dashed lines between the filtered cursors and their center
+     *   |
+     * ScreenToComponentConverter                => Converts cursors from screen coordinates to canvas coordinates
+     *   |
+     * SimpleCursorToTouchTargetDispatcher       => Associates cursors to touch targets (here rounded rectangles)
+     *   |
+     *   |_ EDTScheduler                         => Schedules further processing on the EDT
+     *   |    |_ TOUCH_TARGETS layer             => Displays the touch targets as filled if touched, hollowed if not
+     *   |
+     * IncludeTouchTargetFilter                  => Removes CursorUpdateEvents that are not assigned to specific targets
+     *   |
+     *   |_ DragRecognizer                       => Recognizes the drag gesture and produces DragEvents
+     *   |    |_ TouchListener<DragEvent>        => Processes the DragEvents by updating the touch targets' location
+     *   |
+     *   |_ PinchSpreadRecognizer                => Recognizes the pinch/spread gesture and produces PinchSpreadEvents
+     *   |    |_ TouchListener<PinchSpreadEvent> => Processes the PinchSpreadEvents by updating the touch targets' size
+     *   |
+     *   |_ TapRecognizer                        => Recognizes the tap gesture and produces TapEvents
+     *        |_ TouchListener<TapEvent>         => Processes the TapEvents by just printing them out
+     */
     private void initChain() {
         // Create input source
         TuioSource source = new TuioSource(new ScreenTouchTarget());
@@ -331,7 +347,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                 (cursorToTargetDispatcher);
         queue(cursorToTargetDispatcher) //
                 .queue(new EDTScheduler<CursorUpdateEvent>()) //
-                .queue(CanvasPresentationLayer.TOUCH_TARGETS.getProcessor());
+                .queue(CanvasPresentationLayer.TOUCH_TARGETS.getLayer());
 
         // Configure touch-target filters
         IncludeTouchTargetFilter<CursorUpdateEvent> touchTargetFilter = new
@@ -342,10 +358,12 @@ public class MultitouchFrameworkDemo extends JFrame {
         // Configure gestures on touch targets
         queue(touchTargetFilter) //
                 .queue(new DragRecognizer()) //
+                        //.queue(new DragInertia()) // TODO Inertia would typically go here
                 .queue(new TouchListener<DragEvent>() {
 
                     @Override
                     public void processTouchEvent(DragEvent event) {
+                        // Move the touch target
                         Object touchTarget = event.getTouchTarget().getBaseObject();
                         if (touchTarget instanceof DemoTouchTarget) {
                             Rectangle bounds = ((DemoTouchTarget) touchTarget).getBounds();
@@ -353,7 +371,7 @@ public class MultitouchFrameworkDemo extends JFrame {
                             ((DemoTouchTarget) touchTarget).setBounds(bounds);
                         }
                     }
-                }/*, new DragInertia()*/);
+                });
         queue(touchTargetFilter) //
                 .queue(new PinchSpreadRecognizer()) //
                 .queue(new TouchListener<PinchSpreadEvent>() {
@@ -383,12 +401,23 @@ public class MultitouchFrameworkDemo extends JFrame {
                     }
                 });
         queue(touchTargetFilter) //
-                .queue(new TapRecognizer());
+                .queue(new TapRecognizer()) //
+                .queue(new TouchListener<TapEvent>() {
+                    @Override
+                    public void processTouchEvent(TapEvent event) {
+                        System.out.println(event);
+                    }
+                });
 
         // Activate input controller
         source.start();
     }
 
+    /**
+     * Sets the look-and-feel and shows the main frame.
+     *
+     * @param args Ignored.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
 

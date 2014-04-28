@@ -25,7 +25,6 @@
 
 package com.github.multitouchframework.demo.canvas;
 
-import com.github.multitouchframework.api.TouchListener;
 import com.github.multitouchframework.api.TouchTarget;
 import com.github.multitouchframework.base.cursor.Cursor;
 import com.github.multitouchframework.base.cursor.CursorUpdateEvent;
@@ -38,7 +37,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TouchTargetsLayer implements CanvasLayer, TouchListener<CursorUpdateEvent> {
+public class TouchTargetsLayer implements CanvasLayer<CursorUpdateEvent> {
 
     private SimpleCursorToTouchTargetDispatcher cursorToTargetDispatcher = null;
 
