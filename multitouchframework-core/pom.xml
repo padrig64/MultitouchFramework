@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </parent>
 
     <artifactId>multitouchframework-core</artifactId>
-    <name>MultitouchFramework Core</name>
+    <name>MultitouchFramework :: Core</name>
 
     <dependencies>
 
@@ -47,6 +47,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <groupId>com.illposed.osc</groupId>
             <artifactId>javaosc-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mlawrie.yajtl</groupId>
+            <artifactId>yajtl</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/yajtl.jar</systemPath>
+</dependency>
 
         <!-- Logging -->
 

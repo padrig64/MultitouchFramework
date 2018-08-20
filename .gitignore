@@ -13,12 +13,12 @@
 
 ### Package files
 
-#*.jar
 *.war
 .ear
 
 ### Generated files
 
+target
 *.class
 
 ### Mac OS files

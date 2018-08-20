@@ -2,3 +2,12 @@ language: java
 
 jdk:
   - oraclejdk8
+
+addons:
+  sonarcloud:
+    organization: "padrig64-github"
+    token:
+      secure: "tygM4y0xpG+j8NpJI7Xzl6K51hoYumtstFJgb67QMuXjChzhC5kRSUuK8+/y5P9dzCUJ6omKY3NlGaTnL0vxnyghux24BWe6bVgf/4Pp9sWHcDJcYQBgfHExxVVZgbedrzO0S/OUzQhfEOYlROgkUNpuUDCI04RksXp7Dnx81k0H+6prjn2stNXw2+f5+2ncP+E76HflMhQPM1b1ylJtAcPKiM8WK5gsjVmg2LMoV75F8oOxX4aIs7LeZvbbIiHA6zftPwZVecDX3x1cVFZMxqe3OxJlQ2a67q3sup0eI2aTVy26Z/Y89YwC+gtJC7Nq145a1y1YcLsTqO1mr6PMc3FJanjs6lDfjEEcVhLoZRI3tpog6Lj7MS1O0N1kjoWowJg4H+nQnvHteSoZeWkGRDqkM2UwXe2doPoQaVVJjIP27zsY69Wb9C48YV/xIeArdGAhI/U6UBrzOLM9iHZp+D7Ga7EkJBI1g7O4GSjZa69hmSDk77I72DrEpNWt7paAwkp1ehLvZFK9uN/WGU+8mwPLpn1gK1UH7GyXm6z88a6r/6C5UsJRrqtdYwiU8SU9zPyAEpxaVmSX35PG+chUSpndLMlPpv+y5046Q8zlFIjSP1bYzjHigPRFHpG9oxt9TeY9IGWdSoiKaSFEEAQV2XjIFiMsb0gOGPTosOIwYLs="
+
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar

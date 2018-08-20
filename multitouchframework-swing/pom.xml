@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </parent>
 
     <artifactId>multitouchframework-swing</artifactId>
-    <name>MultitouchFramework Swing Support</name>
+    <name>MultitouchFramework :: Swing Support</name>
 
     <dependencies>
 

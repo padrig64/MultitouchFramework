@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </parent>
 
     <artifactId>multitouchframework-experimental</artifactId>
-    <name>MultitouchFramework Experiments</name>
+    <name>MultitouchFramework :: Experiments</name>
 
     <dependencies>
 
